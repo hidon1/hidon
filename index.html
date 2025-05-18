@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>חידון תנ"ך</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    body.stage-1 {
+      background: url('background-stage-1.png') no-repeat center center;
+      background-size: cover;
+    }
+    #quiz {
+      max-width: 700px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #timer-bar-container {
+      width: 100%;
+      height: 20px;
+      background-color: #ccc;
+      margin: 10px 0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #timer-bar {
+      height: 100%;
+      width: 100%;
+      background-color: #4caf50;
+      transition: width 1s linear;
+    }
+    .answer {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #e0f7fa;
+      border: 1px solid #00acc1;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .answer:hover {
+      background: #b2ebf2;
+    }
+    #dashboard {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    #start-screen {
+      padding: 100px 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="start-screen">
+  <h1>ברוך הבא לחידון התנ״ך</h1>
+  <button onclick="startQuiz()">התחל</button>
+</div>
+
+<div id="quiz" style="display:none">
+  <div id="dashboard">שאלה <span id="question-number">1</span> מתוך <span id="total-questions">0</span></div>
+  <div id="timer-bar-container"><div id="timer-bar"></div></div>
+  <div id="question">שאלה תופיע כאן</div>
+  <div id="answers"></div>
+</div>
+
+<script>
+let questions = [];
+let currentQuestion = 0;
+let timerInterval;
+
+async function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.body.classList.add('stage-1');
+  const res = await fetch("1.json");
+  const data = await res.json();
+  questions = data.map(q => ({
+    text: q.question,
+    options: q.options,
+    correct: q.correct
+  }));
+  document.getElementById('total-questions').innerText = questions.length;
+  showQuestion();
+}
+
+function startTimer(duration = 20) {
+  let timer = duration;
+  const bar = document.getElementById('timer-bar');
+  clearInterval(timerInterval);
+  bar.style.width = '100%';
+  timerInterval = setInterval(() => {
+    timer--;
+    const pct = (timer / duration) * 100;
+    bar.style.width = pct + '%';
+    if (timer <= 0) {
+      clearInterval(timerInterval);
+      autoAdvance();
+    }
+  }, 1000);
+}
+
+function showQuestion() {
+  if (currentQuestion >= questions.length) {
+    document.getElementById('question').innerText = 'סיימת את החידון!';
+    document.getElementById('answers').innerHTML = '';
+    return;
+  }
+  const q = questions[currentQuestion];
+  document.getElementById('question-number').innerText = currentQuestion + 1;
+  document.getElementById('question').innerText = q.text;
+  const answers = document.getElementById('answers');
+  answers.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'answer';
+    btn.innerText = opt;
+    btn.onclick = () => {
+      clearInterval(timerInterval);
+      btn.style.backgroundColor = (i === q.correct) ? '#4caf50' : '#f44336';
+      Array.from(answers.children).forEach(el => el.onclick = null);
+      setTimeout(autoAdvance, 1000);
+    };
+    answers.appendChild(btn);
+  });
+  startTimer();
+}
+
+function autoAdvance() {
+  currentQuestion++;
+  showQuestion();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חידון התנ"ך הגדול</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        /* CSS בתוך תגית <style> */
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+        :root {
+            --primary-color: #4CAF50; /* ירוק */
+            --secondary-color: #388E3C; /* ירוק כהה */
+            --accent-color: #FFC107; /* צהוב */
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Varela Round', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow: hidden; /* למנוע גלילה בגלל תמונות רקע */
+            direction: rtl; /* כיווניות מימין לשמאל */
+            text-align: right; /* יישור טקסט לימין */
+        }
+
+        #quiz-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            position: relative;
+            overflow: hidden; /* כדי שהמסכים יחתכו כמו שצריך */
+            min-height: 500px; /* גובה מינימלי למיכל */
+            display: flex; /* לניהול המסכים */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-image 0.5s ease-in-out; /* אנימציית מעבר תמונת רקע */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* מסכים */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            position: relative; /* למסך הפעיל */
+        }
+
+        /* מסך פתיח */
+        #intro-screen {
+            text-align: center;
+        }
+
+        #intro-screen .intro-title {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        #intro-screen .intro-description {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* כפתורים כלליים */
+        .main-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .main-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .main-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* דשבורד */
+        #dashboard {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        #dashboard span {
+            padding: 0 10px;
+        }
+
+        /* אזור שאלות */
+        #question-area {
+            width: 100%;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: right;
+        }
+
+        #question-text {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .option-btn:hover {
+            background-color: #e0e0e0;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.selected {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #333;
+            font-weight: bold;
+        }
+
+        .option-btn.correct {
+            background-color: #a5d6a7; /* ירוק בהיר */
+            border-color: #4CAF50;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #ef9a9a; /* אדום בהיר */
+            border-color: #F44336;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #feedback {
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* מסך סיום */
+        #end-screen {
+            text-align: center;
+        }
+
+        #end-screen .end-title {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        #end-screen .end-score-message {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        #end-screen #final-score {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* רספונסיביות */
+        @media (max-width: 600px) {
+            #quiz-container {
+                padding: 15px;
+                width: 95%;
+                min-height: 400px;
+            }
+
+            #intro-screen .intro-title {
+                font-size: 2em;
+            }
+
+            #intro-screen .intro-description {
+                font-size: 1em;
+            }
+
+            #dashboard {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #dashboard span {
+                margin-bottom: 5px;
+            }
+
+            #question-text {
+                font-size: 1.5em;
+            }
+
+            .main-btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+
+        <div id="intro-screen" class="screen active">
+            <h1 class="intro-title">ברוכים הבאים לחידון התנ"ך הגדול!</h1>
+            <p class="intro-description">התכוננו למסע מרתק בן 10 שלבים, שבכל אחד מהם תפגשו 10 שאלות מאתגרות שיבחנו את ידע התנ"ך שלכם.</p>
+            <button id="start-quiz-btn" class="main-btn">התחל את החידון</button>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div id="dashboard">
+                <span id="current-stage">שלב: 1</span>
+                <span id="score">ניקוד: 0</span>
+                <span id="question-counter">שאלה: 1/10</span>
+            </div>
+            <div id="question-area">
+                <h2 id="question-text"></h2>
+                <div id="options-container">
+                    </div>
+                <button id="submit-answer-btn" class="main-btn" disabled>בדוק תשובה</button>
+                <div id="feedback"></div>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h2 class="end-title">החידון הסתיים!</h2>
+            <p class="end-score-message">הניקוד הסופי שלך: <span id="final-score"></span> מתוך 100</p>
+            <button id="restart-quiz-btn" class="main-btn">שחק שוב</button>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript בתוך תגית <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizContainer = document.getElementById('quiz-container');
+            const introScreen = document.getElementById('intro-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const endScreen = document.getElementById('end-screen');
+
+            const startQuizBtn = document.getElementById('start-quiz-btn');
+            const submitAnswerBtn = document.getElementById('submit-answer-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+
+            const currentStageSpan = document.getElementById('current-stage');
+            const scoreSpan = document.getElementById('score');
+            const questionCounterSpan = document.getElementById('question-counter');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackDiv = document.getElementById('feedback');
+            const finalScoreSpan = document.getElementById('final-score');
+
+            let currentStage = 1;
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let questionsData = []; // יכיל את כל השאלות של השלב הנוכחי
+            let selectedOption = null; // האפשרות שנבחרה ע"י המשתמש
+
+            const totalStages = 10;
+            const questionsPerStage = 10;
+
+            // מערך של תמונות רקע (עליך להחליף בנתיבים הנכונים שלך בתיקיית images/)
+            const backgroundImages = [
+                'url("images/background1.jpg")',
+                'url("images/background2.jpg")',
+                'url("images/background3.jpg")',
+                'url("images/background4.jpg")',
+                'url("images/background5.jpg")',
+                'url("images/background6.jpg")',
+                'url("images/background7.jpg")',
+                'url("images/background8.jpg")',
+                'url("images/background9.jpg")',
+                'url("images/background10.jpg")'
+            ];
+
+            // פונקציה לטעינת שאלות מקובץ JSON
+            async function loadQuestions(stage) {
+                try {
+                    const response = await fetch(`questions/stage${stage}.json`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const allQuestions = await response.json();
+                    // בחירת 10 שאלות אקראיות מתוך השאלות הקיימות בשלב
+                    questionsData = shuffleArray(allQuestions).slice(0, questionsPerStage);
+                    console.log(`שאלות נטענו לשלב ${stage}:`, questionsData);
+                    return true;
+                } catch (error) {
+                    console.error('שגיאה בטעינת שאלות:', error);
+                    alert('אירעה שגיאה בטעינת השאלות. אנא נסה שוב מאוחר יותר.');
+                    return false;
+                }
+            }
+
+            // פונקציה לערבוב מערך (לשאלות אקראיות)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // פונקציה להצגת השאלה הנוכחית
+            function displayQuestion() {
+                if (currentQuestionIndex < questionsData.length) {
+                    const question = questionsData[currentQuestionIndex];
+                    questionText.textContent = question.question;
+                    optionsContainer.innerHTML = ''; // נקה אפשרויות קודמות
+                    feedbackDiv.textContent = ''; // נקה פידבק קודם
+                    submitAnswerBtn.disabled = true; // נטרל כפתור בדיקה עד לבחירת תשובה
+                    selectedOption = null; // אפס בחירה
+
+                    // ערבב את האפשרויות
+                    const shuffledOptions = shuffleArray([...question.options]);
+
+                    shuffledOptions.forEach(option => {
+                        const button = document.createElement('button');
+                        button.classList.add('option-btn');
+                        button.textContent = option;
+                        button.addEventListener('click', () => selectOption(button, option));
+                        optionsContainer.appendChild(button);
+                    });
+                    updateDashboard();
+                } else {
+                    // כל השאלות לשלב זה נגמרו
+                    moveToNextStage();
+                }
+            }
+
+            // פונקציה לבחירת תשובה
+            function selectOption(button, option) {
+                // הסר את הקלאס 'selected' מכל הכפתורים
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'correct', 'incorrect');
+                });
+                // הוסף את הקלאס 'selected' לכפתור שנבחר
+                button.classList.add('selected');
+                selectedOption = option;
+                submitAnswerBtn.disabled = false; // אפשר את כפתור הבדיקה
+            }
+
+            // פונקציה לבדיקת תשובה
+            function checkAnswer() {
+                if (selectedOption === null) {
+                    feedbackDiv.textContent = "אנא בחר תשובה לפני הבדיקה.";
+                    feedbackDiv.style.color = 'red';
+                    return;
+                }
+
+                const question = questionsData[currentQuestionIndex];
+                const allOptionBtns = document.querySelectorAll('.option-btn');
+                let isCorrect = false;
+
+                allOptionBtns.forEach(btn => {
+                    if (btn.textContent === question.answer) {
+                        btn.classList.add('correct'); // סמן את התשובה הנכונה
+                    }
+                    if (btn.classList.contains('selected') && btn.textContent === question.answer) {
+                        btn.classList.add('correct');
+                        feedbackDiv.textContent = "תשובה נכונה!";
+                        feedbackDiv.style.color = 'green';
+                        score += 1; // 1 נקודה לשאלה
+                        isCorrect = true;
+                    } else if (btn.classList.contains('selected') && btn.textContent !== question.answer) {
+                        btn.classList.add('incorrect');
+                        feedbackDiv.textContent = "תשובה שגויה. התשובה הנכונה הייתה: " + question.answer;
+                        feedbackDiv.style.color = 'red';
+                    }
+                    btn.disabled = true; // נטרל את כל כפתורי האפשרויות לאחר בדיקה
+                });
+
+                submitAnswerBtn.textContent = "השאלה הבאה";
+                submitAnswerBtn.removeEventListener('click', checkAnswer);
+                submitAnswerBtn.addEventListener('click', nextQuestion);
+                submitAnswerBtn.disabled = false; // אפשר את כפתור "השאלה הבאה"
+            }
+
+            // פונקציה למעבר לשאלה הבאה
+            function nextQuestion() {
+                currentQuestionIndex++;
+                submitAnswerBtn.textContent = "בדוק תשובה";
+                submitAnswerBtn.removeEventListener('click', nextQuestion);
+                submitAnswerBtn.addEventListener('click', checkAnswer);
+                submitAnswerBtn.disabled = true; // נטרל עד לבחירה חדשה
+
+                if (currentQuestionIndex < questionsData.length) {
+                    displayQuestion();
+                } else {
+                    moveToNextStage();
+                }
+            }
+
+            // פונקציה לעדכון הדשבורד
+            function updateDashboard() {
+                currentStageSpan.textContent = `שלב: ${currentStage}`;
+                scoreSpan.textContent = `ניקוד: ${score}`;
+                questionCounterSpan.textContent = `שאלה: ${currentQuestionIndex + 1}/${questionsPerStage}`;
+            }
+
+            // פונקציה למעבר לשלב הבא או סיום החידון
+            async function moveToNextStage() {
+                currentStage++;
+                currentQuestionIndex = 0; // אפס את מונה השאלות לשלב החדש
+                if (currentStage <= totalStages) {
+                    const loaded = await loadQuestions(currentStage);
+                    if (loaded) {
+                        applyStageBackground(currentStage);
+                        displayQuestion();
+                    } else {
+                        // אם הטעינה נכשלה, נסיים את החידון או נציג הודעת שגיאה
+                        endQuiz();
+                    }
+                } else {
+                    endQuiz();
+                }
+            }
+
+            // פונקציה ליישום תמונת רקע לשלב
+            function applyStageBackground(stageNum) {
+                if (backgroundImages[stageNum - 1]) {
+                    quizContainer.style.backgroundImage = backgroundImages[stageNum - 1];
+                    quizContainer.style.backgroundRepeat = 'no-repeat'; // וודא שאין חזרתיות
+                } else {
+                    quizContainer.style.backgroundImage = 'none'; // אם אין תמונה, הסר אותה
+                }
+            }
+
+            // פונקציה להתחלת החידון
+            async function startQuiz() {
+                introScreen.classList.remove('active');
+                quizScreen.classList.add('active');
+                currentStage = 1;
+                score = 0;
+                currentQuestionIndex = 0;
+                const loaded = await loadQuestions(currentStage);
+                if (loaded) {
+                    applyStageBackground(currentStage);
+                    displayQuestion();
+                } else {
+                    // אם טעינת השלב הראשון נכשלה, חזור למסך הפתיח או הצג שגיאה
+                    introScreen.classList.add('active');
+                    quizScreen.classList.remove('active');
+                }
+            }
+
+            // פונקציה לסיום החידון
+            function endQuiz() {
+                quizScreen.classList.remove('active');
+                endScreen.classList.add('active');
+                finalScoreSpan.textContent = score;
+            }
+
+            // פונקציה להפעלה מחדש של החידון
+            function restartQuiz() {
+                endScreen.classList.remove('active');
+                introScreen.classList.add('active');
+                // מצב החידון יאופס ב-startQuiz()
+            }
+
+            // אירועים
+            startQuizBtn.addEventListener('click', startQuiz);
+            submitAnswerBtn.addEventListener('click', checkAnswer);
+            restartQuizBtn.addEventListener('click', restartQuiz);
+
+            // התחלה: הצג את מסך הפתיח
+            introScreen.classList.add('active');
+        });
+    </script>
+</body>
+</html>

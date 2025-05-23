@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html lang="he">
+<head>
+<meta charset="utf-8"/>
+<title>חידון התנ"ך</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2&amp;display=swap" rel="stylesheet"/>
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+  font-family: 'Baloo 2', cursive;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-image: inherit;
+  background-size: cover !important; /* כאן העדכון - תמיד cover */
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  opacity: 1;
+  z-index: -1;
+  pointer-events: none;
+}
+#startScreen, #stageIntro, #quizContainer, #failScreen, #successScreen, #endScreen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+.button {
+  margin-top: 20px;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  background: linear-gradient(to right, #4CAF50, #2E8B57);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+:root {
+  --quiz-width: 860px;
+}
+#questionText {
+  font-size: 2.3rem;
+  color: #0d47a1;
+  font-weight: bold;
+  margin: 12px 0 24px 0;
+  width: var(--quiz-width);
+  max-width: 98vw;
+  margin-right: auto;
+  margin-left: auto;
+  background: linear-gradient(135deg, #f6fdff 90%, #e0f7fa 100%);
+  border: 2.5px solid #80deea;
+  border-radius: 22px;
+  box-shadow: 0 1px 14px #b2ebf240;
+  padding: 23px 17px;
+  transition: background 0.23s;
+}
+.answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 44px;
+  justify-content: center;
+  width: var(--quiz-width);
+  max-width: 98vw;
+  margin: 36px auto 36px auto;
+}
+.answer {
+  background: linear-gradient(120deg, #ffffff 94%, #e0f7fa 100%);
+  border: 2px solid #b2ebf2;
+  border-radius: 13px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 1.35rem;
+  min-height: 44px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, color 0.17s, border 0.22s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  width: 96%;
+  margin: 0 auto;
+  color: #003b47;
+}
+.answer:hover {
+  background: #e0f7fa;
+}
+.correct {
+  background: #007e33 !important;
+  color: #fff !important;
+  border: 2px solid #006221 !important;
+}
+.wrong {
+  background: #b71c1c !important;
+  color: #fff !important;
+  border: 2px solid #910d0d !important;
+}
+#progressBarContainer {
+  width: var(--quiz-width);
+  max-width: 98vw;
+  height: 16px;
+  background-color: #c8e6c9;
+  border-radius: 7px;
+  margin: 16px auto 18px auto;
+  overflow: hidden;
+  box-shadow: 0 1px 8px rgba(0,172,193,0.12);
+}
+#progressBar {
+  height: 100%;
+  width: 100%;
+  background-color: #2e7d32;
+  transition: width 1s linear, background-color 0.5s ease;
+}
+#dashboard {
+  width: var(--quiz-width);
+  max-width: 98vw;
+  margin: 0 auto 12px auto;
+  background: #0097a7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 0;
+  font-size: 1.14rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.17);
+}
+#correctAnswersInfo {
+  margin-top: 4px;
+  font-size: 1.16rem;
+  font-weight: normal;
+  color: #fffbe2;
+  text-shadow: 0 1px 2px #01579b55;
+}
+#skipWrapper {
+  margin: 10px auto 0;
+  width: var(--quiz-width);
+  max-width: 98vw;
+  text-align: center;
+}
+#skipButton {
+  padding: 11px 22px;
+  font-size: 1.09rem;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.19);
+  margin-bottom: 10px;
+  width: 52%;
+  min-width: 180px;
+  max-width: 350px;
+}
+#skipButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+#failScreen h2 {
+  font-size: 3.1rem;
+  color: #f44336;
+  text-shadow: 0 2px 10px #fff, 0 1px 4px #f44336;
+  font-family: 'Baloo 2', cursive;
+}
+#failScreen #failText {
+  font-size: 2rem;
+  margin: 22px 0 28px 0;
+  color: #333;
+  background: rgba(255,255,255,0.83);
+  padding: 20px 36px;
+  border-radius: 24px;
+  box-shadow: 0 1px 12px #f443363d;
+  font-family: 'Baloo 2', cursive;
+}
+#failScreen #retryBtn {
+  font-size: 2.2rem;
+  padding: 19px 66px;
+  background: linear-gradient(to right,#00bcd4,#2196f3);
+  color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px #2196f34a;
+  font-family: 'Baloo 2', cursive;
+}
+#successScreen h2 {
+  font-size: 3.1rem;
+  color: #ff9800;
+  font-weight: bold;
+  text-shadow: 0 2px 10px #fff,0 1px 4px #ff9800;
+  font-family: 'Baloo 2', cursive;
+  margin-bottom:24px;
+}
+#successScreen #nextStageBtn {
+  font-size:2.2rem;
+  padding:19px 66px;
+  background:linear-gradient(to right,#ff9800,#ffb347);
+  color:#fff;
+  border-radius:14px;
+  box-shadow:0 2px 10px #ff980054;
+  font-family: 'Baloo 2', cursive;
+}
+
+/* --- עיצוב דף הסיום --- */
+#endScreen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: transparent;
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+}
+#endScreen .end-title {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-size: 4rem;
+  color: #8e3200;
+  margin-bottom: 28px;
+  margin-top: 36px;
+  text-shadow: 0 2px 10px #fff6, 0 1px 4px #61380B;
+  letter-spacing: 2px;
+}
+#endScreen .end-subtitle {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-size: 2.3rem;
+  color: #17594A;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 10px #fff6;
+}
+#endScreen .end-congrats {
+  font-size: 2.2rem;
+  color: #007e33;
+  font-family: 'Baloo 2', cursive;
+  margin-bottom: 36px;
+}
+#endScreen .button {
+  font-size: 1.8rem;
+  padding: 16px 48px;
+  background: linear-gradient(to right, #007e33, #4CAF50);
+  color: #fff;
+  border-radius: 16px;
+  margin-top: 32px;
+  font-family: 'Baloo 2', cursive;
+}
+#fireworksCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 1100;
+  background: transparent;
+}
+@media (max-width: 900px) {
+  :root { --quiz-width: 99vw; }
+  #questionText, .answer-grid, #progressBarContainer, #dashboard, #skipWrapper { width: 99vw !important; max-width: 99vw !important; }
+  #endScreen .end-title { font-size: 2.1rem;}
+  #endScreen .end-subtitle { font-size: 1.3rem;}
+}
+</style>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="favicon.png" rel="alternate icon" type="image/png"/>
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+</head>
+<body>
+
+<button id="muteButton" onclick="toggleMute()" style="position: fixed; top: 12px; left: 12px; z-index: 2000; background: #ffffffcc; border: 1px solid #999; padding: 6px 12px; font-size: 0.95rem; border-radius: 8px; cursor: pointer;">
+🔇 השתק
+</button>
+
+<div id="startScreen">
+<button class="button" onclick="showStageIntro()">התחל</button>
+</div>
+<div id="stageIntro">
+<button class="button" onclick="startQuiz()">התחל שלב</button>
+</div>
+<div id="quizContainer">
+<div id="questionText"></div>
+<div class="answer-grid" id="answers"></div>
+<div id="progressBarContainer"><div id="progressBar"></div></div>
+<div id="skipWrapper"><button disabled="" id="skipButton" onclick="skipQuestion()">דלג שאלה (50 נקודות)</button></div>
+<div id="dashboard">
+<div id="quizInfo">
+      שלב: <span id="stageNum">1</span> |
+      שאלה: <span id="questionNum">1</span> מתוך 10 |
+      ניקוד: <span id="scoreCount">0</span> |
+      זמן נותר: <span id="timeLeft">20</span> שניות
+  </div>
+<div id="correctAnswersInfo"></div>
+</div>
+</div>
+<div id="failScreen">
+<h2 id="failTitle">
+    לא עברת
+  </h2>
+<div id="failText">
+    בשביל לעבור לשלב הבא צריך לענות לפחות תשע תשובות נכונות.<br/>אנא נסה שוב.
+  </div>
+<button class="button" id="retryBtn" onclick="retryStage()">שחק שוב</button>
+</div>
+<div id="successScreen">
+<canvas id="fireworksCanvas" style="display:none;"></canvas>
+<h2 id="successTitle">
+    עברת בהצלחה את שלב <span id="successStageNum"></span>
+</h2>
+<button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+</div>
+<!-- דף סיום חגיגי -->
+<div id="endScreen">
+<canvas id="endFireworksCanvas"></canvas>
+<div class="end-title">סיימת בהצלחה!</div>
+<div class="end-subtitle">עברת את כל התנ״ך!</div>
+<div class="end-congrats">כל הכבוד!</div>
+<button class="button" onclick="restartQuiz()">חזור להתחלה</button>
+</div>
+<script>
+function setBackgroundOpacity(val) {
+  let styleEl = document.getElementById("dynamicBgOpacity");
+  if (!styleEl) {
+    styleEl = document.createElement("style");
+    styleEl.id = "dynamicBgOpacity";
+    document.head.appendChild(styleEl);
+  }
+  styleEl.textContent = `body::before { opacity: ${val} !important; }`;
+}
+setBackgroundOpacity(1);
+
+let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
+
+function updateBackground() {
+  document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
+  document.body.style.backgroundSize = 'cover'; // כאן העדכון
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundPosition = 'center center';
+  document.body.style.backgroundAttachment = 'fixed';
+}
+function showStartScreen() {
+  setBackgroundOpacity(1);
+  document.body.style.backgroundImage = "url('backgrounds/main.jpg')";
+  document.body.style.backgroundSize = 'cover'; // כאן העדכון
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundPosition = 'center center';
+  document.body.style.backgroundAttachment = 'fixed';
+  document.getElementById('startScreen').style.display = 'flex';
+  document.getElementById('stageIntro').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('failScreen').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  playIntroMusic();
+}
+function showStageIntro() {
+  updateBackground();
+  stopAllSounds();
+  playGameMusic();
+  setBackgroundOpacity(1);
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('stageIntro').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('skipButton').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('failScreen').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('successTitle').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  playIntroMusic();
+}
+function startQuiz() {
+  // ביטול אנימציה משלב קודם אם קיימת
+  const animContainer = document.getElementById("stage2AnimationContainer");
+  if (animContainer) animContainer.remove();
+  updateBackground();
+  stopAllSounds();
+  playGameMusic();  // רענון רקע מחדש באופן מיידי
+  setBackgroundOpacity(0.75);
+  document.getElementById('stageIntro').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('skipButton').style.display = 'inline-block';
+  document.getElementById('failScreen').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  playIntroMusic();
+  updateBackground();
+  stopAllSounds();
+  playGameMusic();
+  loadStage();
+}
+function loadStage() {
+  fetch(stage + ".json").then(res => res.json()).then(data => {
+    shuffleArray(data);
+    questions = data.slice(0, 10);
+    current = 0;
+    correct = 0;
+    showQuestion();
+  });
+}
+function showQuestion() {
+  setBackgroundOpacity(0.75);
+  clearInterval(timer); // מנקה כל טיימר קודם - עדכון חשוב!
+  if (current >= 10) {
+    document.getElementById('skipButton').style.display = 'none';
+    if (correct >= 9) {
+      score += 10;
+      showSuccessScreen();
+    } else {
+      showFailScreen();
+    }
+    return;
+  }
+  document.getElementById('skipButton').style.display = score >= 50 ? 'inline-block' : 'none';
+  const q = questions[current];
+  shuffleQuestionAnswers(q);
+  document.getElementById('questionText').textContent = q.question;
+  const answersDiv = document.getElementById('answers');
+  answersDiv.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'answer';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      clearInterval(timer); // מנקה טיימר מיד בלחיצה - עדכון חשוב!
+      const isCorrect = i === q.correct;
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      
+if (isCorrect) {
+  playSuccessSound();
+} else {
+  playFailSound();
+}
+
+      if (isCorrect) { score += 5; correct++; } else { score -= 5; }
+      setTimeout(() => { current++; showQuestion(); }, 800);
+    };
+    answersDiv.appendChild(btn);
+  });
+  startTimer();
+  updateDashboard();
+}
+function skipQuestion() {
+  if (score >= 50) {
+    clearInterval(timer);
+    score -= 50;
+    correct++;
+    current++;
+    showQuestion();
+  }
+}
+function startTimer() {
+  clearInterval(timer); // מנקה טיימר ישן לפני יצירת חדש - עדכון קריטי!
+  if (stage <= 3) timeLeft = 20;
+  else if (stage <= 6) timeLeft = 15;
+  else timeLeft = 12;
+  const initialTime = timeLeft;
+  const progressBar = document.getElementById('progressBar');
+  progressBar.style.width = '100%';
+  progressBar.style.backgroundColor = '#2e7d32';
+  document.getElementById('timeLeft').textContent = timeLeft;
+  updateDashboard();
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timeLeft').textContent = timeLeft;
+    updateDashboard();
+    progressBar.style.width = ((timeLeft / initialTime) * 100) + '%';
+    if (timeLeft <= 5) progressBar.style.backgroundColor = '#f44336';
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      score -= 5;
+      current++;
+      showQuestion();
+    }
+  }, 1000);
+}
+function getCorrectText(n) {
+  if (n === 0) return 'אין תשובות נכונות';
+  if (n === 1) return '1 תשובה נכונה';
+  if ([2,3,4].includes(n)) return n + ' תשובות נכונות';
+  return n + ' תשובות נכונות';
+}
+function updateDashboard() {
+  document.getElementById("stageNum").textContent = stage;
+  document.getElementById("questionNum").textContent = current + 1;
+  document.getElementById("scoreCount").textContent = score;
+  document.getElementById("timeLeft").textContent = timeLeft;
+  const skipBtn = document.getElementById("skipButton");
+  if (skipBtn) {
+    skipBtn.disabled = score < 50;
+  }
+  document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
+}
+function showFailScreen() {
+  setBackgroundOpacity(1);
+  clearInterval(timer); // חשוב - מנקה טיימר שנשאר!
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('failScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  playIntroMusic();
+}
+function retryStage() {
+  clearInterval(timer);
+  stopAllSounds();
+  playGameMusic();
+  setBackgroundOpacity(0.75);
+  document.getElementById('failScreen').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'block';
+  loadStage();
+}
+function showSuccessScreen() {
+  setBackgroundOpacity(1);
+  clearInterval(timer); // תמיד לוודא שאין טיימר פעיל
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  playIntroMusic();
+  document.getElementById('successStageNum').textContent = stage;
+  if (stage === 1) {
+    runStage1SuccessEffect();
+  }
+  else if (stage === 2) {
+    runStage2SuccessEffect();
+  } else if (stage >= 3 && stage <= 6) {
+    loadStageEffect(stage);
+  } else {
+    startFireworks("fireworksCanvas", 2000);
+  }
+}
+function goToNextStage() {
+  stage++;
+  if (stage > 10) {
+    showEndScreen();
+    return;
+  }
+  document.getElementById('successScreen').style.display = 'none';
+  showStageIntro();
+}
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+}
+
+function shuffleQuestionAnswers(q) {
+
+  const optionsWithFlag = q.options.map((opt, index) => ({
+    text: opt,
+    isCorrect: index === q.correct
+  }));
+
+  for (let i = optionsWithFlag.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [optionsWithFlag[i], optionsWithFlag[j]] = [optionsWithFlag[j], optionsWithFlag[i]];
+  }
+
+  q.options = optionsWithFlag.map(o => o.text);
+  q.correct = optionsWithFlag.findIndex(o => o.isCorrect);
+
+}
+
+showStartScreen();
+function startFireworks(canvasId, ms) {
+  let canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  canvas.style.display = "block";
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let ctx = canvas.getContext("2d");
+  let fireworks = [];
+  let running = true;
+
+  function randomColor() {
+    let colors = ["#fd1b53", "#fdc500", "#43ddff", "#baff29", "#ff6e6c", "#ffb340", "#a66cff"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+  function Firework() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height;
+    this.targetY = 200 + Math.random() * (canvas.height/2-100);
+    this.color = randomColor();
+    this.exploded = false;
+    this.particles = [];
+    this.radius = 60 + Math.random()*30;
+    this.vy = -12 - Math.random()*4;
+    this.vx = (Math.random()-0.5)*4;
+    this.size = 3;
+    this.opacity = 1;
+  }
+  Firework.prototype.update = function() {
+    if (!this.exploded) {
+      this.y += this.vy;
+      this.x += this.vx;
+      this.vy += 0.2;
+      if (this.y <= this.targetY) {
+        this.exploded = true;
+        for (let i=0; i<50; i++) {
+          let angle = (Math.PI*2)*i/50;
+          let speed = 3 + Math.random()*2;
+          this.particles.push({
+            x: this.x, y: this.y,
+            vx: Math.cos(angle)*speed,
+            vy: Math.sin(angle)*speed,
+            alpha: 1
+          });
+        }
+      }
+    } else {
+      this.particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.alpha -= 0.016;
+      });
+      this.particles = this.particles.filter(p=>p.alpha>0);
+    }
+  };
+  Firework.prototype.draw = function() {
+    if (!this.exploded) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = this.opacity;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 24;
+      ctx.fill();
+      ctx.restore();
+    } else {
+      this.particles.forEach(p=>{
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 18;
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+  };
+
+  function animate() {
+    if (!running) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if (fireworks.length < 5 && Math.random()<0.08) fireworks.push(new Firework());
+    fireworks.forEach(fw=>{fw.update();fw.draw();});
+    fireworks = fireworks.filter(fw=>(!fw.exploded)||fw.particles.length>0);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  setTimeout(()=>{
+    running = false;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    canvas.style.display = "none";
+  }, ms);
+}
+function showEndScreen() {
+  setBackgroundOpacity(1);
+  clearInterval(timer); // מנקה טיימר אחרון - סופר חשוב!
+  document.body.style.backgroundImage = "url('backgrounds/end.jpg')";
+  document.body.style.backgroundSize = 'cover'; // כאן העדכון
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundPosition = 'center center';
+  document.body.style.backgroundAttachment = 'fixed';
+
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('stageIntro').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('failScreen').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'flex';
+
+  startFireworks("endFireworksCanvas", 5000);
+}
+function restartQuiz() {
+  stage = 1;
+  score = 0;
+  current = 0;
+  correct = 0;
+  setBackgroundOpacity(1);
+  clearInterval(timer); // מנקה הכל!
+  showStartScreen();
+}
+window.addEventListener('resize',()=>{
+  let fcs = document.getElementById('fireworksCanvas');
+  if (fcs) {
+    fcs.width = window.innerWidth;
+    fcs.height = window.innerHeight;
+  }
+  let efc = document.getElementById('endFireworksCanvas');
+  if (efc) {
+    efc.width = window.innerWidth;
+    efc.height = window.innerHeight;
+  }
+});
+</script>
+<script src="stage1-effect.js"></script>
+<script src="stage2-effect.js"></script>
+<script>
+function loadStageEffect(stageNum) {
+  const script = document.createElement('script');
+  script.src = `stage${stageNum}.js`;
+  script.onload = () => {
+    const funcName = `showStage${stageNum}Animation`;
+    if (typeof window[funcName] === "function") {
+      window[funcName]();
+    }
+  };
+  document.body.appendChild(script);
+}
+</script>
+
+
+
+
+  <script src="sound_manager.js"></script>
+
+<script>
+let isMuted = false;
+function toggleMute() {
+  isMuted = !isMuted;
+  const button = document.getElementById("muteButton");
+  button.innerText = isMuted ? "🔊 הפעל צלילים" : "🔇 השתק";
+  Object.values(sounds).forEach(sound => {
+    sound.muted = isMuted;
+  });
+}
+</script>
+
+</body>
+</html>

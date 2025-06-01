@@ -856,6 +856,29 @@ function toggleMute() {
   });
 }
 </script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
+    authDomain: "hidon1-e4c91.firebaseapp.com",
+    projectId: "hidon1-e4c91",
+    storageBucket: "hidon1-e4c91.firebasestorage.app",
+    messagingSenderId: "411517496015",
+    appId: "1:411517496015:web:2d9c176783d062110465ba",
+    measurementId: "G-FWTSZNY72T"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+  
 </body>
 </html>

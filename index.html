@@ -451,25 +451,6 @@ function showStartScreen() {
   document.getElementById('endScreen').style.display = 'none';
   playIntroMusic();
 }
-function showStageIntro() {
-if(document.getElementById('welcomeBanner')) {
-  document.getElementById('welcomeBanner').classList.add('hide');
-}
-  updateBackground();
-  stopAllSounds();
-  playGameMusic();
-  setBackgroundOpacity(1);
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('stageIntro').style.display = 'flex';
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('skipButton').style.display = 'none';
-  document.getElementById('quizContainer').style.display = 'none';
-  document.getElementById('failScreen').style.display = 'none';
-  document.getElementById('successScreen').style.display = 'none';
-  document.getElementById('successTitle').style.display = 'none';
-  document.getElementById('endScreen').style.display = 'none';
-  playIntroMusic();
-}
 function startQuiz() {
   // ביטול אנימציה משלב קודם אם קיימת
   const animContainer = document.getElementById("stage2AnimationContainer");

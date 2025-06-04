@@ -112,7 +112,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <div id="authContainer">
+    <div id="authContainer" style="display:none">
     <h2 id="formTitle">התחברות לאתר</h2>
     <div id="errorMsg" class="errorMsg"></div>
     <input class="inputField" id="usernameField" placeholder="שם משתמש" style="display:none">
@@ -246,6 +246,7 @@
         showUser(user);
    window.parent.postMessage('authComplete', '*');
       } else {
+        document.getElementById('authContainer').style.display = 'block';
         emailField.style.display = passwordField.style.display =
           submitBtn.style.display = googleBtn.style.display = toggleModeBtn.style.display = "";
         userInfo.style.display = logoutBtn.style.display = "none";

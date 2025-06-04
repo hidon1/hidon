@@ -244,6 +244,7 @@
     auth.onAuthStateChanged((user) => {
       if (user) {
         showUser(user);
+   window.parent.postMessage('authComplete', '*');
       } else {
         emailField.style.display = passwordField.style.display =
           submitBtn.style.display = googleBtn.style.display = toggleModeBtn.style.display = "";

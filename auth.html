@@ -184,6 +184,7 @@
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
           await userCredential.user.updateProfile({ displayName: username });
           showUser(userCredential.user);
+	window.parent.postMessage('authComplete', '*');
         } catch (err) {
           errorMsg.textContent = err.message;
         }
@@ -191,6 +192,7 @@
         try {
           const userCredential = await auth.signInWithEmailAndPassword(email, password);
           showUser(userCredential.user);
+	window.parent.postMessage('authComplete', '*');
         } catch (err) {
           errorMsg.textContent = err.message;
         }
@@ -210,6 +212,7 @@
           result = await auth.signInWithPopup(provider);
         }
         showUser(result.user);
+	  window.parent.postMessage('authComplete', '*');
       } catch (err) {
         errorMsg.textContent = err.message;
       }

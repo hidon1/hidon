@@ -252,7 +252,8 @@
 	document.getElementById('skipBtn').onclick = function() {
   // הסתרת הבאנר
   document.getElementById('authContainer').style.display = 'none';
-  // אפשרות להחזיר את הדף הראשי (אם יש iframe או אלמנט אחר)
+ window.parent.postMessage('authComplete', '*');
+
   // window.parent.postMessage('skipAuth', '*');
 };
 auth.onAuthStateChanged((user) => {

@@ -918,7 +918,6 @@ function openAuthBanner() {
 window.addEventListener("message", function(event) {
   // אפשר להוסיף בדיקת event.origin לאבטחה!
   if(event.data === "authComplete") {
-  document.body.style.visibility = 'visible'; 
     document.getElementById('authOverlay').style.display = 'none';
     document.getElementById('authFrame').src = "";
     // הראה את מסך שלב

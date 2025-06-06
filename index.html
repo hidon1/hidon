@@ -2,6 +2,11 @@
 
 <html lang="he">
 <head>
+  <script>
+    if (!localStorage.getItem('userLoggedIn')) {
+      window.location.href = "auth.html";
+    }
+  </script>
   <title>משחק חידון התנ"ך לנוער | חידון תנ"ך מרתק ומהנה</title>
 <meta name="description" content="משחק חידון התנ"ך לנוער ולמשפחה, עם שאלות מהתנ"ך, שלבים מרתקים ודירוגים. כנסו עכשיו לבדוק את הידע שלכם וליהנות ממשחק תנ"כי ייחודי!">
 <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">

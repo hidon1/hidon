@@ -2,7 +2,9 @@
 
 <html lang="he">
 <head>
-
+  <style>
+    body { visibility: hidden; }
+  </style>
   <title>משחק חידון התנ"ך לנוער | חידון תנ"ך מרתק ומהנה</title>
 <meta name="description" content="משחק חידון התנ"ך לנוער ולמשפחה, עם שאלות מהתנ"ך, שלבים מרתקים ודירוגים. כנסו עכשיו לבדוק את הידע שלכם וליהנות ממשחק תנ"כי ייחודי!">
 <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
@@ -919,7 +921,7 @@ function openAuthBanner() {
 window.addEventListener("message", function(event) {
   // אפשר להוסיף בדיקת event.origin לאבטחה!
   if(event.data === "authComplete") {
-    // הסתר באנר הרשמה
+  document.body.style.visibility = 'visible'; 
     document.getElementById('authOverlay').style.display = 'none';
     document.getElementById('authFrame').src = "";
     // הראה את מסך שלב

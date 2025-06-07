@@ -10,9 +10,7 @@
 
   <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
   <link href="https://fonts.googleapis.com/css2?family=Alef:wght@700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap"
-        rel="stylesheet"
-        onload="document.body.style.visibility='visible'">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
 <style>
 #welcomeBanner {
   position: fixed;
@@ -365,6 +363,11 @@ body::before {
 }
 
 </style>
+  <script>
+  document.fonts.ready.then(function () {
+    document.body.style.visibility = "visible";
+  });
+</script>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="favicon.png" rel="alternate icon" type="image/png"/>
 <!-- <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/> -->

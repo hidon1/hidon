@@ -43,24 +43,32 @@
   pointer-events: none;
 }
 </style>
-
-<style>
-#successMessage {
+<style>#successMessage {
   position: fixed;
-  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 8rem;
-  color: #0047ab; /* כחול חזק */
-  font-family: 'Rubik Dirt', serif;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-  animation: blink 0.8s infinite alternate;
+  top: 6vh; /* חצי עליון של המסך */
+  transform: translateX(-50%);
+  min-width: 400px;
+  max-width: 95vw;
+  font-size: 7.5rem;
+  color: #0047ab;
+  font-family: 'Rubik Dirt', cursive;
+  background: linear-gradient(135deg, #b3f5ff 60%, #f3e8ff 100%);
+  border-radius: 160px 160px 90px 90px / 110px 110px 80px 80px;
+  box-shadow: 0 10px 44px #7b60c355;
+  padding: 50px 32px 28px 32px;
+  border: 5px solid #7657c2;
+  text-align: center;
+  line-height: 1.1;
+  animation: slow-blink 2.4s infinite alternate;
   display: none;
   z-index: 9999;
+  user-select: none;
 }
-@keyframes blink {
+
+@keyframes slow-blink {
   from { opacity: 1; }
-  to { opacity: 0; }
+  to   { opacity: 0.2; }
 }
 </style>
 <div id="successMessage">כל הכבוד! עברת בהצלחה.</div>

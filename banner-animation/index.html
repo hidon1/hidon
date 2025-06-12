@@ -64,7 +64,7 @@ let stopRotation = false;
 let arrivedCount = 0;
 
 loader.load('images/quiz-center.png', (texture) => {
-  texture.flipY = false;
+  texture.flipY = true;
   const material = new THREE.MeshStandardMaterial({
     map: texture,
     transparent: true,
@@ -91,7 +91,7 @@ loader.load('images/quiz-center.png', (texture) => {
 
   duplicatedElements.forEach((src, i) => {
     loader.load("images/" + src, (tex) => {
-      tex.flipY = false;
+      tex.flipY = true;
       const mat = new THREE.MeshBasicMaterial({
         map: tex,
         transparent: true,

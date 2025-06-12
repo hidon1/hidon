@@ -133,19 +133,26 @@ loader.load('images/quiz-center.png', (texture) => {
     });
   });
 });
-
-// === אפקט הדגשה על באנר ראשי ===
 function updateBannerHighlight() {
   if (!group) return;
   group.children.forEach((child) => {
     if (isClicked) {
-      child.material.emissive = new THREE.Color(0xffff55); // הדגשה חזקה במיוחד אחרי קליק
-      child.material.emissiveIntensity = 1.3;
+      child.material.color.set(0xcccccc); // כהה יותר (עומק)
+      child.material.opacity = 0.94;
+      child.scale.set(0.98, 0.98, 1); // מכווץ מעט
+      child.material.emissive = new THREE.Color(0x000000); // אין הדגשה בהירה
+      child.material.emissiveIntensity = 0;
     } else if (isHovered) {
-      child.material.emissive = new THREE.Color(0xffffee); // הדגשה רגילה בהובר
-      child.material.emissiveIntensity = 0.7;
+      child.material.color.set(0xdddddd); // טיפה כהה
+      child.material.opacity = 0.98;
+      child.scale.set(0.992, 0.992, 1); // טיפה שוקע
+      child.material.emissive = new THREE.Color(0x000000);
+      child.material.emissiveIntensity = 0;
     } else {
-      child.material.emissive = new THREE.Color(0x000000); // ללא הדגשה
+      child.material.color.set(0xffffff); // רגיל
+      child.material.opacity = 1;
+      child.scale.set(1, 1, 1);
+      child.material.emissive = new THREE.Color(0x000000);
       child.material.emissiveIntensity = 0;
     }
   });

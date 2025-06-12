@@ -136,21 +136,21 @@ function updateBannerHighlight() {
   if (!group) return;
   group.children.forEach((child) => {
     if (isClicked) {
-      child.material.color.set(0xcccccc); // כהה יותר (עומק)
+      child.material.color.set(0xcccccc);
       child.material.opacity = 0.94;
-      child.scale.set(0.98, 0.98, 1); // מכווץ מעט
-      child.material.emissive = new THREE.Color(0x000000); // אין הדגשה בהירה
+      child.scale.set(0.98, -0.98, 1); // *** שים לב למינוס ***
+      child.material.emissive = new THREE.Color(0x000000);
       child.material.emissiveIntensity = 0;
     } else if (isHovered) {
-      child.material.color.set(0xdddddd); // טיפה כהה
+      child.material.color.set(0xdddddd);
       child.material.opacity = 0.98;
-      child.scale.set(0.992, 0.992, 1); // טיפה שוקע
+      child.scale.set(0.992, -0.992, 1); // *** שים לב למינוס ***
       child.material.emissive = new THREE.Color(0x000000);
       child.material.emissiveIntensity = 0;
     } else {
-      child.material.color.set(0xffffff); // רגיל
+      child.material.color.set(0xffffff);
       child.material.opacity = 1;
-      child.scale.set(1, 1, 1);
+      child.scale.set(1, -1, 1); // *** שים לב למינוס ***
       child.material.emissive = new THREE.Color(0x000000);
       child.material.emissiveIntensity = 0;
     }

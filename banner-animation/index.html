@@ -47,7 +47,7 @@ const duplicatedElements = [];
 for (let i = 0; i < 3; i++) duplicatedElements.push(...baseElements);
 
 const totalElements = duplicatedElements.length;
-const iconSize = 0.45;
+const iconSize = 0.75;
 const bannerRadius = 1.0;
 const radius = bannerRadius + (iconSize / 2) - 0.08;
 const duration = 3000;
@@ -67,7 +67,7 @@ loader.load('images/quiz-center.png', (texture) => {
     side: THREE.DoubleSide
   });
 
-  const geometry = new THREE.PlaneGeometry(2, 2);
+  const geometry = new THREE.PlaneGeometry(3, 3);
   const front = new THREE.Mesh(geometry, material);
   front.scale.y = -1;
 

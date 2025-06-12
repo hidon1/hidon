@@ -98,7 +98,6 @@ loader.load('images/quiz-center.png', (texture) => {
       });
       const geo = new THREE.PlaneGeometry(iconSize, iconSize);
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.scale.y = -1;
 
       const startX = (Math.random() - 0.5) * 20;
       const startY = (Math.random() - 0.5) * 20;

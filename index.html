@@ -405,9 +405,7 @@ body::before {
 </div>
 
 <!-- מסך בין שלבים -->
-<div id="stageIntro" style="position: relative; text-align: center;">
-  
-  <!-- באנר עם אלמנטים -->
+<div id="stageIntro" style="display: block; position: relative; text-align: center;">
   <iframe
     src="banner-animation/index.html"
     style="
@@ -415,15 +413,12 @@ body::before {
       height: 500px;
       border: none;
       pointer-events: none;
-      position: absolute;
-      top: -520px;
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
+      margin-top: 30px;
       z-index: 10;"
     loading="lazy">
   </iframe>
 
-  <!-- כפתור התחלה -->
   <button class="button" onclick="startQuiz()" style="position: relative; z-index: 20;">
     התחל שלב
   </button>

@@ -74,10 +74,10 @@ loader.load('images/quiz-center.png', (texture) => {
 
   const geometry = new THREE.PlaneGeometry(4, 4);
   const front = new THREE.Mesh(geometry, material);
-  front.scale.y = -1;
+  front.scale.y = 1;
 
   const back = new THREE.Mesh(geometry, material.clone());
-  back.scale.set(-1, -1, 1);
+  back.scale.set(-1, 1, 1);
   back.position.z = -0.01;
 
   group = new THREE.Group();

@@ -406,17 +406,12 @@ body::before {
 
 <!-- מסך בין שלבים -->
 <div id="stageIntro" style="display: block; position: relative; text-align: center;">
-  <iframe
-    src="banner-animation/index.html"
-    style="
-      width: 100%;
-      height: 500px;
-      border: none;
-      position: relative;
-      margin-top: 30px;
-      z-index: 10;"
-    loading="lazy">
-  </iframe>
+ <iframe
+  src="banner-animation/index.html"
+  id="bannerIframe"
+  style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;"
+  loading="lazy">
+</iframe>
 
   <button class="button" onclick="startQuiz()" style="position: relative; z-index: 20;">
     התחל שלב
@@ -502,6 +497,14 @@ function showStartScreen() {
   playIntroMusic();
 }
 function showStageIntro() {
+  // רענון באנר האנימציה בכל שלב
+var bannerIframe = document.getElementById('bannerIframe');
+if (bannerIframe) {
+  bannerIframe.src = '';
+  setTimeout(() => {
+    bannerIframe.src = 'banner-animation/index.html';
+  }, 50);
+}
 if(document.getElementById('welcomeBanner')) {
   document.getElementById('welcomeBanner').classList.add('hide');
 }

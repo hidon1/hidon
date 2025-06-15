@@ -900,14 +900,13 @@ function toggleMute() {
 }
 </script>
 <script type="module">
-  // Import the functions you need from the SDKs you need
+  // ייבוא מה-SDKים של Firebase
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  // קונפיגורציית Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
     authDomain: "hidon1-e4c91.firebaseapp.com",
@@ -918,59 +917,62 @@ function toggleMute() {
     measurementId: "G-FWTSZNY72T"
   };
 
-  // Initialize Firebase
+  // אתחול Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
+
   // קוד פתיחת באנר הרשמה
-function openAuthBanner() {
-  // הסתרת באנר פתיחה
-  document.getElementById('welcomeBanner').classList.add('hide');
-  document.getElementById('startScreen').style.display = 'none';
-  // טען באנר הרשמה
-  document.getElementById('authOverlay').style.display = 'block';
-  document.getElementById('authFrame').src = "auth.html";
-}
-
-// מקבל הודעה מה-iframe כשההרשמה הסתיימה
-window.addEventListener("message", function(event) {
-  // אפשר להוסיף בדיקת event.origin לאבטחה!
-  if(event.data === "authComplete") {
-    document.getElementById('authOverlay').style.display = 'none';
-    document.getElementById('authFrame').src = "";
-    // הראה את מסך שלב
-    showStageIntro();
+  function openAuthBanner() {
+    document.getElementById('welcomeBanner').classList.add('hide');
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('authOverlay').style.display = 'block';
+    document.getElementById('authFrame').src = "auth.html";
   }
-});
-window.openAuthBanner = openAuthBanner;
 
-let coins = 0;
-let userId = null;
-let userCoinsRef = null;
+  window.openAuthBanner = openAuthBanner;
 
-// Load from Firebase if user is logged in
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    userId = user.uid;
-    userCoinsRef = firebase.database().ref('users/' + userId + '/coins');
-    userCoinsRef.once('value').then(snapshot => {
-      coins = snapshot.val() || 0;
-      updateCoinsDisplay();
-    });
+  // קבלת הודעה מה-iframe כשההרשמה הסתיימה
+  window.addEventListener("message", function(event) {
+    if (event.data === "authComplete") {
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('authFrame').src = "";
+      showStageIntro();
+    }
+  });
+
+  // משתנים גלובליים למטבעות
+  let coins = 0;
+  let userId = null;
+  let userCoinsRef = null;
+
+  // ברגע שהמשתמש מחובר - נטען את המטבעות
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      userId = user.uid;
+      userCoinsRef = ref(db, 'users/' + userId + '/coins');
+      get(userCoinsRef).then(snapshot => {
+        coins = snapshot.exists() ? snapshot.val() : 0;
+        updateCoinsDisplay();
+      });
+    }
+  });
+
+  // פונקציה להוספת מטבעות לפי הזמן שנותר
+  function addCoinsByRemainingTime(remainingTime) {
+    const coinsToAdd = Math.max(0, remainingTime);
+    coins += coinsToAdd;
+    updateCoinsDisplay();
+    if (userCoinsRef) set(userCoinsRef, coins);
   }
-});
 
-function addCoinsByRemainingTime(remainingTime) {
-  const coinsToAdd = Math.max(0, remainingTime);
-  coins += coinsToAdd;
-  updateCoinsDisplay();
-  if (userCoinsRef) userCoinsRef.set(coins);
-}
-
-function updateCoinsDisplay() {
-  const el = document.getElementById("coinsDisplay");
-  if (el) el.innerText = "מטבעות: " + coins;
-}
-
+  // עדכון תצוגת המטבעות בדשבורד
+  function updateCoinsDisplay() {
+    const el = document.getElementById("coinsDisplay");
+    if (el) el.innerText = "מטבעות: " + coins;
+  }
 </script>
+
 </body>
 </html>

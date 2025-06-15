@@ -575,7 +575,14 @@ if (isCorrect) {
   playFailSound();
 }
 
-      if (isCorrect) { score += 5; correct++; } else { score -= 5; }
+if (isCorrect) {
+  score += 5;
+  correct++;
+  addCoinsByRemainingTime(timeLeft); // ✅ הוספת מטבעות לפי זמן שנשאר
+} else {
+  score -= 5;
+}
+
       setTimeout(() => { current++; showQuestion(); }, 800);
     };
     answersDiv.appendChild(btn);

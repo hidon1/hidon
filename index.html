@@ -423,7 +423,9 @@ body::before {
       שלב: <span id="stageNum">1</span> |
       שאלה: <span id="questionNum">1</span> מתוך 10 |
       ניקוד: <span id="scoreCount">0</span> |
-      זמן נותר: <span id="timeLeft">20</span> שניות
+      זמן נותר: <span id="timeLeft">20</span> שניות |
+  <span id="coins">מטבעות: 0</span>
+
   </div>
 <div id="correctAnswersInfo"></div>
 </div>
@@ -468,7 +470,7 @@ function setBackgroundOpacity(val) {
 }
 setBackgroundOpacity(1);
 
-let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
+let stage = 1, current = 0, correct = 0, score = 0,coins = 0, questions = [], timer, timeLeft;
 
 function updateBackground() {
   document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
@@ -577,6 +579,9 @@ function showQuestion() {
         if (isAnswerLocked) return;
         isAnswerLocked = true;
       clearInterval(timer); // מנקה טיימר מיד בלחיצה - עדכון חשוב!
+        if (timeLeft > 0) { // ודא שיש זמן שנותר
+        coins += timeLeft; // הוסף את מספר השניות הנותרות ככמות מטבעות
+    }
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
       
@@ -639,6 +644,7 @@ function updateDashboard() {
   document.getElementById("questionNum").textContent = current + 1;
   document.getElementById("scoreCount").textContent = score;
   document.getElementById("timeLeft").textContent = timeLeft;
+   document.getElementById("coinsCount").textContent = coins;
   const skipBtn = document.getElementById("skipButton");
   if (skipBtn) {
     skipBtn.classList.add("always-visible");

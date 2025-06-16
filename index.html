@@ -586,7 +586,9 @@ if (isCorrect) {
 }
 
       if (isCorrect) { score += 5; correct++; 
-      coins += timeLeft;
+         console.log("Before adding coins: coins = ", coins, ", timeLeft = ", timeLeft); // <--- הוסף את השורה הזו
+        coins += timeLeft;
+        console.log("After adding coins: coins = ", coins); // <--- הוסף את השורה הזו
       } else { 
         score -= 5; }
       setTimeout(() => { current++; showQuestion(); }, 800);

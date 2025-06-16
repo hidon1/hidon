@@ -549,9 +549,10 @@ function loadStage() {
   });
 }
 function showQuestion() {
-    let isAnswerLocked = false;
+  let isAnswerLocked = false;
   setBackgroundOpacity(0.75);
-  clearInterval(timer); // מנקה כל טיימר קודם - עדכון חשוב!
+  clearInterval(timer);
+
   if (current >= 10) {
     document.getElementById('skipButton').style.display = 'none';
     if (correct >= 9) {
@@ -562,42 +563,54 @@ function showQuestion() {
     }
     return;
   }
+
+  // כפתור דילוג רק אם יש מספיק נקודות
   document.getElementById('skipButton').style.display = score >= 50 ? 'inline-block' : 'none';
+
   const q = questions[current];
   shuffleQuestionAnswers(q);
+
   document.getElementById('questionText').textContent = q.question;
   const answersDiv = document.getElementById('answers');
   answersDiv.innerHTML = '';
+
   q.options.forEach((opt, i) => {
     const btn = document.createElement('div');
     btn.className = 'answer';
     btn.textContent = opt;
+
     btn.onclick = () => {
-        if (isAnswerLocked) return;
-        isAnswerLocked = true;
-      clearInterval(timer); // מנקה טיימר מיד בלחיצה - עדכון חשוב!
+      if (isAnswerLocked) return;
+      isAnswerLocked = true;
+      clearInterval(timer);
+
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
-      
-if (isCorrect) {
-  playSuccessSound();
-} else {
-  playFailSound();
-}
 
-      if (isCorrect) { score += 5; correct++; 
-         console.log("Before adding coins: coins = ", coins, ", timeLeft = ", timeLeft); // <--- הוסף את השורה הזו
-        coins += timeLeft;
-        updateDashboard();
-        console.log("After adding coins: coins = ", coins); // <--- הוסף את השורה הזו
-      } else { 
-        score -= 5; }
+      if (isCorrect) {
+        playSuccessSound();
+        score += 5;
+        correct++;
+
+        console.log("Before adding coins: coins = ", coins, ", timeLeft = ", timeLeft);
+        if (typeof timeLeft === 'number' && timeLeft > 0) {
+          coins += timeLeft;
+        }
+        console.log("After adding coins: coins = ", coins);
+      } else {
+        playFailSound();
+        score -= 5;
+      }
+
+      updateDashboard();
       setTimeout(() => { current++; showQuestion(); }, 800);
     };
+
     answersDiv.appendChild(btn);
   });
-  startTimer();
-  updateDashboard();
+
+  startTimer(); // ← מפעיל את הטיימר ומגדיר את timeLeft
+  updateDashboard(); // ← מציג את הנתונים מיד עם תחילת השאלה
 }
 function skipQuestion() {
   if (score >= 50) {

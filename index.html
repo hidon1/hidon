@@ -639,6 +639,7 @@ function getCorrectText(n) {
   return n + ' תשובות נכונות';
 }
 function updateDashboard() {
+ console.log("Updating dashboard. Current coins value: ", coins); // <--- הוסף את השורה הזו
   document.getElementById("stageNum").textContent = stage;
   document.getElementById("questionNum").textContent = current + 1;
   document.getElementById("scoreCount").textContent = score;

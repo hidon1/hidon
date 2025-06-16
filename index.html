@@ -754,11 +754,19 @@ function goToNextStage() {
 }
 
 function shuffleQuestionAnswers(q) {
+  // שומרים את הטקסט של התשובה הנכונה לפני הערבוב
+  const correctAnswerText = q.options[q.correct];
 
-  const optionsWithFlag = q.options.map((opt, index) => ({
-    text: opt,
-    isCorrect: index === q.correct
-  }));
+  // מערבבים את התשובות
+  for (let i = q.options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+  }
+
+  // מוצאים את האינדקס החדש של התשובה הנכונה
+  q.correct = q.options.indexOf(correctAnswerText);
+}
+
 
   for (let i = optionsWithFlag.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

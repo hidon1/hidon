@@ -634,17 +634,22 @@ function getCorrectText(n) {
   return n + ' תשובות נכונות';
 }
 function updateDashboard() {
- console.log("Updating dashboard. Current coins value: ", coins); // <--- הוסף את השורה הזו
-  document.getElementById("stageNum").textContent = stage;
-  document.getElementById("questionNum").textContent = current + 1;
-  document.getElementById("scoreCount").textContent = score;
-    document.getElementById("coinsCount").textContent = coins;
-  document.getElementById("timeLeft").textContent = timeLeft;
-  const skipBtn = document.getElementById("skipButton");
-  if (skipBtn) {
-    skipBtn.classList.add("always-visible");
-    if (score >= 50) {
-      skipBtn.classList.remove("inactive");
+    console.log("Updating dashboard. Current coins value: ", coins);
+    document.getElementById("stageNum").textContent = stage;
+    document.getElementById("questionNum").textContent = current + 1;
+    document.getElementById("scoreCount").textContent = score;
+
+    const coinsSpan = document.getElementById("coinsCount"); // נשמור את האלמנט במשתנה לנוחות
+    coinsSpan.textContent = coins;
+    console.log("coinsCount span textContent after set:", coinsSpan.textContent); // <-- וודא ששורה זו קיימת!
+    console.log("coinsCount span innerHTML after set:", coinsSpan.innerHTML); // <-- וודא ששורה זו קיימת!
+
+    document.getElementById("timeLeft").textContent = timeLeft;
+    const skipBtn = document.getElementById("skipButton");
+    if (skipBtn) {
+        skipBtn.classList.add("always-visible");
+        if (score >= 50) {
+            skipBtn.classList.remove("inactive"); // וודא שסגרת כאן את הקלאס כמו שצריך
       skipBtn.classList.add("active");
       skipBtn.disabled = false;
     } else {

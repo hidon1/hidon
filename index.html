@@ -588,6 +588,7 @@ if (isCorrect) {
       if (isCorrect) { score += 5; correct++; 
          console.log("Before adding coins: coins = ", coins, ", timeLeft = ", timeLeft); // <--- הוסף את השורה הזו
         coins += timeLeft;
+        updateDashboard();
         console.log("After adding coins: coins = ", coins); // <--- הוסף את השורה הזו
       } else { 
         score -= 5; }

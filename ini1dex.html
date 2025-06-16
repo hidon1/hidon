@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>החבויים</title>
+  <style>
+    body {
+      visibility: hidden; /* נסתר עד שהסקריפט טוען הכל */
+      margin: 0;
+      overflow: hidden; /* מונע גלילה בטעות */
+    }
+  </style>
+
+  <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
+  <link href="https://fonts.googleapis.com/css2?family=Alef:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="welcomeBanner" class="banner hide">
+    <div class="banner-content">
+      <p>החבויים</p>
+      <button id="loginButton" class="auth-button">התחבר/הירשם</button>
+      <button id="continueWithoutLogin" class="auth-button">המשך ללא התחברות</button>
+    </div>
+  </div>
+
+  <div id="authOverlay" class="overlay">
+    <div class="auth-box">
+      <h2>התחברות / הרשמה</h2>
+      <div id="loginForm">
+        <h3>התחבר</h3>
+        <input type="email" id="loginEmail" placeholder="אימייל">
+        <input type="password" id="loginPassword" placeholder="סיסמה">
+        <button id="loginSubmit">התחבר</button>
+        <p>אין לך חשבון? <a href="#" id="signupLink">הירשם כאן</a></p>
+      </div>
+      <div id="signupForm" style="display: none;">
+        <h3>הירשם</h3>
+        <input type="email" id="signupEmail" placeholder="אימייל">
+        <input type="password" id="signupPassword" placeholder="סיסמה">
+        <button id="signupSubmit">הירשם</button>
+        <p>כבר יש לך חשבון? <a href="#" id="showLoginForm">התחבר כאן</a></p>
+      </div>
+      <button id="closeAuth" class="close-button">&times;</button>
+    </div>
+  </div>
+
+  <div id="startScreen" class="start-screen">
+    <div class="user-info">
+      <span id="usernameDisplay">אורח</span>
+      <button id="logoutButton" style="display: none;">התנתק</button>
+    </div>
+    <h1>החבויים</h1>
+    <p>ברוך הבא למשחק החבויים!</p>
+    <button id="newGameButton">התחל משחק חדש</button>
+    <div class="stats-section">
+      <button id="showStatsButton">הצג סטטיסטיקות</button>
+      <button id="resetStatsButton">אפס סטטיסטיקות מקומיות</button>
+    </div>
+  </div>
+
+  <div id="gameStatsOverlay" class="overlay">
+    <div class="stats-box">
+      <h2>סטטיסטיקות משחק</h2>
+      <p>נצחונות: <span id="winsCount">0</span></p>
+      <p>הפסדים: <span id="lossesCount">0</span></p>
+      <button id="closeStatsButton">סגור</button>
+    </div>
+  </div>
+
+  <div id="gameContainer" class="game-container">
+    <div class="header-bar">
+      <span class="coins-display">💰 <span id="coins">0</span></span>
+      <span class="stage-display">שלב: <span id="stageDisplay">1</span></span>
+    </div>
+    <div class="game-area">
+      <img id="hangmanImage" src="hangman0.png" alt="איש תלוי">
+      <p id="wordDisplay" class="word-display"></p>
+      <p id="message" class="message"></p>
+      <div id="alphabet" class="alphabet-grid"></div>
+      <button id="playAgain" class="play-again-button">שחק שוב</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // הגדרת משתנים גלובליים
+    let coins = 0; // מטבעות
+    let currentWord = ''; // המילה הנוכחית
+    let guessedLetters = []; // אותיות שניחשו
+    let mistakes = 0; // טעויות בסבב הנוכחי
+    let maxMistakes = 6; // מקסימום טעויות
+    let totalMistakesInRound = 0; // סך טעויות למטבעות
+    let wordList = []; // רשימת מילים מה-JSON
+    let currentStage = 0; // שלב נוכחי
+    let user = null; // ללא שימוש בפיירבייס כרגע, נגדיר כמשתמש אורח
+    let wins = 0;
+    let losses = 0;
+
+    // אלמנטים מה-DOM
+    const coinElement = document.getElementById('coins');
+    const wordDisplay = document.getElementById('wordDisplay');
+    const alphabetContainer = document.getElementById('alphabet');
+    const hangmanImage = document.getElementById('hangmanImage');
+    const message = document.getElementById('message');
+    const playAgainButton = document.getElementById('playAgain');
+    const newGameButton = document.getElementById('newGameButton');
+    const startScreen = document.getElementById('startScreen');
+    const authOverlay = document.getElementById('authOverlay');
+    const welcomeBanner = document.getElementById('welcomeBanner');
+    const continueWithoutLoginButton = document.getElementById('continueWithoutLogin');
+    const loginButton = document.getElementById('loginButton');
+    const gameContainer = document.getElementById('gameContainer');
+    const logoutButton = document.getElementById('logoutButton');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const stageDisplay = document.getElementById('stageDisplay');
+    const gameStatsOverlay = document.getElementById('gameStatsOverlay');
+    const closeStatsButton = document.getElementById('closeStatsButton');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    const signupLink = document.getElementById('signupLink');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const showLoginFormLink = document.getElementById('showLoginForm');
+    const showSignupFormLink = document.getElementById('showSignupForm');
+    const loginEmailInput = document.getElementById('loginEmail');
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const signupEmailInput = document.getElementById('signupEmail');
+    const signupPasswordInput = document.getElementById('signupPassword');
+    const loginSubmitButton = document.getElementById('loginSubmit');
+    const signupSubmitButton = document.getElementById('signupSubmit');
+    const showStatsButton = document.getElementById('showStatsButton');
+    const resetStatsButton = document.getElementById('resetStatsButton');
+    const winsCountSpan = document.getElementById('winsCount');
+    const lossesCountSpan = document.getElementById('lossesCount');
+    const closeAuthButton = document.getElementById('closeAuth');
+
+
+    // טעינת מילים מקובץ JSON
+    fetch('stages.json')
+      .then(response => response.json())
+      .then(data => {
+        wordList = data.stages;
+        console.log('Words loaded:', wordList);
+        // הצגת באנר הפתיחה לאחר טעינת המילים
+        welcomeBanner.classList.remove('hide');
+        document.body.style.visibility = 'visible'; // הצג את ה-body לאחר הטעינה
+        loadLocalStats(); // טען סטטיסטיקות מקומיות
+      })
+      .catch(error => {
+        console.error('Error loading words:', error);
+        message.textContent = 'שגיאה בטעינת המילים. נסה לרענן את הדף.';
+        message.style.color = 'red';
+        document.body.style.visibility = 'visible'; // וודא שה-body גלוי גם במקרה שגיאה
+      });
+
+    // --- פונקציות לניהול מטבעות וסטטיסטיקות (ללא Firebase) ---
+
+    // פונקציה לעדכון תצוגת המטבעות
+    function updateCoinsDisplay() {
+      coinElement.textContent = coins;
+    }
+
+    // פונקציה לעדכון מטבעות
+    function updateCoins(amount) {
+      coins += amount;
+      if (coins < 0) coins = 0; // למנוע מטבעות שליליים
+      updateCoinsDisplay();
+      saveLocalStats(); // שמור את המטבעות ל-Local Storage
+      console.log('Coins updated locally:', coins);
+    }
+
+    // פונקציות שמירה וטעינה של סטטיסטיקות (ל-Local Storage)
+    function saveLocalStats() {
+      localStorage.setItem('gameWins', wins);
+      localStorage.setItem('gameLosses', losses);
+      localStorage.setItem('gameCoins', coins); // שמירת מטבעות
+      localStorage.setItem('currentStage', currentStage);
+    }
+
+    function loadLocalStats() {
+      wins = parseInt(localStorage.getItem('gameWins')) || 0;
+      losses = parseInt(localStorage.getItem('gameLosses')) || 0;
+      coins = parseInt(localStorage.getItem('gameCoins')) || 0; // טעינת מטבעות
+      currentStage = parseInt(localStorage.getItem('currentStage')) || 0;
+      if (currentStage >= wordList.length && wordList.length > 0) {
+        currentStage = 0; // אפס שלב אם הוא גבוה מדי
+      }
+      updateStatsDisplay();
+      updateCoinsDisplay();
+      stageDisplay.textContent = currentStage + 1; // תמיד מציג שלב + 1
+    }
+
+    function updateStatsDisplay() {
+      winsCountSpan.textContent = wins;
+      lossesCountSpan.textContent = losses;
+    }
+
+    function resetLocalStats() {
+      if (confirm('האם אתה בטוח שברצונך לאפס את כל הסטטיסטיקות המקומיות?')) {
+        wins = 0;
+        losses = 0;
+        coins = 0;
+        currentStage = 0;
+        saveLocalStats();
+        updateStatsDisplay();
+        updateCoinsDisplay();
+        stageDisplay.textContent = currentStage + 1;
+        message.textContent = 'הסטטיסטיקות אופסו בהצלחה!';
+        message.style.color = 'green';
+        setTimeout(() => message.textContent = '', 3000);
+      }
+    }
+
+    // --- לוגיקת משחק עיקרית ---
+
+    function initializeGame() {
+      mistakes = 0;
+      totalMistakesInRound = 0;
+      guessedLetters = [];
+      hangmanImage.src = 'hangman0.png';
+      message.textContent = '';
+      playAgainButton.style.display = 'none';
+      alphabetContainer.innerHTML = '';
+      currentWord = getRandomWord(currentStage); // קבל מילה מהשלב הנוכחי
+
+      if (!currentWord) {
+        message.textContent = 'נגמרו המילים לשלב זה! עובר לשלב הבא.';
+        message.style.color = 'orange';
+        currentStage++;
+        if (currentStage >= wordList.length) {
+          message.textContent = 'סיימת את כל השלבים! מתחיל מהתחלה.';
+          currentStage = 0; // מתחיל מהשלב הראשון אם סיימו את כולם
+        }
+        setTimeout(initializeGame, 2000); // התחל משחק חדש לאחר הודעה
+        return;
+      }
+      displayWord();
+      createAlphabetButtons();
+      stageDisplay.textContent = currentStage + 1;
+      saveLocalStats(); // שמור סטטיסטיקות לאחר אתחול
+    }
+
+    function getRandomWord(stageIndex) {
+      if (wordList.length === 0 || stageIndex >= wordList.length) {
+        return null; // אין מילים או שלב לא קיים
+      }
+      const stageWords = wordList[stageIndex].words;
+      if (stageWords.length === 0) return null;
+      const randomIndex = Math.floor(Math.random() * stageWords.length);
+      return stageWords[randomIndex];
+    }
+
+    function displayWord() {
+      const display = currentWord.split('').map(letter => {
+        if (letter === ' ') return '&nbsp;'; // שמירה על רווחים
+        return guessedLetters.includes(letter) ? letter : '_';
+      }).join(' ');
+      wordDisplay.innerHTML = display;
+    }
+
+    function createAlphabetButtons() {
+      const alphabet = 'אבגדהוזחטיכלמנסעפצקרשת';
+      alphabetContainer.innerHTML = ''; // נקה כפתורים קודמים
+      alphabet.split('').forEach(letter => {
+        const button = document.createElement('button');
+        button.textContent = letter;
+        button.classList.add('letter-button');
+        button.addEventListener('click', () => handleGuess(letter, button));
+        alphabetContainer.appendChild(button);
+      });
+    }
+
+    function handleGuess(letter, button) {
+      button.disabled = true; // נטרל את הכפתור
+      if (currentWord.includes(letter)) {
+        guessedLetters.push(letter);
+        displayWord();
+        message.textContent = 'נכון!';
+        message.style.color = 'green';
+        if (!wordDisplay.textContent.includes('_')) {
+          winGame();
+        }
+      } else {
+        mistakes++;
+        totalMistakesInRound++;
+        hangmanImage.src = `hangman${mistakes}.png`;
+        message.textContent = 'טעות!';
+        message.style.color = 'red';
+        if (mistakes >= maxMistakes) {
+          loseGame();
+        }
+      }
+    }
+
+    function winGame() {
+      message.textContent = `כל הכבוד! ניצחת! המילה הייתה: ${currentWord}`;
+      message.style.color = 'blue';
+      disableAlphabetButtons();
+      playAgainButton.style.display = 'block';
+      updateCoins(10); // הוסף 10 מטבעות לניצחון
+      wins++;
+      currentStage++; // מעבר לשלב הבא
+      saveLocalStats(); // שמור סטטיסטיקות
+    }
+
+    function loseGame() {
+      message.textContent = `אוף! הפסדת. המילה הייתה: ${currentWord}`;
+      message.style.color = 'darkred';
+      disableAlphabetButtons();
+      playAgainButton.style.display = 'block';
+      updateCoins(-5); // הורד 5 מטבעות על הפסד
+      losses++;
+      saveLocalStats(); // שמור סטטיסטיקות
+    }
+
+    function disableAlphabetButtons() {
+      Array.from(alphabetContainer.children).forEach(button => {
+        button.disabled = true;
+      });
+    }
+
+    // --- ניהול מסכים ואירועים ---
+
+    // פונקציות להצגת טופסי כניסה/הרשמה (פונקציות UI בלבד, ללא לוגיקת Firebase)
+    function showLoginForm() {
+      loginForm.style.display = 'block';
+      signupForm.style.display = 'none';
+    }
+
+    function showSignupForm() {
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+    }
+
+    function closeAuthBanner() {
+      authOverlay.style.display = 'none';
+    }
+
+    // --- מטפלי אירועים (Event Listeners) ---
+
+    // פונקציות ריקות למקרה שהלחצנים נלחצים למרות שהוסר Firebase
+    // אלה יהיו המקומות שבהם נשלב שוב את Firebase בעתיד אם תרצה
+    loginSubmitButton.addEventListener('click', (event) => {
+        event.preventDefault(); // מונע ריענון דף
+        alert('פונקציונליות התחברות אינה זמינה כרגע (פיירבייס מנותק).');
+        console.log('Login attempt:', loginEmailInput.value, loginPasswordInput.value);
+    });
+
+    signupSubmitButton.addEventListener('click', (event) => {
+        event.preventDefault(); // מונע ריענון דף
+        alert('פונקציונליות הרשמה אינה זמינה כרגע (פיירבייס מנותק).');
+        console.log('Signup attempt:', signupEmailInput.value, signupPasswordInput.value);
+    });
+
+    logoutButton.addEventListener('click', () => {
+        alert('פונקציונליות התנתקות אינה זמינה כרגע (פיירבייס מנותק).');
+        user = null;
+        usernameDisplay.textContent = 'אורח';
+        logoutButton.style.display = 'none';
+        startScreen.style.display = 'flex';
+        gameContainer.style.display = 'none';
+        welcomeBanner.classList.remove('hide');
+        // נשאיר את המטבעות המקומיות כמו שהן, או אפס אותן אם רוצים התנתקות מלאה
+        // coins = 0; updateCoinsDisplay();
+    });
+
+    // כפתורים לניהול מסכים ומשחק
+    playAgainButton.addEventListener('click', initializeGame);
+    newGameButton.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      gameContainer.style.display = 'block';
+      initializeGame();
+    });
+
+    loginButton.addEventListener('click', () => {
+        welcomeBanner.classList.add('hide');
+        startScreen.style.display = 'none';
+        authOverlay.style.display = 'block';
+        showLoginForm(); // הצג טופס התחברות
+    });
+
+    continueWithoutLoginButton.addEventListener('click', () => {
+      welcomeBanner.classList.add('hide');
+      startScreen.style.display = 'flex'; // ודא שמסך ההתחלה גלוי
+      authOverlay.style.display = 'none';
+      gameContainer.style.display = 'none'; // הסתר את המשחק בהתחלה
+      user = { uid: 'anonymous_local' }; // סימולציה של משתמש אורח
+      usernameDisplay.textContent = 'משתמש אורח';
+      logoutButton.style.display = 'none'; // לא מציגים כפתור התנתקות לאורח
+      loadLocalStats(); // טען סטטיסטיקות מקומיות עבור אורח
+    });
+
+    signupLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSignupForm();
+    });
+
+    showLoginFormLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLoginForm();
+    });
+
+    showSignupFormLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSignupForm();
+    });
+
+    closeAuthButton.addEventListener('click', closeAuthBanner);
+    showStatsButton.addEventListener('click', () => {
+      loadLocalStats(); // וודא טעינת הסטטיסטיקות העדכניות
+      gameStatsOverlay.style.display = 'block';
+    });
+    closeStatsButton.addEventListener('click', () => {
+      gameStatsOverlay.style.display = 'none';
+    });
+    resetStatsButton.addEventListener('click', resetLocalStats);
+
+    // --- אתחול ראשוני בעת טעינת הדף ---
+    // האתר נטען עם באנר פתיחה והסטארט סקרין מוסתרים
+    // הם יוצגו לאחר טעינת המילים.
+    // הקוד שמציג את ה-body למעלה (visibility: visible) יופעל בתוך ה-fetch.
+    // כרגע האתחול מתבצע רק מתוך ה-fetch ל-stages.json
+  </script>
+</body>
+</html>

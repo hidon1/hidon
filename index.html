@@ -731,11 +731,16 @@ function goToNextStage() {
 }
 
 function shuffleQuestionAnswers(q) {
+  const correctAnswerText = q.options[q.correct];
 
-  const optionsWithFlag = q.options.map((opt, index) => ({
-    text: opt,
-    isCorrect: index === q.correct
-  }));
+  for (let i = q.options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+  }
+
+  q.correct = q.options.indexOf(correctAnswerText);
+}
+
 
   for (let i = optionsWithFlag.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

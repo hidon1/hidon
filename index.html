@@ -569,6 +569,10 @@ function showQuestion() {
 
   const q = questions[current];
   shuffleQuestionAnswers(q);
+console.log("שאלה:", q.question);
+console.log("תשובות אחרי ערבוב:", q.options);
+console.log("אינדקס נכון אחרי ערבוב:", q.correct);
+console.log("תשובה הנכונה בפועל:", q.options[q.correct]);
 
   document.getElementById('questionText').textContent = q.question;
   const answersDiv = document.getElementById('answers');

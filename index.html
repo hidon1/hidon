@@ -472,9 +472,7 @@ setBackgroundOpacity(1);
 
 let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
 let coins = 0;
-if (localStorage.getItem("quizCoins")) {
-  coins = parseInt(localStorage.getItem("quizCoins"));
-}
+
 function updateBackground() {
   document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
   document.body.style.backgroundSize = 'cover'; // כאן העדכון
@@ -981,6 +979,11 @@ window.addEventListener("message", function(event) {
 window.openAuthBanner = openAuthBanner;
   window.addEventListener('load', () => {
   updateDashboard();
+    function awardStageCoins() {
+  coins += 100;
+  updateDashboard(); // כדי לעדכן את התצוגה
+}
+
 });
 
 </script>

@@ -1,7 +1,5 @@
 // אתחול המטבעות מקריאה מתוך localStorage או התחלה ב-0
-let coins = parseInt(localStorage.getItem("quizCoins")) || 0;
 
-// משתנה גלובלי להתחלת מדידת זמן
 let questionStartTime = Date.now();
 
 // התחלת מדידת זמן חדש לשאלה

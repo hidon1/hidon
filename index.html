@@ -963,7 +963,10 @@ window.addEventListener("message", function(event) {
 });
 window.openAuthBanner = openAuthBanner;
 </script>
-  <script src="coins.js"></script>
+<script>
+  let coins = parseInt(localStorage.getItem("quizCoins")) || 0;
+</script>
+
 
 </body>
 </html>

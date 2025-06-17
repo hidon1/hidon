@@ -566,6 +566,7 @@ function showQuestion() {
     document.getElementById('skipButton').style.display = 'none';
     if (correct >= 9) {
       score += 10;
+        awardStageCoins();
       showSuccessScreen();
     } else {
       showFailScreen();

@@ -590,7 +590,7 @@ if (isCorrect) {
   const coinReward = Math.max(0, 20 - timeTaken);
   coins += coinReward;
   console.log("ענית תוך", timeTaken, "שניות → קיבלת", coinReward, "מטבעות. סך הכול:", coins);
-
+updateDashboard();
       } else { 
         score -= 5; }
       setTimeout(() => { current++; showQuestion(); }, 800);

@@ -471,7 +471,10 @@ function setBackgroundOpacity(val) {
 setBackgroundOpacity(1);
 
 let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
-
+let coins = 0;
+if (localStorage.getItem("quizCoins")) {
+  coins = parseInt(localStorage.getItem("quizCoins"));
+}
 function updateBackground() {
   document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
   document.body.style.backgroundSize = 'cover'; // כאן העדכון
@@ -716,6 +719,10 @@ function retryStage() {
 function showSuccessScreen() {
   setBackgroundOpacity(1);
   clearInterval(timer);
+  coins += 100;
+localStorage.setItem("quizCoins", coins);
+updateDashboard();
+
   document.getElementById('quizContainer').style.display = 'none';
   document.getElementById('successScreen').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
@@ -965,8 +972,11 @@ window.addEventListener("message", function(event) {
   }
 });
 window.openAuthBanner = openAuthBanner;
+  window.addEventListener('load', () => {
+  updateDashboard();
+});
+
 </script>
-<script src="coins.js"></script>
 
 </body>
 </html>

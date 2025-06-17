@@ -722,6 +722,8 @@ function showSuccessScreen() {
   document.getElementById('endScreen').style.display = 'none';
   playIntroMusic();
   document.getElementById('successStageNum').textContent = stage;
+  awardStageCoins();
+
   showSuccessMessage();
 }
 

@@ -552,7 +552,9 @@ function loadStage() {
 }
 function showQuestion() {
   startCoinTimer(); // התחלת מדידת זמן למטבעות
+  questionStartTime = Date.now(); // אם אתה משתמש בזה גם לנקודות או טיימר
   let isAnswerLocked = false;
+
   setBackgroundOpacity(0.75);
   clearInterval(timer);
 
@@ -570,6 +572,7 @@ function showQuestion() {
   document.getElementById('skipButton').style.display = score >= 50 ? 'inline-block' : 'none';
   const q = questions[current];
   shuffleQuestionAnswers(q);
+
   document.getElementById('questionText').textContent = q.question;
 
   const answersDiv = document.getElementById('answers');
@@ -589,7 +592,7 @@ function showQuestion() {
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
 
       if (isCorrect) {
-        handleCorrectAnswer(); // חישוב מטבעות + שמירה
+        handleCorrectAnswer(); // חישוב מטבעות + עדכון
         playSuccessSound();
         score += 5;
         correct++;

@@ -480,12 +480,6 @@ function updateBackground() {
   document.body.style.backgroundPosition = 'center center';
   document.body.style.backgroundAttachment = 'fixed';
 }
-  function awardStageCoins() {
-  coins += 100;
-  localStorage.setItem("quizCoins", coins);
-  updateDashboard();
-  console.log("נוספו 100 מטבעות על מעבר שלב");
-}
 
 function showStartScreen() {
   setBackgroundOpacity(1);
@@ -571,7 +565,8 @@ function showQuestion() {
     document.getElementById('skipButton').style.display = 'none';
     if (correct >= 9) {
       score += 10;
-        awardStageCoins();
+      coins += 100;
+       document.getElementById("coinsCount").textContent = coins;
       showSuccessScreen();
     } else {
       showFailScreen();

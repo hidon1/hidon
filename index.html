@@ -571,7 +571,6 @@ function showQuestion() {
     document.getElementById('skipButton').style.display = 'none';
     if (correct >= 9) {
       score += 10;
-        coins += 100;
         awardStageCoins();
       showSuccessScreen();
     } else {
@@ -976,15 +975,6 @@ window.addEventListener("message", function(event) {
     // הראה את מסך שלב
     showStageIntro();
   }
-});
-window.openAuthBanner = openAuthBanner;
-  window.addEventListener('load', () => {
-  updateDashboard();
-    function awardStageCoins() {
-  coins += 100;
-  updateDashboard(); // כדי לעדכן את התצוגה
-}
-
 });
 
 </script>

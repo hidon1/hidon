@@ -468,7 +468,15 @@ function setBackgroundOpacity(val) {
 }
 setBackgroundOpacity(1);
 
-let stage = 1, current = 0, correct = 0, score = 0, coins = 0, questions = [], timer, timeLeft;
+let stage = 1, current = 0, correct = 0, score = 0;
+let coins = parseInt(localStorage.getItem("quizCoins")) || 0;
+let questions = [], timer, timeLeft;
+
+// בדיקת טעינה מהעבר
+if (coins > 0) {
+  alert("ברוך השב! יש לך " + coins + " מטבעות מהפעם הקודמת.");
+}
+
 function updateBackground() {
   document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
   document.body.style.backgroundSize = 'cover'; // כאן העדכון
@@ -659,6 +667,7 @@ function updateDashboard() {
     }
   }
   document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
+    localStorage.setItem("quizCoins", coins);
 }
 function showFailScreen() {
   setBackgroundOpacity(1);

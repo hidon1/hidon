@@ -547,6 +547,7 @@ function loadStage() {
 }
 function showQuestion() {
     let isAnswerLocked = false;
+    questionStartTime = Date.now();
   setBackgroundOpacity(0.75);
   clearInterval(timer); // מנקה כל טיימר קודם - עדכון חשוב!
   if (current >= 10) {
@@ -582,13 +583,14 @@ if (isCorrect) {
   playFailSound();
 }
 
-      if (isCorrect) { score += 5; correct++; 
-         console.log("Before adding coins: coins = ", coins, ", timeLeft = ", timeLeft); // <--- הוסף את השורה הזו
-        const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
-        const coinReward = Math.max(0, 20 - timeTaken);
-        coins += coinReward;
-        console.log("ענית תוך", timeTaken, "שניות → קיבלת", coinReward, "מטבעות.");
-        console.log("After adding coins: coins = ", coins); // <--- הוסף את השורה הזו
+    if (isCorrect) {
+  score += 5;
+  correct++;
+  const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
+  const coinReward = Math.max(0, 20 - timeTaken);
+  coins += coinReward;
+  console.log("ענית תוך", timeTaken, "שניות → קיבלת", coinReward, "מטבעות. סך הכול:", coins);
+
       } else { 
         score -= 5; }
       setTimeout(() => { current++; showQuestion(); }, 800);

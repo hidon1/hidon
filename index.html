@@ -551,7 +551,7 @@ function loadStage() {
   });
 }
 function showQuestion() {
-  startCoinTimer(); // מתחיל ספירה לזמן תגובה
+  startCoinTimer(); // התחלת מדידת זמן למטבעות
   let isAnswerLocked = false;
   setBackgroundOpacity(0.75);
   clearInterval(timer);
@@ -571,6 +571,7 @@ function showQuestion() {
   const q = questions[current];
   shuffleQuestionAnswers(q);
   document.getElementById('questionText').textContent = q.question;
+
   const answersDiv = document.getElementById('answers');
   answersDiv.innerHTML = '';
 
@@ -582,13 +583,13 @@ function showQuestion() {
     btn.onclick = () => {
       if (isAnswerLocked) return;
       isAnswerLocked = true;
-
       clearInterval(timer);
+
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
 
       if (isCorrect) {
-        handleCorrectAnswer(); // מחשב את המטבעות ומעדכן בדשבורד
+        handleCorrectAnswer(); // חישוב מטבעות + שמירה
         playSuccessSound();
         score += 5;
         correct++;
@@ -609,6 +610,7 @@ function showQuestion() {
   startTimer();
   updateDashboard();
 }
+
 function startTimer() {
   clearInterval(timer); // מנקה טיימר ישן לפני יצירת חדש - עדכון קריטי!
   if (stage <= 3) timeLeft = 20;

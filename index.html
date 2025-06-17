@@ -965,6 +965,7 @@ function openAuthBanner() {
   document.getElementById('authOverlay').style.display = 'block';
   document.getElementById('authFrame').src = "auth.html";
 }
+ window.openAuthBanner = openAuthBanner;
 
 // מקבל הודעה מה-iframe כשההרשמה הסתיימה
 window.addEventListener("message", function(event) {
@@ -974,8 +975,7 @@ window.addEventListener("message", function(event) {
     document.getElementById('authFrame').src = "";
     // הראה את מסך שלב
     showStageIntro();
-    window.openAuthBanner = openAuthBanner;
-
+   
   }
 });
 

@@ -424,6 +424,7 @@ body::before {
       שאלה: <span id="questionNum">1</span> מתוך 10 |
       ניקוד: <span id="scoreCount">0</span> |
       זמן נותר: <span id="timeLeft">20</span> שניות
+      מטבעות: <span id="coinsCount">0</span>
   </div>
 <div id="correctAnswersInfo"></div>
 </div>
@@ -550,10 +551,11 @@ function loadStage() {
   });
 }
 function showQuestion() {
-  questionStartTime = Date.now();
-    let isAnswerLocked = false;
+  startCoinTimer(); // מתחיל ספירה לזמן תגובה
+  let isAnswerLocked = false;
   setBackgroundOpacity(0.75);
-  clearInterval(timer); // מנקה כל טיימר קודם - עדכון חשוב!
+  clearInterval(timer);
+
   if (current >= 10) {
     document.getElementById('skipButton').style.display = 'none';
     if (correct >= 9) {
@@ -564,55 +566,48 @@ function showQuestion() {
     }
     return;
   }
+
   document.getElementById('skipButton').style.display = score >= 50 ? 'inline-block' : 'none';
   const q = questions[current];
   shuffleQuestionAnswers(q);
   document.getElementById('questionText').textContent = q.question;
   const answersDiv = document.getElementById('answers');
   answersDiv.innerHTML = '';
+
   q.options.forEach((opt, i) => {
     const btn = document.createElement('div');
     btn.className = 'answer';
     btn.textContent = opt;
+
     btn.onclick = () => {
-        if (isAnswerLocked) return;
-        isAnswerLocked = true;
-      clearInterval(timer); // מנקה טיימר מיד בלחיצה - עדכון חשוב!
+      if (isAnswerLocked) return;
+      isAnswerLocked = true;
+
+      clearInterval(timer);
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
-      
-if (isCorrect) {
-  const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
-  const coinReward = Math.max(0, 20 - timeTaken);
-  coins += coinReward;
-  localStorage.setItem("quizCoins", coins);
-
-  playSuccessSound();
-} else {
-  playFailSound();
-}
 
       if (isCorrect) {
-  const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
-  const coinReward = Math.max(0, 20 - timeTaken);
-  coins += coinReward;
-  localStorage.setItem("quizCoins", coins);
- score += 5; correct++; } else { score -= 5; }
-      setTimeout(() => { current++; showQuestion(); }, 800);
+        handleCorrectAnswer(); // מחשב את המטבעות ומעדכן בדשבורד
+        playSuccessSound();
+        score += 5;
+        correct++;
+      } else {
+        playFailSound();
+        score -= 5;
+      }
+
+      setTimeout(() => {
+        current++;
+        showQuestion();
+      }, 800);
     };
+
     answersDiv.appendChild(btn);
   });
+
   startTimer();
   updateDashboard();
-}
-function skipQuestion() {
-  if (score >= 50) {
-    clearInterval(timer);
-    score -= 50;
-    correct++;
-    current++;
-    showQuestion();
-  }
 }
 function startTimer() {
   clearInterval(timer); // מנקה טיימר ישן לפני יצירת חדש - עדכון קריטי!
@@ -963,6 +958,7 @@ window.addEventListener("message", function(event) {
 });
 window.openAuthBanner = openAuthBanner;
 </script>
-  
+  <script src="coins.js"></script>
+
 </body>
 </html>

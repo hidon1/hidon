@@ -469,6 +469,8 @@ function setBackgroundOpacity(val) {
 setBackgroundOpacity(1);
 
 let stage = 1, current = 0, correct = 0, score = 0;
+  let questionStartTime = 0;
+
 let coins = parseInt(localStorage.getItem("quizCoins")) || 0;
 let questions = [], timer, timeLeft;
 

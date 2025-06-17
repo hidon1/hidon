@@ -566,7 +566,6 @@ function showQuestion() {
     if (correct >= 9) {
       score += 10;
       coins += 100;
-       document.getElementById("coinsCount").textContent = coins;
       showSuccessScreen();
     } else {
       showFailScreen();

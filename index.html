@@ -708,25 +708,24 @@ function getCorrectText(n) {
   return n + ' תשובות נכונות';
 }
 function updateDashboard() {
+  console.log("updateDashboard called."); // הוסף את זה
+  const scoreElement = document.getElementById("scoreCount"); // הוסף את זה
+  console.log("scoreCount element:", scoreElement); // הוסף את זה
+
+  if (scoreElement) { // הוסף את תנאי ה-if הזה כדי למנוע את השגיאה
+    scoreElement.textContent = score;
+  } else {
+    console.error("Error: Element with ID 'scoreCount' not found in updateDashboard.");
+  }
+
   document.getElementById("stageNum").textContent = stage;
   document.getElementById("questionNum").textContent = current + 1;
-  document.getElementById("scoreCount").textContent = score;
+  // document.getElementById("scoreCount").textContent = score; // שורה זו תוסר / תוחלף על ידי ה-if למעלה
   document.getElementById("timeLeft").textContent = timeLeft;
-  document.getElementById("currentCoins").textContent = coinsCount; // עדכון ספירת המטבעות בבאנר החדש
-  const skipBtn = document.getElementById("skipButton");
-  if (skipBtn) {
-    skipBtn.classList.add("always-visible");
-    if (score >= 50) {
-      skipBtn.classList.remove("inactive");
-      skipBtn.classList.add("active");
-      skipBtn.disabled = false;
-    } else {
-      skipBtn.classList.remove("active");
-      skipBtn.classList.add("inactive");
-      skipBtn.disabled = true;
-    }
-  }
-  document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
+  document.getElementById("currentCoins").textContent = coinsCount;
+  document.getElementById("correctCount").textContent = correct;
+
+  // ... שאר הקוד בפונקציה ...
 }
 function showFailScreen() {
   setBackgroundOpacity(1);

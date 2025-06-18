@@ -597,20 +597,17 @@ if (isCorrect) {
 }
 
 if (isCorrect) {
- let maxTime = stage <= 3 ? 20 : stage <= 6 ? 15 : 12;
-let earnedCoins = Math.min(answeredTime, maxTime);
-coins += earnedCoins;
-
-console.log("נשארו שניות:", timeLeft, "→ קיבלת מטבעות:", earnedCoins, "סה״כ מטבעות:", coins);
-
-score += 5;
-correct++;
-
-updateDashboard();
+  playSuccessSound();
+  coins += 5;
+  score += 5;
+  correct++;
+  updateDashboard();
 } else {
+  playFailSound();
   score -= 5;
-  coins = Math.max(0, coins - 2); // ↓ ↓ ↓ הוספה חשובה!
-  updateDashboard(); // גם כאן – חובה לעדכן מיד אחרי שינוי
+  coins -= 5;
+  if (coins < 0) coins = 0;
+  updateDashboard();
 }
       setTimeout(() => { current++; showQuestion(); }, 800);
     };

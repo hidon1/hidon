@@ -581,6 +581,8 @@ function showQuestion() {
     btn.onclick = () => {
         if (isAnswerLocked) return;
         isAnswerLocked = true;
+      const answeredTime = timeLeft;
+
       clearInterval(timer); // מנקה טיימר מיד בלחיצה - עדכון חשוב!
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
@@ -593,7 +595,7 @@ if (isCorrect) {
 
 if (isCorrect) {
  let maxTime = stage <= 3 ? 20 : stage <= 6 ? 15 : 12;
-let earnedCoins = Math.min(timeLeft, maxTime); // כמה שניות נשארו בפועל
+let earnedCoins = Math.min(answeredTime, maxTime);
 coins += earnedCoins;
 
 console.log("נשארו שניות:", timeLeft, "→ קיבלת מטבעות:", earnedCoins, "סה״כ מטבעות:", coins);

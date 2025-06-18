@@ -476,13 +476,37 @@ setBackgroundOpacity(1);
 
 let stage = 1, current = 0, correct = 0, score = 0, coins = 0, questions = [], timer, timeLeft;
 
-function updateBackground() {
-  document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
-  document.body.style.backgroundSize = 'cover'; // כאן העדכון
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center center';
-  document.body.style.backgroundAttachment = 'fixed';
+function updateDashboard() {
+  document.getElementById("stageNum").textContent = stage;
+  document.getElementById("questionNum").textContent = current + 1;
+  document.getElementById("scoreCount").textContent = score;
+  document.getElementById("timeLeft").textContent = timeLeft;
+
+  // ✅ שורה חדשה שמטפלת נכון במטבעות
+  const coinEl = document.getElementById("coinsCount");
+  if (coinEl) {
+    coinEl.textContent = coins;
+  } else {
+    console.warn("⚠️ coinsCount לא נמצא ב־DOM");
+  }
+
+  const skipBtn = document.getElementById("skipButton");
+  if (skipBtn) {
+    skipBtn.classList.add("always-visible");
+    if (score >= 50) {
+      skipBtn.classList.remove("inactive");
+      skipBtn.classList.add("active");
+      skipBtn.disabled = false;
+    } else {
+      skipBtn.classList.remove("active");
+      skipBtn.classList.add("inactive");
+      skipBtn.disabled = true;
+    }
+  }
+
+  document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
 }
+
 function showStartScreen() {
   setBackgroundOpacity(1);
   document.body.style.backgroundImage = "url('backgrounds/main.jpg')";
@@ -596,6 +620,7 @@ if (isCorrect) {
   playSuccessSound();
   score += 5;
   coins += 10; // כאן צוברים מטבעות
+  console.log("🎉 זכית! מטבעות עכשיו:", coins);
   correct++;
 
 } else {

@@ -592,18 +592,20 @@ if (isCorrect) {
 }
 
 if (isCorrect) {
-  // חישוב כמות המטבעות לפי הזמן שנותר
   let maxTime = stage <= 3 ? 20 : stage <= 6 ? 15 : 12;
-  let earnedCoins = Math.max(0, maxTime - timeLeft); // כמה זמן עבר
-  earnedCoins = maxTime - earnedCoins; // כמה נשאר
+  let earnedCoins = Math.max(0, maxTime - timeLeft);
+  earnedCoins = maxTime - earnedCoins;
   coins += earnedCoins;
+
+  console.log("נשארו שניות:", timeLeft, "-> קיבלת מטבעות:", earnedCoins, "סה״כ:", coins);
 
   score += 5;
   correct++;
+
+  updateDashboard(); // ← חובה כאן כדי להציג מייד
 } else {
   score -= 5;
 }
-
       setTimeout(() => { current++; showQuestion(); }, 800);
     };
     answersDiv.appendChild(btn);

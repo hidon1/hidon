@@ -612,24 +612,32 @@ const storeItems = [
     { name: 'כתר', price: 300, image: 'crown-avatar.png' }
 ];
 
-// פונקציה מרכזית לעדכון ניקוד
 function updateScore(change) {
+    console.log('1. מתחיל את פונקציית updateScore. ניקוד נוכחי:', score, 'שינוי נדרש:', change);
     score += change;
     if (score < 0) {
-        score = 0; // מניעת ניקוד שלילי
+        score = 0;
     }
+    console.log('2. משתנה הניקוד עודכן ל:', score);
+
     // עדכון כל תצוגות הניקוד
     document.getElementById("scoreCount").textContent = score;
+    console.log('3. בוצע עדכון של אלמנט scoreCount.');
+
     document.getElementById("score-display").textContent = score;
+    console.log('4. בוצע עדכון של אלמנט score-display.');
+
     document.getElementById("store-score-display").textContent = score;
+    console.log('5. בוצע עדכון של אלמנט store-score-display.');
 
     // עדכון כפתור הדילוג
     const skipBtn = document.getElementById("skipButton");
     if (skipBtn) {
         skipBtn.disabled = score < 50;
     }
-    // שמירת הניקוד בזיכרון הדפדפן
+
     localStorage.setItem('userScore', score);
+    console.log('6. סיום הפונקציה. הניקוד נשמר.');
 }
 
 // פונקציות החנות

@@ -655,7 +655,14 @@ function updateDashboard() {
   document.getElementById("questionNum").textContent = current + 1;
   document.getElementById("scoreCount").textContent = score;
   document.getElementById("timeLeft").textContent = timeLeft;
-  document.getElementById("coinsCount").textContent = coins;
+
+  // בדיקה בטוחה עבור coins
+  const coinEl = document.getElementById("coinsCount");
+  if (coinEl) {
+    coinEl.textContent = coins;
+  } else {
+    console.warn("⚠️ אלמנט coinsCount לא נטען עדיין");
+  }
 
   const skipBtn = document.getElementById("skipButton");
   if (skipBtn) {
@@ -670,8 +677,10 @@ function updateDashboard() {
       skipBtn.disabled = true;
     }
   }
+
   document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
 }
+
 function showFailScreen() {
   setBackgroundOpacity(1);
   clearInterval(timer); // חשוב - מנקה טיימר שנשאר!

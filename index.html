@@ -625,30 +625,42 @@ function showQuestion() {
       const isCorrect = i === q.correct;
       btn.classList.add(isCorrect ? 'correct' : 'wrong');
       
+// ... (הקוד שלפני הבלוק הזה, כנראה בתוך פונקציית showQuestion או דומה) ...
+
+// בלוק ה-if/else המאוחד והנכון:
 if (isCorrect) {
-  playSuccessSound();
-} else {
-  playFailSound();
+  playSuccessSound(); // ניגון צליל הצלחה
+  score += 5;
+  correct++;
+
+  console.log("--- DEBUGGING COINS ---");
+  console.log("Before coins calculation. Current coinsCount:", coinsCount);
+
+  let coinsToAdd = 10; // 10 מטבעות על כל תשובה נכונה
+  let timeTaken = (Date.now() - questionStartTime) / 1000; // זמן שלקח לענות בשניות
+
+  console.log("Time taken for answer (seconds):", timeTaken);
+
+  if (timeTaken <= TIME_BONUS_THRESHOLD) { // אם ענו תוך 5 שניות הראשונות
+    coinsToAdd += FAST_ANSWER_BONUS; // הוסף עוד 5 מטבעות
+    console.log("Added fast answer bonus. Coins to add:", coinsToAdd);
+  } else {
+    console.log("No fast answer bonus. Coins to add:", coinsToAdd);
+  }
+
+  coinsCount += coinsToAdd; // עדכן את סכום המטבעות
+  console.log("Coins added this turn:", coinsToAdd, "Total coins after adding:", coinsCount);
+  console.log("--- END DEBUGGING COINS ---");
+
+} else { // אם התשובה לא נכונה
+  playFailSound(); // ניגון צליל כישלון
+  score -= 5;
 }
 
-      if (isCorrect) {
-        score += 5;
-        correct++;
+// שאר הקוד שבסוף הפונקציה שלך (כמו ה-setTimeout)
+setTimeout(() => { current++; showQuestion(); }, 800);
 
-        // --- לוגיקת מטבעות חדשה ---
-        let coinsToAdd = 10; // 10 מטבעות על כל תשובה נכונה
-        let timeTaken = (Date.now() - questionStartTime) / 1000; // זמן שלקח לענות בשניות
-
-        if (timeTaken <= TIME_BONUS_THRESHOLD) { // אם ענו תוך 5 שניות הראשונות
-            coinsToAdd += FAST_ANSWER_BONUS; // הוסף עוד 5 מטבעות
-        }
-        coinsCount += coinsToAdd; // עדכן את סכום המטבעות
-        // --- סוף לוגיקת מטבעות חדשה ---
-
-      } else {
-        score -= 5;
-      }
-      setTimeout(() => { current++; showQuestion(); }, 800);
+// ... (הקוד שאחרי הבלוק הזה, אם קיים) ...
     };
     answersDiv.appendChild(btn);
   });

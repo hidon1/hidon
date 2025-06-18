@@ -588,20 +588,15 @@ function showQuestion() {
       
 if (isCorrect) {
   playSuccessSound();
-} else {
-  playFailSound();
-}
-
-if (isCorrect) {
-  playSuccessSound();
   score += 5;
   correct++;
-  coins += 10; // כאן צוברים מטבעות
+  coins += 10;
+  console.log("✅ קיבלת 10 מטבעות. סך הכול עכשיו:", coins);
 } else {
   playFailSound();
   score -= 5;
-  // לא נוגעים ב-coins במקרה של טעות
 }
+
 
       setTimeout(() => { current++; showQuestion(); }, 800);
     };

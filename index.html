@@ -475,6 +475,9 @@ setBackgroundOpacity(1);
 
 let stage = 1, current = 0,coins = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
 
+updateDashboard(); // ← חשוב! תוסיף את זה מיד לאחר ההגדרות
+
+
 function updateBackground() {
   document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
   document.body.style.backgroundSize = 'cover'; // כאן העדכון

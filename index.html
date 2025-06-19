@@ -763,24 +763,25 @@
         });
     }
 
-    function buyItem(item) {
-        if (coins >= item.price) {
-            updateCoins(-item.price); 
-            userAvatar = item.image;
-            document.getElementById('user-avatar').src = userAvatar;
-            alert(`קנית את סמל ה-${item.name}!`);
-            closeStore();
-
-            localStorage.setItem('userAvatar', userAvatar);
-            window.saveUserDataToDB(); 
-        } else {
-            alert('אין לך מספיק מטבעות כדי לקנות את זה.');
-        }
+// החלף את כל הפונקציה הזו בקוד שלך
+function buyItem(item) {
+    if (coins >= item.price) {
+        // שורה זו מעדכנת את המטבעות וגם קוראת לשמירה בשרת
+        updateCoins(-item.price); 
+        
+        // מעדכנים את הדמות ומיד שומרים אותה
+        userAvatar = item.image;
+        document.getElementById('user-avatar').src = userAvatar;
+        localStorage.setItem('userAvatar', userAvatar);
+        window.saveUserDataToDB(); // שמירה מפורשת של הדמות החדשה
+        
+        alert(`קנית את סמל ה-${item.name}!`);
+        closeStore();
+        
+    } else {
+        alert('אין לך מספיק מטבעות כדי לקנות את זה.');
     }
-
-    window.openStore = openStore;
-    window.closeStore = closeStore;
-    window.buyItem = buyItem;
+}
     
     function updateBackground() {
         document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
@@ -1140,7 +1141,9 @@ function toggleMute() {
   
   // --- START: MOVING DB FUNCTIONS INTO THE MODULE ---
 
-  async function loadUserData() {
+// החלף את כל הפונקציה הזו בקוד שלך
+async function loadUserData() {
+    // We use window.variable to modify the global variables from within the module
     if (!currentUser) {
         const savedScore = localStorage.getItem('userScore');
         window.score = savedScore ? parseInt(savedScore, 10) : 0;
@@ -1176,10 +1179,17 @@ function toggleMute() {
         window.score = savedScore ? parseInt(savedScore, 10) : 0;
     }
     
-    window.updateScore(0);
-    window.updateCoins(0);
+    // --- START OF FIX ---
+    // במקום לקרוא לפונקציות העדכון, נעדכן את התצוגה ישירות
+    // כדי למנוע שמירה מחדש לא רצויה
+    document.getElementById("coin-display").textContent = window.coins;
+    document.getElementById("store-coin-display").textContent = window.coins;
     document.getElementById('user-avatar').src = window.userAvatar;
-  }
+    
+    // עדיין צריך לעדכן את תצוגת הניקוד
+    window.updateScore(0);
+    // --- END OF FIX ---
+}
 
   function saveUserDataToDB() {
     if (!currentUser) return; 

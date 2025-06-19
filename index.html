@@ -600,7 +600,27 @@ function setBackgroundOpacity(val) {
 }
 setBackgroundOpacity(1);
 
-let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
+let stage = 1, current = 0, correct = 0, questions = [], timer, timeLeft;
+
+// --- התחלה: קוד "המרגל" שלנו ---
+let _internalScore = 0; // זהו הניקוד האמיתי והפנימי
+
+Object.defineProperty(window, 'score', {
+  get: function() { 
+    // פונקציה זו מופעלת כשמישהו מנסה לקרוא את המשתנה 'score'
+    return _internalScore; 
+  },
+  set: function(value) { 
+    // פונקציה זו מופעלת כשמישהו מנסה לשנות את המשתנה 'score' ישירות
+    alert('!!! תפסנו קוד ישן שמנסה לעדכן את הניקוד לערך: ' + value + ' !!!');
+    console.error("קוד ישן זוהה! הוא ניסה לשנות את הניקוד ישירות במקום להשתמש בפונקציה updateScore.");
+    _internalScore = value; 
+    // נעדכן גם את התצוגה כדי לראות מה קורה
+    document.getElementById("scoreCount").textContent = _internalScore;
+    document.getElementById("score-display").textContent = _internalScore;
+  }
+});
+// --- סוף: קוד "המרגל" ---
 
 // START: הגדרות ופונקציות חדשות עבור החנות
 let userAvatar = 'default-avatar.png';
@@ -612,24 +632,23 @@ const storeItems = [
     { name: 'כתר', price: 300, image: 'crown-avatar.png' }
 ];
 
-// פונקציה מרכזית ואחידה לעדכון ניקוד
 function updateScore(change) {
-    score += change;
-    if (score < 0) {
-        score = 0; // מניעת ניקוד שלילי
+    _internalScore += change; // שינוי: עובדים עם המשתנה הפנימי
+    if (_internalScore < 0) {
+        _internalScore = 0;
     }
-    // עדכון כל תצוגות הניקוד כדי שיראו אותו הדבר
-    document.getElementById("scoreCount").textContent = score;
-    document.getElementById("score-display").textContent = score;
-    document.getElementById("store-score-display").textContent = score;
+    // עדכון כל תצוגות הניקוד
+    document.getElementById("scoreCount").textContent = _internalScore;
+    document.getElementById("score-display").textContent = _internalScore;
+    document.getElementById("store-score-display").textContent = _internalScore;
 
     // עדכון כפתור הדילוג
     const skipBtn = document.getElementById("skipButton");
     if (skipBtn) {
-        skipBtn.disabled = score < 50;
+        skipBtn.disabled = _internalScore < 50;
     }
-    // שמירת הניקוד בזיכרון הדפדפן
-    localStorage.setItem('userScore', score);
+    // שמירת הניקוד
+    localStorage.setItem('userScore', _internalScore);
 }
 
 // פונקציות החנות

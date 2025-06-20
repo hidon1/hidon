@@ -127,7 +127,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    /* מחיקת השורה הבעייתית מונעת את ההשתקפות */
+   background-image: var(--bg-image)
     background-size: cover !important;
     background-repeat: no-repeat !important;
     background-position: center center !important;
@@ -610,14 +610,14 @@
         localStorage.setItem('userScore', score);
     }
     
-    function updateBackground() {
-        document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
-    }
+function updateBackground() {
+    document.body.style.setProperty('--bg-image', `url('backgrounds/stage${stage}.jpg')`);
+}
 
     function showStartScreen() {
         document.getElementById('user-info-container').style.display = 'none';
         setBackgroundOpacity(1);
-        document.body.style.backgroundImage = "url('backgrounds/main.jpg')";
+        document.body.style.setProperty('--bg-image', "url('backgrounds/main.jpg')");
         document.getElementById('startScreen').style.display = 'flex';
         document.getElementById('stageIntro').style.display = 'none';
         document.getElementById('quizContainer').style.display = 'none';

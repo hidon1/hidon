@@ -111,30 +111,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-            font-family: 'Baloo 2', cursive;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: inherit;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            background-position: center center !important;
-            opacity: 1;
-            z-index: -1;
-            pointer-events: none;
-        }
+    body, html {
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    font-family: 'Baloo 2', cursive;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-attachment: fixed; /* <--- הוסף את השורה הזו */
+}
 
         #startScreen, #stageIntro, #quizContainer, #failScreen, #successScreen, #endScreen {
             display: none;
@@ -484,6 +469,35 @@
             background-color: transparent;
         }
         /* END: עיצוב חדש לחנות */
+        /* עיצוב חדש למסכי סיום */
+#successScreen, #failScreen, #endScreen {
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));
+}
+.screen-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: #1A5276;
+    margin: 20px;
+    max-width: 600px;
+}
+#successScreen h2, #failScreen h2, #endScreen h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 3.1rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 0 0 25px 0;
+}
+#successScreen h2 {
+    color: #f39c12; /* צבע כתום להצלחה */
+}
+#nextStageBtn {
+    font-size: 1.8rem;
+    padding: 15px 50px;
+    background: linear-gradient(45deg, #ff9800, #ffb347);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+}
 
     </style>
     <script>
@@ -559,8 +573,10 @@
 </div>
 <div id="successScreen">
     <canvas id="fireworksCanvas"></canvas>
-    <h2>עברת בהצלחה את שלב <span id="successStageNum"></span></h2>
-    <button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+    <div class="screen-card">
+        <h2>עברת בהצלחה את שלב <span id="successStageNum"></span></h2>
+        <button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+    </div>
 </div>
 <div id="endScreen">
     <canvas id="endFireworksCanvas"></canvas>

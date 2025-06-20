@@ -484,7 +484,46 @@
             background-color: transparent;
         }
         /* END: עיצוב חדש לחנות */
+/* ======================================= */
+/* START: עיצוב חדש למסך ההצלחה          */
+/* ======================================= */
 
+#successScreen {
+    /* הוספת רקע חצי-שקוף למסך כולו */
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3));
+}
+
+.screen-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: #1A5276;
+    margin: 20px;
+    max-width: 600px;
+    width: 90%;
+}
+
+#successScreen h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 4.5rem;   /* גופן גדול יותר */
+    color: #3498db;      /* צבע כחול */
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+#nextStageBtn {
+    font-size: 1.8rem;
+    padding: 15px 50px;
+    background: linear-gradient(45deg, #ff9800, #ffb347);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+}
+
+/* ======================================= */
+/* END: עיצוב חדש למסך ההצלחה             */
+/* ======================================= */
     </style>
     <script>
         document.fonts.ready.then(() => document.body.style.visibility = "visible");
@@ -559,8 +598,10 @@
 </div>
 <div id="successScreen">
     <canvas id="fireworksCanvas"></canvas>
-    <h2>עברת בהצלחה את שלב <span id="successStageNum"></span></h2>
-    <button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+    <div class="screen-card">
+        <h2>עברת בהצלחה את שלב <span id="successStageNum"></span></h2>
+        <button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+    </div>
 </div>
 <div id="endScreen">
     <canvas id="endFireworksCanvas"></canvas>

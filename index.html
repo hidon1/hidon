@@ -549,9 +549,55 @@
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
 }
 
-/* ======================================= */
-/* END: עיצוב חדש למסך "לא עברת"          */
-/* ======================================= */
+/* START: Leaderboard CSS */
+#leaderboard-container {
+    position: fixed;
+    top: 200px; /* מיקום מתחת לבאנר האייקון */
+    right: 15px;
+    z-index: 4000;
+    direction: ltr;
+    background: rgba(0, 30, 60, 0.7);
+    backdrop-filter: blur(5px);
+    border-radius: 12px;
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-family: 'Alef', sans-serif;
+    color: white;
+    width: 220px;
+}
+#leaderboard-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 5px;
+}
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+.leaderboard-row img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 1px solid white;
+}
+.leaderboard-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.leaderboard-coins {
+    font-weight: 700;
+    color: #ffd700;
+}
+/* END: Leaderboard CSS */
     </style>
     <script>
         document.fonts.ready.then(() => document.body.style.visibility = "visible");
@@ -584,6 +630,11 @@
         <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
     </div>
 </div>
+    <div id="leaderboard-container" style="display: none;">
+        <div id="leaderboard-title">טבלת המובילים</div>
+        <div id="leaderboard-list">
+            </div>
+    </div>
 <div id="store-overlay" class="overlay">
     <div class="overlay-content">
         <span class="close-btn" onclick="window.firebase_store.closeStore()">&times;</span>

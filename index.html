@@ -120,20 +120,21 @@
             overflow-x: hidden;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-size: contain !important;
-            background-repeat: no-repeat !important;
-            background-position: center center !important;
-            opacity: 1;
-            z-index: -1;
-            pointer-events: none;
-        }
+    body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* מחיקת השורה הבעייתית מונעת את ההשתקפות */
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    opacity: 1;
+    z-index: -1;
+    pointer-events: none;
+}
 
         #startScreen, #stageIntro, #quizContainer, #failScreen, #successScreen, #endScreen {
             display: none;

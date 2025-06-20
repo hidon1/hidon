@@ -522,7 +522,38 @@
 }
 
 /* ======================================= */
-/* END: עיצוב חדש למסך ההצלחה             */
+/* START: עיצוב חדש למסך "לא עברת"        */
+/* ======================================= */
+
+#failScreen h2 {
+    font-size: 4.5rem;   /* גופן גדול יותר */
+    color: #e74c3c;     /* צבע אדום */
+    font-weight: bold;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+#failScreen #failText {
+    background-color: #eaf2f8; /* "כרטיסייה" בצבע תכלת בהיר */
+    color: #154360; /* צבע טקסט כהה שיהיה קריא */
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    border: 1px solid #d4e6f1;
+}
+
+#retryBtn {
+    font-size: 1.8rem;
+    padding: 15px 50px;
+    background: linear-gradient(45deg, #3498db, #5dade2);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+/* ======================================= */
+/* END: עיצוב חדש למסך "לא עברת"          */
 /* ======================================= */
     </style>
     <script>
@@ -592,9 +623,11 @@
     </div>
 </div>
 <div id="failScreen">
-    <h2>לא עברת</h2>
-    <div id="failText">בשביל לעבור לשלב הבא צריך לענות לפחות תשע תשובות נכונות.<br/>אנא נסה שוב.</div>
-    <button class="button" id="retryBtn" onclick="retryStage()">שחק שוב</button>
+    <div class="screen-card">
+        <h2>לא עברת</h2>
+        <div id="failText">בשביל לעבור לשלב הבא צריך לענות לפחות תשע תשובות נכונות.<br/>אנא נסה שוב.</div>
+        <button class="button" id="retryBtn" onclick="retryStage()">שחק שוב</button>
+    </div>
 </div>
 <div id="successScreen">
     <canvas id="fireworksCanvas"></canvas>

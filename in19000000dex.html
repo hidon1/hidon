@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <style>
+        body { visibility: hidden; }
+    </style>
+
+    <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    
+    <meta charset="utf-8"/>
+    <title>חידון התנ"ך</title>
+    
+    <style>
+        :root {
+            --quiz-width: 860px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            font-family: 'Baloo 2', cursive;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* START: Fix for background image reflection */
+        body {
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
+            background-attachment: fixed;
+        }
+        /* END: Fix for background image reflection */
+
+        #startScreen, #stageIntro, #quizContainer, #failScreen, #successScreen, #endScreen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            font-family: 'Frank Ruhl Libre', serif !important;
+            font-size: 1.3rem;
+            padding: 14px 38px;
+            border-radius: 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .button:disabled {
+            cursor: not-allowed;
+            background-color: gray !important;
+            opacity: 0.6;
+        }
+        
+        #welcomeBanner {
+            position: fixed;
+            top: 6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96vw;
+            min-width: 220px;
+            max-width: 900px;
+            z-index: 3000;
+            background-color: #AFEEEE;
+            color: #003366;
+            font-family: 'Rubik Dirt', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-align: center;
+            border-radius: 50px;
+            box-shadow: 0 8px 38px #7b60c357;
+            padding: 38px 12px 22px 12px;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.6s cubic-bezier(.84, -0.15, .57, .87);
+            border: 4px solid #7657c2;
+            line-height: 1.16;
+            user-select: none;
+        }
+
+        #welcomeBanner.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #successMessage {
+            position: fixed;
+            top: 12vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5rem;
+            color: #0047ab;
+            font-family: 'Frank Ruhl Libre', sans-serif;
+            letter-spacing: 0.12em;
+            text-align: center;
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            z-index: 9999;
+            user-select: none;
+            line-height: 1.08;
+            white-space: nowrap;
+        }
+
+        #questionText {
+            font-size: 2.3rem;
+            color: #0d47a1;
+            font-weight: bold;
+            margin: 12px 0 24px 0;
+            width: var(--quiz-width);
+            max-width: 98vw;
+            margin-right: auto;
+            margin-left: auto;
+            background: linear-gradient(135deg, #f6fdff 90%, #e0f7fa 100%);
+            border: 2.5px solid #80deea;
+            border-radius: 22px;
+            box-shadow: 0 1px 14px #b2ebf240;
+            padding: 23px 17px;
+            transition: background 0.23s;
+            font-family: 'Varela Round', Arial, sans-serif !important;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 44px;
+            justify-content: center;
+            width: var(--quiz-width);
+            max-width: 98vw;
+            margin: 36px auto 36px auto;
+        }
+
+        .answer {
+            font-family: 'Frank Ruhl Libre', serif !important;
+            background: linear-gradient(120deg, #ffffff 94%, #e0f7fa 100%);
+            border: 2px solid #b2ebf2;
+            border-radius: 13px;
+            padding: 12px 0;
+            cursor: pointer;
+            font-size: 1.85rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.25s, color 0.17s, border 0.22s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+            width: 96%;
+            margin: 0 auto;
+            color: #003b47;
+        }
+
+        .answer:hover {
+            background: #e0f7fa;
+        }
+
+        .correct {
+            background: #007e33 !important;
+            color: #fff !important;
+            border: 2px solid #006221 !important;
+        }
+
+        .wrong {
+            background: #b71c1c !important;
+            color: #fff !important;
+            border: 2px solid #910d0d !important;
+        }
+
+        #progressBarContainer, #dashboard, #skipWrapper {
+            width: var(--quiz-width);
+            max-width: 98vw;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        #progressBarContainer {
+            height: 16px;
+            background-color: #c8e6c9;
+            border-radius: 7px;
+            margin-top: 16px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0,172,193,0.12);
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 100%;
+            background-color: #2e7d32;
+            transition: width 1s linear, background-color 0.5s ease;
+        }
+
+        #dashboard {
+            background: #0097a7;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.17);
+            font-family: 'Frank Ruhl Libre', serif !important;
+            margin-bottom: 12px;
+        }
+
+        #correctAnswersInfo {
+            margin-top: 4px;
+            font-size: 1.16rem;
+            font-weight: normal;
+            color: #fffbe2;
+            text-shadow: 0 1px 2px #01579b55;
+        }
+
+        #skipWrapper {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #skipButton {
+            padding: 11px 22px;
+            font-size: 1.09rem;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.19);
+            margin-bottom: 10px;
+            width: 52%;
+            min-width: 180px;
+            max-width: 350px;
+        }
+        
+        #failScreen h2, #endScreen h2 {
+             font-family: 'Baloo 2', cursive;
+        }
+
+        /* --- User Info & Leaderboard --- */
+        #user-info-container, #leaderboard-container {
+            position: fixed;
+            right: 15px;
+            z-index: 4000;
+            direction: ltr;
+        }
+
+        #user-info-container {
+            top: 15px;
+        }
+        
+        #currency-bar {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        #coin-icon {
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+        #coin-display {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin-left: 10px;
+        }
+        
+        #avatar-banner {
+            margin-top: 10px;
+            background: rgba(0, 51, 102, 0.5);
+            border-radius: 12px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            height: 120px;
+            transition: width 0.3s;
+        }
+        #user-avatar {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        /* START: Leaderboard CSS */
+        #leaderboard-container {
+            top: 200px;
+            background: rgba(0, 30, 60, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Alef', sans-serif;
+            color: white;
+            width: 220px;
+        }
+        #leaderboard-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            padding-bottom: 5px;
+        }
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        .leaderboard-row img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 1px solid white;
+        }
+        .leaderboard-name {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .leaderboard-coins {
+            font-weight: 700;
+            color: #ffd700;
+        }
+        /* END: Leaderboard CSS */
+
+        /* --- START: Redesigned Success Screen CSS --- */
+        #successScreen {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3));
+        }
+        .screen-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            color: #154360;
+            margin: 20px;
+        }
+        #failScreen h2, #successScreen h2, #endScreen h2 {
+            font-size: 3.1rem;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0 0 25px 0;
+        }
+        #failScreen h2 { color: #c0392b; }
+        #successScreen h2 { color: #f39c12; }
+        #endScreen h2 { color: #27ae60; }
+
+        #nextStageBtn {
+            font-size: 1.8rem;
+            padding: 15px 50px;
+            background: linear-gradient(45deg, #ff9800, #ffb347);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+        }
+        #retryBtn {
+            font-size: 1.8rem;
+            padding: 15px 50px;
+            background: linear-gradient(45deg, #3498db, #5dade2);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        /* END: Redesigned Success Screen CSS */
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            z-index: 5000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .overlay-content {
+            background: linear-gradient(145deg, #f0f8ff, #d6eaf8);
+            padding: 30px;
+            border: none;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 20px;
+            text-align: center;
+            font-family: 'Alef', sans-serif;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        
+        .overlay.visible .overlay-content {
+            transform: scale(1);
+        }
+        
+        .overlay-content h2 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 2.5rem;
+            color: #154360;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .overlay-content h3 {
+             font-family: 'Alef', sans-serif;
+             font-size: 1.4rem;
+             color: #1f618d;
+             margin-top: 0;
+             margin-bottom: 20px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #999;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        #store-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+            direction: rtl;
+        }
+
+        .store-item {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .store-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.2);
+        }
+        
+        .store-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9f9;
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1a5276;
+            margin: 5px 0;
+        }
+
+        .item-price {
+            font-weight: bold;
+            margin-top: 5px;
+            color: #b7950b;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .item-price img {
+            width: 18px;
+            height: 18px;
+            margin-right: 4px;
+            margin-bottom: 0;
+            background-color: transparent;
+        }
+
+    </style>
+    <script>
+        document.fonts.ready.then(() => document.body.style.visibility = "visible");
+    </script>
+    <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+    <link href="favicon.png" rel="alternate icon" type="image/png"/>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-74G3G1VJHX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-74G3G1VJHX');
+    </script>
+</head>
+<body>
+
+    <div id="welcomeBanner">ברוכים הבאים<br>לחידון התנ״ך</div>
+    <div id="authOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:4000; background:rgba(255,255,255,0.93);">
+        <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
+    </div>
+
+    <div id="user-info-container" style="display: none;">
+        <div id="currency-bar" onclick="window.firebase_store.openStore()">
+            <span id="coin-display">0</span>
+            <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
+        </div>
+        <div id="avatar-banner">
+            <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
+        </div>
+    </div>
+    
+    <div id="leaderboard-container" style="display: none;">
+        <div id="leaderboard-title">טבלת המובילים</div>
+        <div id="leaderboard-list"></div>
+    </div>
+    
+    <div id="store-overlay" class="overlay">
+        <div class="overlay-content">
+            <span class="close-btn" onclick="window.firebase_store.closeStore()">&times;</span>
+            <h2>חנות הסמלים</h2>
+            <h3>יש לך: <span id="store-coin-display">0</span> מטבעות</h3>
+            <hr style="border: none; border-top: 1px solid #bdc3c7; margin: 15px 0;">
+            <div id="store-items"></div>
+        </div>
+    </div>
+
+    <button id="muteButton" onclick="toggleMute()" style="position: fixed; top: 12px; left: 12px; z-index: 5001; background: #ffffffcc; border: 1px solid #999; padding: 6px 12px; font-size: 0.95rem; font-family: 'Frank Ruhl Libre', serif; border-radius: 8px; cursor: pointer;">
+        🔇 השתק
+    </button>
+    <div id="startScreen">
+        <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
+    </div>
+
+    <div id="stageIntro">
+        <iframe src="banner-animation/index.html" id="bannerIframe" style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;" loading="lazy"></iframe>
+    </div>
+    <div id="quizContainer">
+        <div id="questionText"></div>
+        <div class="answer-grid" id="answers"></div>
+        <div id="progressBarContainer"><div id="progressBar"></div></div>
+        <div id="skipWrapper"><button disabled id="skipButton" onclick="skipQuestion()">דלג שאלה (50 נקודות)</button></div>
+        <div id="dashboard">
+            <div id="quizInfo">
+                שלב: <span id="stageNum">1</span> |
+                שאלה: <span id="questionNum">1</span> מתוך 10 |
+                ניקוד: <span id="scoreCount">0</span> |
+                זמן נותר: <span id="timeLeft">20</span> שניות
+            </div>
+            <div id="correctAnswersInfo"></div>
+        </div>
+    </div>
+    <div id="failScreen">
+        <div class="screen-card">
+            <h2>לא עברת</h2>
+            <div id="failText">בשביל לעבור לשלב הבא צריך לענות לפחות תשע תשובות נכונות.<br/>אנא נסה שוב.</div>
+            <button class="button" id="retryBtn" onclick="retryStage()">שחק שוב</button>
+        </div>
+    </div>
+    <div id="successScreen">
+        <canvas id="fireworksCanvas"></canvas>
+        <div class="screen-card">
+            <h2>עברת בהצלחה את שלב <span id="successStageNum"></span></h2>
+            <button class="button" id="nextStageBtn" onclick="goToNextStage()">עבור לשלב הבא</button>
+        </div>
+    </div>
+    <div id="endScreen">
+        <canvas id="endFireworksCanvas"></canvas>
+        <div class="screen-card">
+            <h2>סיימת בהצלחה!</h2>
+            <p>רואים שלמדת את התנ״ך!</p>
+            <h3>כל הכבוד!</h3>
+            <button class="button" onclick="restartQuiz()">חזור להתחלה</button>
+        </div>
+    </div>
+<script>
+    // Global variables for game state not saved to DB
+    let stage = 1, current = 0, correct = 0, score = 0, questions = [], timer, timeLeft;
+
+    if (typeof playIntroMusic === 'undefined') {
+        function playIntroMusic() {}
+        function stopAllSounds() {}
+        function playGameMusic() {}
+        function playSuccessSound() {}
+        function playFailSound() {}
+    }
+
+    function alignAvatarBannerWidth() {
+        const currencyBar = document.getElementById('currency-bar');
+        const avatarBanner = document.getElementById('avatar-banner');
+        if (currencyBar && avatarBanner) {
+            const currencyBarWidth = currencyBar.offsetWidth;
+            avatarBanner.style.width = currencyBarWidth + 'px';
+        }
+    }
+
+    function updateScore(change) {
+        score += change;
+        if (score < 0) score = 0;
+        document.getElementById("scoreCount").textContent = score;
+        const skipBtn = document.getElementById("skipButton");
+        if (skipBtn) skipBtn.disabled = score < 50;
+        localStorage.setItem('userScore', score);
+    }
+    
+    function updateBackground() {
+        document.body.style.backgroundImage = `url('backgrounds/stage${stage}.jpg')`;
+    }
+
+    function showStartScreen() {
+        document.getElementById('user-info-container').style.display = 'none';
+        document.getElementById('leaderboard-container').style.display = 'none';
+        document.body.style.backgroundImage = "url('backgrounds/main.jpg')";
+        document.getElementById('startScreen').style.display = 'flex';
+        document.getElementById('stageIntro').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'none';
+        playIntroMusic();
+    }
+
+    function showStageIntro() {
+        document.getElementById('user-info-container').style.display = 'block';
+        window.firebase_store.loadUserData(); 
+        window.updateLeaderboard();
+        setTimeout(alignAvatarBannerWidth, 50);
+        const bannerIframe = document.getElementById('bannerIframe');
+        if (bannerIframe) {
+            bannerIframe.src = '';
+            setTimeout(() => { bannerIframe.src = 'banner-animation/index.html'; }, 50);
+        }
+        if (document.getElementById('welcomeBanner')) {
+            document.getElementById('welcomeBanner').classList.add('hide');
+        }
+        updateBackground();
+        stopAllSounds();
+        playGameMusic();
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('stageIntro').style.display = 'flex';
+        document.getElementById('quizContainer').style.display = 'none';
+    }
+
+    function startQuiz() {
+        updateBackground();
+        stopAllSounds();
+        playGameMusic();
+        document.getElementById('stageIntro').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('skipButton').style.display = 'inline-block';
+        loadStage();
+    }
+
+    function loadStage() {
+        fetch(`${stage}.json`).then(res => res.json()).then(data => {
+            shuffleArray(data);
+            questions = data.slice(0, 10);
+            current = 0;
+            correct = 0;
+            showQuestion();
+        });
+    }
+
+    function showQuestion() {
+        let isAnswerLocked = false;
+        if (current >= 10) {
+            document.getElementById('skipButton').style.display = 'none';
+            correct >= 9 ? showSuccessScreen() : showFailScreen();
+            return;
+        }
+        const q = questions[current];
+        shuffleQuestionAnswers(q);
+        document.getElementById('questionText').textContent = q.question;
+        const answersDiv = document.getElementById('answers');
+        answersDiv.innerHTML = '';
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('div');
+            btn.className = 'answer';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                if (isAnswerLocked) return;
+                isAnswerLocked = true;
+                clearInterval(timer);
+                const isCorrect = i === q.correct;
+                btn.classList.add(isCorrect ? 'correct' : 'wrong');
+                if (isCorrect) {
+                    playSuccessSound();
+                    updateScore(5);
+                    window.firebase_store.updateCoins(timeLeft);
+                    correct++;
+                } else {
+                    playFailSound();
+                    updateScore(-5);
+                }
+                setTimeout(() => { current++; showQuestion(); }, 800);
+            };
+            answersDiv.appendChild(btn);
+        });
+        startTimer();
+        updateDashboard();
+    }
+
+    function skipQuestion() {
+        if (score >= 50) {
+            updateScore(-50);
+            correct++;
+            current++;
+            showQuestion();
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        if (stage <= 3) timeLeft = 20;
+        else if (stage <= 6) timeLeft = 15;
+        else timeLeft = 12;
+        const initialTime = timeLeft;
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = '100%';
+        progressBar.style.backgroundColor = '#2e7d32';
+        document.getElementById('timeLeft').textContent = timeLeft;
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timeLeft').textContent = timeLeft;
+            progressBar.style.width = `${(timeLeft / initialTime) * 100}%`;
+            if (timeLeft <= 5) progressBar.style.backgroundColor = '#f44336';
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                updateScore(-5);
+                current++;
+                showQuestion();
+            }
+        }, 1000);
+    }
+
+    function getCorrectText(n) {
+        if (n === 0) return 'אין תשובות נכונות';
+        if (n === 1) return '1 תשובה נכונה';
+        return `${n} תשובות נכונות`;
+    }
+
+    function updateDashboard() {
+        document.getElementById("stageNum").textContent = stage;
+        document.getElementById("questionNum").textContent = current + 1;
+        document.getElementById("scoreCount").textContent = score;
+        document.getElementById("timeLeft").textContent = timeLeft;
+        document.getElementById('correctAnswersInfo').textContent = getCorrectText(correct);
+    }
+
+    function showFailScreen() {
+        clearInterval(timer);
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('failScreen').style.display = 'flex';
+        playIntroMusic();
+    }
+
+    let successTimeout = null;
+    function showSuccessMessage() {
+        const message = document.getElementById('successMessage');
+        message.style.display = 'block';
+        if (successTimeout) clearTimeout(successTimeout);
+        successTimeout = setTimeout(() => { message.style.display = 'none'; }, 5000);
+    }
+
+    function retryStage() {
+        if (successTimeout) clearTimeout(successTimeout);
+        document.getElementById('successMessage').style.display = 'none';
+        clearInterval(timer);
+        stopAllSounds();
+        playGameMusic();
+        document.getElementById('failScreen').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'flex';
+        loadStage();
+    }
+
+    function showSuccessScreen() {
+        clearInterval(timer);
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'flex';
+        playIntroMusic();
+        document.getElementById('successStageNum').textContent = stage;
+        showSuccessMessage();
+    }
+
+    function goToNextStage() {
+        if (successTimeout) clearTimeout(successTimeout);
+        document.getElementById('successMessage').style.display = 'none';
+        stage++;
+        if (stage > 10) {
+            showEndScreen();
+            return;
+        }
+        document.getElementById('successScreen').style.display = 'none';
+        showStageIntro();
+    }
+
+    function shuffleQuestionAnswers(q) {
+        const optionsWithFlag = q.options.map((opt, index) => ({ text: opt, isCorrect: index === q.correct }));
+        for (let i = optionsWithFlag.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [optionsWithFlag[i], optionsWithFlag[j]] = [optionsWithFlag[j], optionsWithFlag[i]];
+        }
+        q.options = optionsWithFlag.map(o => o.text);
+        q.correct = optionsWithFlag.findIndex(o => o.isCorrect);
+    }
+
+    function showEndScreen() {
+        document.getElementById('user-info-container').style.display = 'none';
+        document.getElementById('leaderboard-container').style.display = 'none';
+        clearInterval(timer);
+        document.body.style.backgroundImage = "url('backgrounds/end.jpg')";
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('endScreen').style.display = 'flex';
+    }
+
+    function restartQuiz() {
+        stage = 1; correct = 0; current = 0; score = 0;
+        localStorage.removeItem('userScore');
+        updateScore(0);
+        clearInterval(timer);
+        showStartScreen();
+    }
+        
+    showStartScreen();
+</script>
+
+<script src="sound_manager.js"></script>
+
+<script>
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+let isMuted = false;
+function toggleMute() {
+  if (typeof sounds === 'undefined' || sounds === null) {
+      console.error("Mute Error: The 'sounds' object is not available.");
+      return;
+  }
+  isMuted = !isMuted;
+  const button = document.getElementById("muteButton");
+  button.innerText = isMuted ? "🔊 הפעל צלילים" : "🔇 השתק";
+  Object.values(sounds).forEach(sound => {
+    if (sound && typeof sound.muted === 'boolean') sound.muted = isMuted;
+  });
+}
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getDatabase, ref, set, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
+    authDomain: "hidon1-e4c91.firebaseapp.com",
+    projectId: "hidon1-e4c91",
+    storageBucket: "hidon1-e4c91.appspot.com",
+    messagingSenderId: "411517496015",
+    appId: "1:411517496015:web:2d9c176783d062110465ba",
+    measurementId: "G-FWTSZNY72T"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+  let currentUser = null;
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    if (user && document.getElementById('user-info-container').style.display === 'block') {
+        window.firebase_store.loadUserData();
+        window.updateLeaderboard();
+    }
+  });
+  
+  const firebase_store = {
+    coins: 0,
+    userAvatar: 'images/default-avatar.png',
+    username: 'אלמוני',
+    storeItems: [],
+
+    initStoreItems() {
+        this.storeItems = [];
+        for (let i = 1; i <= 20; i++) {
+            this.storeItems.push({
+                name: `סמל ${i}`,
+                price: i * 200,
+                image: `images/${i}.png`
+            });
+        }
+    },
+
+    async loadUserData() {
+        if (!currentUser) {
+            this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
+            this.userAvatar = localStorage.getItem('userAvatar') || 'images/default-avatar.png';
+        } else {
+            const userRef = ref(db, 'users/' + currentUser.uid);
+            try {
+                const snapshot = await get(userRef);
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    this.coins = data.coins || 0;
+                    this.userAvatar = data.avatar || 'images/default-avatar.png';
+                    this.username = data.username || 'אלמוני';
+                } else {
+                    this.coins = 0;
+                    this.userAvatar = 'images/default-avatar.png';
+                    this.username = currentUser.displayName || 'אלמוני';
+                    this.saveUserDataToDB();
+                }
+            } catch(error) {
+                console.error("DB Load Error:", error);
+                this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
+                this.userAvatar = localStorage.getItem('userAvatar') || 'images/default-avatar.png';
+            }
+        }
+        
+        document.getElementById("coin-display").textContent = this.coins;
+        document.getElementById("store-coin-display").textContent = this.coins;
+        document.getElementById('user-avatar').src = this.userAvatar;
+        
+        window.score = parseInt(localStorage.getItem('userScore') || '0', 10);
+        window.updateScore(0);
+    },
+
+    saveUserDataToDB() {
+        if (!currentUser) return; 
+        const userRef = ref(db, 'users/' + currentUser.uid);
+        set(userRef, {
+            coins: this.coins,
+            avatar: this.userAvatar,
+            username: this.username
+        }).catch(error => console.error("DB Save Error:", error));
+    },
+    
+    updateCoins(change) {
+        this.coins += change;
+        if (this.coins < 0) this.coins = 0;
+        
+        document.getElementById("coin-display").textContent = this.coins;
+        document.getElementById("store-coin-display").textContent = this.coins;
+        
+        localStorage.setItem('userCoins', this.coins);
+        this.saveUserDataToDB();
+    },
+
+    buyItem(item) {
+        if (this.coins >= item.price) {
+            this.updateCoins(-item.price);
+            this.userAvatar = item.image;
+            document.getElementById('user-avatar').src = this.userAvatar;
+            localStorage.setItem('userAvatar', this.userAvatar);
+            this.saveUserDataToDB();
+            alert(`קנית את ${item.name}!`);
+            this.closeStore();
+        } else {
+            alert('אין לך מספיק מטבעות.');
+        }
+    },
+    
+    openStore() {
+        this.populateStore();
+        document.getElementById('store-overlay').classList.add('visible');
+    },
+
+    closeStore() {
+        document.getElementById('store-overlay').classList.remove('visible');
+    },
+
+    populateStore() {
+        const itemsContainer = document.getElementById('store-items');
+        itemsContainer.innerHTML = '';
+        this.storeItems.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'store-item';
+            itemDiv.innerHTML = `<img src="<span class="math-inline">\{item\.image\}" alt\="</span>{item.name}"><p class="item-name"><span class="math-inline">\{item\.name\}</p\><div class\="item\-price"\></span>{item.price}<img src="images/coin-icon.png" alt="מטבע"></div>`;
+            itemDiv.onclick = () => this.buyItem(item);
+            itemsContainer.appendChild(itemDiv);
+        });
+    }
+  };
+  
+  async function updateLeaderboard() {
+      const leaderboardList = document.getElementById('leaderboard-list');
+      const leaderboardContainer = document.getElementById('leaderboard-container');
+      if (!leaderboardList || !leaderboardContainer) return;
+
+      leaderboardContainer.style.display = 'block';
+      const usersRef = ref(db, 'users');
+      const topUsersQuery = query(usersRef, orderByChild('coins'), limitToLast(5));
+
+      try {
+          const snapshot = await get(topUsersQuery);
+          if (snapshot.exists()) {
+              const users = [];
+              snapshot.forEach(childSnapshot => {
+                  users.push({
+                      username: childSnapshot.val().username || 'אלמוני',
+                      avatar: childSnapshot.val().avatar || 'images/default-avatar.png',
+                      coins: childSnapshot.val().coins
+                  });
+              });
+              
+              leaderboardList.innerHTML = '';
+              users.reverse().forEach(user => {
+                  const row = document.createElement('div');
+                  row.className = 'leaderboard-row';
+                  row.innerHTML = `
+                      <img src="<span class="math-inline">\{user\.avatar\}" alt\="avatar"\>
+<span class\="leaderboard\-name"\></span>{user.username}</span>
+                      <span class="leaderboard-coins">${user.coins}</span>
+                  `;
+                  leaderboardList.appendChild(row);
+              });
+          } else {
+              leaderboardList.innerHTML = 'אין נתונים להצגה';
+          }
+      } catch (error) {
+          console.error("Failed to fetch leaderboard data:", error);
+          leaderboardList.innerHTML = 'שגיאה בטעינת הנתונים';
+      }
+  }
+  window.updateLeaderboard = updateLeaderboard;
+
+  firebase_store.initStoreItems();
+  window.firebase_store = firebase_store;
+
+  function openAuthBanner() {
+    document.getElementById('welcomeBanner').classList.add('hide');
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('authOverlay').style.display = 'block';
+    document.getElementById('authFrame').src = "auth.html";
+  }
+
+  window.addEventListener("message", function(event) {
+    if(event.data.type === "authComplete") {
+      firebase_store.username = event.data.username || 'אלמוני';
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('authFrame').src = "";
+      showStageIntro();
+    }
+  });
+  window.openAuthBanner = openAuthBanner;
+</script>
+  
+</body>
+</html>

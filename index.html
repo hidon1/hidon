@@ -1104,7 +1104,7 @@ function toggleMute() {
         if (this.coins < 0) this.coins = 0;
         document.getElementById("coin-display").textContent = this.coins;
         document.getElementById("store-coin-display").textContent = this.coins;
-        // The save is now handled by saveUserDataToDB() when needed
+         this.saveUserDataToDB();
     },
 
     // *** REWRITTEN: Handles both buying and selecting items

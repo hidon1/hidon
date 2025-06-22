@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<script>
+  // אם המשתמש כבר מחובר, דלג מיד ל-index.html
+  if (localStorage.getItem("user")) {
+    window.location.replace("index.html");
+  }
+</script>
+
+  <meta charset="UTF-8">
+  <title>התחברות לאתר</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- גופן יפה מגוגל -->
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0e7ff 0%, #b1d2fa 100%);
+      font-family: 'Varela Round', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    #authContainer {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 6px 40px #0002;
+      padding: 30px 36px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      transition: box-shadow 0.3s;
+    }
+    h2 {
+      font-size: 2rem;
+      color: #1d60ab;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+    .inputField {
+      width: 100%;
+      padding: 13px 10px;
+      margin: 8px 0;
+      border: 1px solid #90b4fa;
+      border-radius: 8px;
+      font-size: 1.12em;
+      background: #f5f8ff;
+      outline: none;
+      transition: border .2s;
+    }
+    .inputField:focus {
+      border-color: #1d60ab;
+    }
+    .button {
+      width: 100%;
+      background: linear-gradient(90deg, #1d60ab 60%, #5be1f7 100%);
+      color: #fff;
+      font-size: 1.18em;
+      padding: 12px;
+      margin: 13px 0 6px 0;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 7px #1d60ab22;
+    }
+    .button:hover { background: #2665bc; }
+    .googleBtn {
+      background: #fff;
+      color: #1d60ab;
+      border: 1px solid #d1d9e6;
+      box-shadow: 0 2px 7px #b1d2fa55;
+      margin-bottom: 10px;
+    }
+    .googleBtn:hover { background: #e3eaff; }
+    .switch-mode {
+      background: none;
+      color: #228;
+      border: none;
+      font-size: 1em;
+      text-decoration: underline;
+      cursor: pointer;
+      margin: 12px 0 0 0;
+      padding: 0;
+    }
+    #userInfo {
+      margin: 22px 0 0 0;
+      background: #e0f4fb;
+      border-radius: 8px;
+      padding: 18px 0;
+      font-size: 1.13em;
+      color: #155ea0;
+    }
+    .logoutBtn {
+      margin-top: 10px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 0;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .logoutBtn:hover { background: #be3e2d; }
+    .errorMsg {
+      color: #d70040;
+      font-size: 1em;
+      margin: 7px 0;
+    }
+    @media (max-width: 480px) {
+      #authContainer { max-width: 99vw; padding: 20px 2vw; }
+    }
+  </style>
+  <!-- Firebase 9 CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div id="authContainer" style="display:none">
+    <h2 id="formTitle">התחברות לאתר</h2>
+    <div id="errorMsg" class="errorMsg"></div>
+    <input class="inputField" id="usernameField" placeholder="שם משתמש" style="display:none">
+    <input class="inputField" id="emailField" placeholder="מייל" type="email" autocomplete="username">
+    <input class="inputField" id="passwordField" placeholder="סיסמה" type="password" autocomplete="current-password">
+    <button class="button" id="submitBtn">התחבר</button>
+    <button class="button googleBtn" id="googleBtn">התחבר עם Google</button>
+	<button id="skipBtn" class="button" style="background: linear-gradient(90deg, #1d60ab 60%, #5be1f7 100%); margin-top: 10px;">לא עכשיו</button>
+    <button class="switch-mode" id="toggleModeBtn">עדיין אין לך חשבון? <b>להרשמה</b></button>
+    <div id="userInfo" style="display:none"></div>
+    <button id="logoutBtn" class="logoutBtn" style="display:none">התנתק</button>
+  </div>
+
+  <script>
+    // --- Firebase Config (שלך!) ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
+      authDomain: "hidon1-e4c91.firebaseapp.com",
+      projectId: "hidon1-e4c91",
+      storageBucket: "hidon1-e4c91.firebasestorage.app",
+      messagingSenderId: "411517496015",
+      appId: "1:411517496015:web:2d9c176783d062110465ba",
+      measurementId: "G-FWTSZNY72T"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // מצב הרשמה/התחברות
+    let signupMode = false;
+    const usernameField = document.getElementById('usernameField');
+    const emailField = document.getElementById('emailField');
+    const passwordField = document.getElementById('passwordField');
+    const submitBtn = document.getElementById('submitBtn');
+    const googleBtn = document.getElementById('googleBtn');
+    const toggleModeBtn = document.getElementById('toggleModeBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const userInfo = document.getElementById('userInfo');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const formTitle = document.getElementById('formTitle');
+
+    // החלפת מצב
+    toggleModeBtn.onclick = () => {
+      signupMode = !signupMode;
+      errorMsg.textContent = "";
+      if (signupMode) {
+        formTitle.textContent = 'הרשמה לאתר';
+        usernameField.style.display = "";
+        submitBtn.textContent = "הרשם";
+        toggleModeBtn.innerHTML = "כבר רשום? <b>להתחברות</b>";
+        googleBtn.textContent = "הירשם עם Google";
+      } else {
+        formTitle.textContent = 'התחברות לאתר';
+        usernameField.style.display = "none";
+        submitBtn.textContent = "התחבר";
+        toggleModeBtn.innerHTML = "עדיין אין לך חשבון? <b>להרשמה</b>";
+        googleBtn.textContent = "התחבר עם Google";
+      }
+    };
+
+    // הרשמה או התחברות
+    submitBtn.onclick = async () => {
+      errorMsg.textContent = "";
+      const email = emailField.value.trim();
+      const password = passwordField.value;
+      if (signupMode) {
+        const username = usernameField.value.trim();
+        if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
+        try {
+          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+          await userCredential.user.updateProfile({ displayName: username });
+          showUser(userCredential.user);
+	window.parent.postMessage('authComplete', '*');
+        } catch (err) {
+          errorMsg.textContent = err.message;
+        }
+      } else {
+        try {
+          const userCredential = await auth.signInWithEmailAndPassword(email, password);
+          showUser(userCredential.user);
+	window.parent.postMessage('authComplete', '*');
+        } catch (err) {
+          errorMsg.textContent = err.message;
+        }
+      }
+    };
+
+    // גוגל
+    googleBtn.onclick = async () => {
+      errorMsg.textContent = "";
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        let result;
+        if (signupMode) {
+          // גם בהרשמה וגם בהתחברות
+          result = await auth.signInWithPopup(provider);
+        } else {
+          result = await auth.signInWithPopup(provider);
+        }
+        showUser(result.user);
+	  window.parent.postMessage('authComplete', '*');
+      } catch (err) {
+        errorMsg.textContent = err.message;
+      }
+    };
+
+    // התנתקות
+    logoutBtn.onclick = () => {
+      auth.signOut();
+    };
+
+    // הצגת משתמש
+    function showUser(user) {
+      document.getElementById('authContainer').classList.remove('shake');
+      emailField.value = "";
+      passwordField.value = "";
+      usernameField.value = "";
+      document.getElementById('userInfo').innerHTML =
+        `<b>שלום ${user.displayName || "משתמש"}</b><br>מייל: ${user.email}`;
+      userInfo.style.display = "";
+      logoutBtn.style.display = "";
+      emailField.style.display = passwordField.style.display =
+        usernameField.style.display = submitBtn.style.display =
+        googleBtn.style.display = toggleModeBtn.style.display = "none";
+      formTitle.textContent = "ברוך הבא";
+      errorMsg.textContent = "";
+    }
+
+    // הצג מחדש טופס אם אין משתמש
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        showUser(user);
+   window.parent.postMessage('authComplete', '*');
+      } else {
+        document.getElementById('authContainer').style.display = 'block';
+        emailField.style.display = passwordField.style.display =
+          submitBtn.style.display = googleBtn.style.display = toggleModeBtn.style.display = "";
+        userInfo.style.display = logoutBtn.style.display = "none";
+        usernameField.style.display = signupMode ? "" : "none";
+        formTitle.textContent = signupMode ? "הרשמה לאתר" : "התחברות לאתר";
+      }
+    });
+	document.getElementById('skipBtn').onclick = function() {
+  // הסתרת הבאנר
+  document.getElementById('authContainer').style.display = 'none';
+ window.parent.postMessage('authComplete', '*');
+
+  // window.parent.postMessage('skipAuth', '*');
+};
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // אם המשתמש מחובר, לא מציגים את authContainer כלל
+    document.getElementById('authContainer').style.display = 'none';
+  } else {
+    document.getElementById('authContainer').style.display = 'block';
+  }
+});
+  </script>
+</body>
+</html>

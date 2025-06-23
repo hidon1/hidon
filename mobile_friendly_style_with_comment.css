@@ -29,47 +29,51 @@
 
     #user-info-container {
         position: fixed;
-        top: env(safe-area-inset-top, 10px);
-        left: 0;
-        right: 0;
-        margin: auto;
+        top: 10px;
+        right: 10px;
         display: flex;
-        justify-content: center;
-        z-index: 100;
-        transform: scale(0.85);
-        transform-origin: top center;
-        flex-direction: column;
         align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        z-index: 999;
     }
 
     #currency-bar {
         display: flex;
         align-items: center;
         background-color: #fff;
-        padding: 6px 14px;
-        border-radius: 25px;
+        padding: 6px 10px;
+        border-radius: 20px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     #coin-icon {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         margin-left: 5px;
     }
 
     #coin-display {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         color: #d4af37;
         font-weight: bold;
-        margin-left: 5px;
+        margin-left: 4px;
+    }
+
+    #user-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        margin: 0 auto;
     }
 
     #muteButton {
         position: fixed;
         top: 10px;
         left: 10px;
-        z-index: 100;
-        font-size: 0.8rem;
+        z-index: 999;
+        font-size: 0.75rem;
         padding: 6px 10px;
         border-radius: 8px;
         background: var(--card-bg);
@@ -79,11 +83,12 @@
     #quizContainer {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
+        align-items: center;
         height: 100vh;
-        padding: 90px 12px 20px;
+        padding-top: 65px;
         box-sizing: border-box;
-        gap: 12px;
+        gap: 10px;
     }
 
     #questionText {
@@ -92,6 +97,7 @@
         background: var(--card-bg);
         border: 2px solid var(--answer-border);
         border-radius: var(--radius);
+        width: 80%;
     }
 
     .answer-grid {
@@ -99,6 +105,7 @@
         flex-direction: column;
         gap: 8px;
         overflow-y: auto;
+        width: 80%;
     }
 
     .answer {
@@ -107,19 +114,21 @@
         border-radius: var(--radius);
         padding: 10px;
         font-size: 0.9rem;
-        width: 95%;
+        width: 100%;
         margin: 0 auto;
         color: #2c3e50;
     }
 
     #progressBarContainer {
-        height: 10px;
+        width: 80%;
+        height: 12px;
         background-color: #d0f0c0;
         border-radius: 8px;
         overflow: hidden;
     }
 
     #dashboard {
+        width: 80%;
         font-size: 0.7rem;
         background: #1c3d5a;
         color: #fff;
@@ -130,17 +139,19 @@
 
     #skipWrapper {
         text-align: center;
+        width: 80%;
     }
 
     #skipButton, #hintButton {
         font-size: 0.8rem;
         padding: 8px 14px;
-        margin: 5px;
+        margin: 5px auto;
         border-radius: var(--radius);
         background: var(--button-bg);
         color: white;
         border: none;
         box-shadow: var(--button-shadow);
+        width: 100%;
     }
 
     #startBtn, #retryBtn, #nextStageBtn {

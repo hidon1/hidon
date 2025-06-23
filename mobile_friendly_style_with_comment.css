@@ -1,187 +1,111 @@
 /* ========================================================== */
-/* ===== קובץ עיצוב מובייל - גרסה סופית ומלוטשת ===== */
+/* ===== קובץ עיצוב חיצוני למובייל (פתרון CSS בלבד) ===== */
 /* ========================================================== */
 
 @media (max-width: 900px) {
 
-    /* --- הגדרות בסיס, פונטים ומשתני עיצוב --- */
+    /* --- הגדרות בסיס --- */
     :root {
         --text-color: #1A5276;
         --card-bg: rgba(255, 255, 255, 0.98);
-        --button-bg: linear-gradient(145deg, #5dade2, #2e86c1); /* גוון כחול כמו במחשב */
-        --button-shadow: 0 4px 15px rgba(41, 128, 185, 0.4);
-        --answer-border: #aed6f1; /* גוון בהיר יותר למסגרות */
-        --radius: 20px; /* פינות מעוגלות */
-        --main-font: 'Varela Round', sans-serif;
-        --title-font: 'Frank Ruhl Libre', serif;
+        --radius: 18px;
     }
 
-    /* --- הגדרות גוף ומניעת גלילה --- */
     body, html {
-        font-family: var(--main-font) !important;
-        background-color: #eaf2f8;
-        color: var(--text-color) !important;
-        width: 100vw;
-        height: 100vh;
+        font-family: 'Varela Round', sans-serif !important;
         overflow: hidden !important;
-        position: fixed;
-        box-sizing: border-box;
-    }
-    *, *::before, *::after {
-        box-sizing: inherit; /* מבטיח שריפוד ומסגרת לא יגרמו לגלישה */
+        position: fixed !important;
     }
 
+    /* --- רקע קבוע וסטטי --- */
     body::before {
         background-image: url('backgrounds/main.jpg') !important;
         background-attachment: fixed !important;
-        background-size: cover !important;
     }
 
-    #leaderboard-container, #welcomeBanner, #successMessage { 
+    /* --- הסתרת אלמנטים לא רצויים במובייל --- */
+    #leaderboard-container, #welcomeBanner, #successMessage, #avatar-banner { 
         display: none !important;
     }
 
-    /* --- סידור מחדש של האלמנטים העליונים --- */
-    #user-info-container, #muteButton {
+    /* --- מיקום מחדש של אלמנטים עליונים בעזרת מיקום אבסולוטי --- */
+
+    /* 1. מיקום המטבעות בצד שמאל למעלה */
+    #currency-bar {
         position: fixed !important;
         top: 15px !important;
-        z-index: 100 !important;
-    }
-    #user-info-container {
-        right: 15px !important;
-    }
-    #muteButton {
         left: 15px !important;
-        background: var(--card-bg) !important; 
-        color: var(--text-color) !important;
-        padding: 6px 10px !important;
-        border-radius: var(--radius) !important;
-        font-size: 0.8rem !important;
-        border: 1px solid var(--answer-border) !important;
-    }
-    #currency-bar {
+        z-index: 101 !important;
         padding: 5px 12px !important;
         border-radius: 30px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     }
-    #coin-icon { width: 22px !important; height: 22px !important; }
-    #coin-display { font-size: 1.3rem !important; }
+    #coin-icon { width: 20px !important; height: 20px !important; }
+    #coin-display { font-size: 1.2rem !important; }
 
-    /* --- עיצוב אחיד למסכים וכפתורים ראשיים --- */
-    .screen-card {
-        padding: 25px !important;
+    /* 2. מיקום הסמל האישי בצד ימין למעלה */
+    #user-avatar {
+        display: block !important;
+        position: fixed !important;
+        top: 15px !important;
+        right: 15px !important;
+        z-index: 101 !important;
+        width: 45px !important;
+        height: 45px !important;
+        border-radius: 50% !important;
+        border: 2px solid white !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* 3. מיקום כפתור ההשתקה מתחת למטבעות */
+    #muteButton {
+        position: fixed !important;
+        top: 70px !important; /* מיקום קשיח מתחת למטבעות */
+        left: 15px !important;
+        z-index: 100 !important;
+        padding: 6px 10px !important;
+        font-size: 0.8rem !important;
+        border-radius: 12px !important;
         background: var(--card-bg) !important;
+    }
+
+    /* --- המשך עיצוב שאר המסך --- */
+    .screen-card, #startBtn, #retryBtn, #nextStageBtn {
         border-radius: var(--radius) !important;
-        width: 90vw !important;
-        max-width: 400px !important;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.1) !important;
     }
     
     #startScreen h1 {
-        font-family: var(--title-font) !important;
-        font-size: 2.5rem !important;
+        font-family: 'Frank Ruhl Libre', serif !important;
     }
-    
+
+    #quizContainer {
+        padding-top: 80px !important; /* מרווח כדי שהשאלה לא תהיה מתחת לכפתורים */
+    }
+
+    #questionText, .answer {
+        width: 90vw !important;
+        max-width: 450px !important;
+        border-radius: var(--radius) !important;
+    }
+
+    /* שאר הכללים מהגרסה הקודמת נשארים רלוונטיים... */
     .button, #startBtn, #retryBtn, #nextStageBtn {
-        font-family: var(--title-font) !important;
-        font-size: 1.5rem !important;
-        padding: 12px 35px !important;
-        border-radius: 50px !important; /* פינות עגולות במיוחד */
-        color: white !important;
-        border: 2px solid rgba(255, 255, 255, 0.5) !important;
-        background: var(--button-bg) !important;
-        box-shadow: var(--button-shadow) !important;
-        width: 85% !important;
-        max-width: 350px !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        font-family: 'Frank Ruhl Libre', serif !important;
+        border-radius: 50px !important;
+        background: linear-gradient(145deg, #5dade2, #2e86c1) !important;
     }
     
-    /* --- פריסה חדשה ומתוקנת למסך החידון --- */
     #quizContainer {
         display: flex !important;
         flex-direction: column !important;
-        height: 100% !important;
+        height: 100vh !important;
         box-sizing: border-box !important;
-        padding: 70px 0 15px 0 !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 12px;
     }
-
-    #questionText {
-        flex-shrink: 0;
-        width: 90vw;
-        padding: 15px !important;
-        font-size: 1.3rem !important;
-        border-radius: var(--radius) !important;
-        background: var(--card-bg) !important;
-        border: 2px solid var(--answer-border) !important;
-        text-align: center;
-        margin: 0 auto !important;
-    }
-
-    .answer-grid {
-        flex-grow: 1; /* החלק הגמיש שתופס את המקום הפנוי */
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        overflow-y: auto; /* מאפשר גלילה רק אם התשובות ארוכות מאוד */
-        width: 90vw;
-        margin: 10px auto !important;
-        justify-content: center; /* ממקם במרכז אם אין מספיק תוכן לגלילה */
-    }
-
-    .answer {
-        width: 100% !important;
-        padding: 14px 10px !important; /* פדינג אחיד */
-        font-size: 1.1rem !important;
-        min-height: 52px !important;
-        background: linear-gradient(120deg, #ffffff 94%, #eef5f9 100%) !important;
-        border: 2px solid var(--answer-border) !important;
-        border-radius: var(--radius) !important;
-        font-family: var(--main-font) !important;
-        color: #34495e !important;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.07) !important;
-    }
-
-    /* --- הצגת פס ההתקדמות (שעון) ומיקומו --- */
-    #progressBarContainer {
-        display: block !important;
-        width: 90vw;
-        height: 12px !important;
-        background-color: rgba(0, 0, 0, 0.1) !important;
-        border-radius: 6px !important;
-        margin: 5px auto !important; /* מרווח קטן */
-        flex-shrink: 0;
-    }
-    #progressBar { height: 100%; border-radius: 6px; }
-
-    #skipWrapper { 
-        width: 90vw; 
-        margin: 0 auto !important; 
-        flex-shrink: 0;
-    }
-    
-    #dashboard {
-        width: 90vw;
-        font-size: 0.8rem !important;
-        padding: 8px !important;
-        border-radius: var(--radius) !important;
-        background: rgba(28, 61, 90, 0.95) !important;
-        line-height: 1.4 !important;
-        margin: 0 auto !important;
-        flex-shrink: 0;
-    }
-
-    /* --- מצב מאוזן (Landscape) --- */
-    @media (orientation: landscape) and (max-height: 500px) {
-        #quizContainer { padding: 50px 0 10px 0 !important; gap: 5px !important; }
-        .top-ui-container { display: none !important; }
-        
-        #questionText { font-size: 1rem !important; padding: 8px !important; }
-        .answer-grid {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important; /* 2 עמודות */
-            gap: 8px !important;
-        }
-        .answer { min-height: 40px !important; font-size: 0.8rem !important; padding: 5px !important; }
-        #dashboard { padding: 4px !important; font-size: 0.7rem !important; }
-    }
+    #quizContainer > * { margin-left: auto !important; margin-right: auto !important; flex-shrink: 0 !important; }
+    #questionText { padding: 15px !important; font-size: 1.3rem !important; background: var(--card-bg) !important; border: 2px solid var(--answer-border) !important; }
+    .answer-grid { flex-grow: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important; overflow-y: auto !important; padding: 5px 0; }
+    .answer { padding: 12px 10px !important; font-size: 1.1rem !important; min-height: 50px !important; background: white !important; border: 2px solid var(--answer-border) !important; font-family: 'Varela Round', sans-serif !important; }
+    #progressBarContainer { display: block !important; height: 12px !important; background-color: rgba(0, 0, 0, 0.1) !important; border-radius: 6px !important; margin-top: auto !important; margin-bottom: 10px !important; }
 }

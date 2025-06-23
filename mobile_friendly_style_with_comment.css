@@ -1,146 +1,152 @@
-/* =================================================== */
-/* ===== קובץ עיצוב מובייל חדש, מלוטש ומקיף ===== */
-/* =================================================== */
+/* ========================================================== */
+/* ===== קובץ עיצוב מקיף וסופי למובייל (גרסה חדשה) ===== */
+/* ========================================================== */
 
 @media (max-width: 900px) {
 
-    /* --- הגדרות גלובליות ומשתני עיצוב --- */
+    /* --- הגדרות בסיס, פונטים ומשתני עיצוב --- */
     :root {
-        --mobile-bg-color: #f0f4f8;
         --text-color: #1c3d5a;
         --card-bg: rgba(255, 255, 255, 0.98);
-        --button-bg: linear-gradient(45deg, #3498db, #5dade2);
+        --button-bg: linear-gradient(135deg, #4da8da, #2a7ab0);
         --button-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
         --answer-border: #d6eaf8;
-        --radius-normal: 16px; /* פינות מעוגלות */
-        --radius-small: 12px;
+        --radius: 18px; /* פינות מעוגלות יותר */
     }
     
     body, html {
-        font-family: 'Varela Round', 'Baloo 2', sans-serif !important; /* הגדרת פונט גלובלית */
-        background-color: var(--mobile-bg-color);
+        font-family: 'Varela Round', sans-serif !important;
+        background-color: #eaf2f8;
         color: var(--text-color);
+        /* מניעת גלילה בכל המסך */
+        height: 100vh;
+        overflow: hidden;
     }
 
     body::before {
         background-image: url('backgrounds/main.jpg') !important;
         background-attachment: fixed;
         background-size: cover;
-        background-position: center;
     }
 
-    /* --- הסתרת אלמנטים של מחשב ובאנרים מיותרים --- */
-    #leaderboard-container, 
-    #avatar-banner,
-    #welcomeBanner, /* הסתרה קבועה של הבאנרים המיותרים במובייל */
-    #successMessage { 
-        display: none !important;
-    }
+    /* הסתרת אלמנטים של מחשב */
+    #leaderboard-container { display: none !important; }
 
-    /* --- עיצוב כפתור ההשתקה --- */
-    #muteButton {
-        display: block !important;
-        position: fixed !important;
-        top: 12px;
-        left: 12px;
-        z-index: 9999;
-        background: var(--card-bg) !important;
-        border: 1px solid var(--answer-border) !important;
+    /* --- עיצוב ממשק עליון (מטבעות, השתק) --- */
+    #user-info-container, #muteButton {
+        position: fixed;
+        top: 15px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #user-info-container { right: 15px; }
+    #muteButton { 
+        left: 15px; 
+        background: rgba(255, 255, 255, 0.9) !important; 
         color: var(--text-color) !important;
+        padding: 8px 12px !important;
+        border-radius: var(--radius) !important;
+        margin-top: 50px; /* מיקום מתחת למטבעות */
     }
+    #currency-bar { padding: 6px 14px; border-radius: 30px; }
+    #coin-icon { width: 25px; height: 25px; }
+    #coin-display { font-size: 1.5rem; }
 
-    /* --- עיצוב אחיד למסכי פתיחה/סיום --- */
+    /* --- עיצוב אחיד למסכים (פתיחה, סיום) --- */
     .screen-card {
         padding: 25px;
         background: var(--card-bg);
-        border-radius: var(--radius-normal);
+        border-radius: var(--radius);
         width: 90vw;
         max-width: 400px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.1);
     }
+    #startScreen .button, #failScreen .button, #successScreen .button {
+        padding: 15px;
+        font-size: 1.6rem;
+    }
+    #startScreen, #failScreen, #successScreen, #endScreen {
+        background: rgba(234, 242, 248, 0.5); /* רקע חצי שקוף למסכים אלו */
+        backdrop-filter: blur(4px);
+    }
     
-    #startScreen h1 {
-        font-size: 2.5rem;
-        color: var(--text-color);
-    }
-
-    .button {
-        font-family: 'Varela Round', sans-serif !important;
-        border-radius: var(--radius-normal) !important;
-        font-size: 1.5rem !important;
-        background: var(--button-bg) !important;
-        box-shadow: var(--button-shadow) !important;
-    }
-
-    #failScreen h2, #successScreen h2, #endScreen h2 { font-size: 2.2rem; }
-    #failText, #endScreen p { font-size: 1.1rem; }
-    #retryBtn, #nextStageBtn, #endScreen .button { font-size: 1.4rem; padding: 12px 30px; }
-
-
-    /* ================================================= */
-    /* ===== פריסה חדשה למסך החידון למניעת גלילה ===== */
-    /* ================================================= */
+    /* --- פריסת Flexbox חדשה למסך החידון --- */
     #quizContainer {
         display: flex !important;
         flex-direction: column;
-        justify-content: space-between; /* דוחף את הדשבורד למטה */
-        height: 100vh; /* גובה מלא של המסך */
+        height: 100vh;
         max-height: 100vh;
         box-sizing: border-box;
-        padding: 65px 0 10px 0; /* מרווח למעלה (עבור באנר המטבעות) ולמטה */
+        padding: 70px 0 15px 0; /* מרווח למעלה ולמטה */
     }
 
     #quizContainer > * {
         width: 92vw;
         margin-left: auto;
         margin-right: auto;
+        flex-shrink: 0; /* מונע מהאלמנטים להתכווץ */
     }
     
     #questionText {
         padding: 15px;
         font-size: 1.4rem;
-        border-radius: var(--radius-normal);
+        border-radius: var(--radius);
         background: var(--card-bg);
-        flex-shrink: 0; /* מונע מהשאלה להתכווץ */
+        border: 2px solid var(--answer-border);
+        margin-bottom: 10px;
+    }
+
+    #progressBarContainer {
+        height: 10px;
+        background-color: #bdc3c7;
+        border-radius: 5px;
+        margin-bottom: 10px;
     }
 
     .answer-grid {
-        flex: 1; /* החלק הגמיש שתופס את שאר המקום */
+        flex-grow: 1; /* החלק הגמיש שתופס מקום */
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        overflow-y: auto; /* מאפשר גלילה רק אם התשובות ארוכות מדי */
-        justify-content: center; /* ממקם את התשובות באמצע אם אין גלילה */
+        gap: 10px;
+        margin-bottom: 10px;
+        overflow-y: auto; /* מאפשר גלילה רק אם צריך */
+        justify-content: center;
     }
 
     .answer {
         width: 100%;
-        padding: 16px 10px;
+        padding: 15px 10px;
         font-size: 1.1rem;
-        border-radius: var(--radius-small);
-        background: var(--card-bg);
+        height: auto;
+        min-height: 55px;
+        background: white;
         border: 2px solid var(--answer-border);
-        flex-shrink: 0;
-    }
-    
-    #progressBarContainer {
-        height: 12px;
-        border-radius: 6px;
-        flex-shrink: 0;
-    }
-    
-    #skipWrapper {
-        flex-shrink: 0;
-        margin-top: 10px;
+        border-radius: var(--radius);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        font-family: 'Varela Round', sans-serif !important;
     }
     
     #dashboard {
-        order: 10;
-        flex-shrink: 0;
-        font-size: 0.85rem;
-        border-radius: var(--radius-normal);
-        background: rgba(28, 61, 90, 0.97);
+        font-size: 0.8rem;
+        padding: 8px;
+        border-radius: var(--radius);
+        background: rgba(28, 61, 90, 0.95);
+    }
+    
+    /* --- מצב מאוזן (Landscape) --- */
+    @media (orientation: landscape) and (max-height: 500px) {
+        #quizContainer { padding: 10px 0; }
+        #user-info-container, #muteButton { top: 5px; }
+        #muteButton { margin-top: 0; }
+        #questionText { font-size: 1.1rem; padding: 10px; margin-bottom: 5px; }
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .answer { padding: 10px 5px; font-size: 0.9rem; min-height: 45px; }
+        #dashboard { padding: 5px; font-size: 0.7rem; }
     }
 }

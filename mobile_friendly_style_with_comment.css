@@ -135,7 +135,7 @@
         padding: 0 10px;
         box-sizing: border-box;
         gap: 12px;
-        padding-top: 180px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
+        padding-top: 210px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
     }
 
 #questionText {
@@ -240,31 +240,31 @@
         max-width: 280px;
         display: block;
     }
-    /* ================================================= */
+/* ================================================= */
 /* ===== הקטנת האווטאר ותיבת המטבעות במובייל ===== */
 /* ================================================= */
 
-/* מקטין את הריפוד בתוך תיבת המטבעות */
+/* מקטין עוד יותר את הריפוד */
 #currency-bar {
-   padding: 4px 10px;
+   padding: 3px 8px;
 }
 
-/* מקטין את גודל הגופן של מספר המטבעות */
+/* מקטין עוד יותר את גודל הגופן */
 #coin-display {
-    font-size: 1.4rem !important; /* הקטנו מ-1.8rem */
+    font-size: 1.1rem !important;
 }
 
-/* מקטין את אייקון המטבע */
+/* מקטין עוד יותר את אייקון המטבע */
 #coin-icon {
-    width: 22px !important;    /* הקטנו מ-30px */
-    height: 22px !important;   /* הקטנו מ-30px */
+    width: 18px !important;
+    height: 18px !important;
 }
 
-/* מעדכן את הגדרות האווטאר שיתאים לשינוי */
+/* מעדכן את הגדרות האווטאר ללא מסגרת */
 #user-avatar {
-    width: 100% !important; /* גורם לו למלא את התיבה שלו */
-    height: auto !important; /* שומר על הפרופורציות */
-    border-radius: 8px !important; /* התאמת עיגול הפינות */
-    border: 1px solid white !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: none !important; /* <- הסרנו את המסגרת כאן */
 }
 }

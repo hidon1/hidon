@@ -1,6 +1,6 @@
 
+/* עיצוב מקצועי למובייל עם אווטאר מוקטן, מטבעות בצד ימין, השתק בשמאל, ורקע קבוע */
 @media (max-width: 900px) {
-
     :root {
         --text-color: #1A5276;
         --card-bg: rgba(255, 255, 255, 0.95);
@@ -8,30 +8,51 @@
         --button-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         --answer-border: #d6eaf8;
         --radius: 16px;
+        --main-font: 'Varela Round', sans-serif;
     }
 
     html, body {
         margin: 0;
         padding: 0;
-        font-family: 'Varela Round', 'Frank Ruhl Libre', sans-serif;
-        background: url('images/bg.jpg') no-repeat center center fixed;
+        font-family: var(--main-font);
+        background: url('background.jpg') no-repeat center center fixed;
         background-size: cover;
         color: var(--text-color);
         width: 100vw;
         height: 100vh;
-        overflow-x: hidden;
+        overflow: hidden;
         position: fixed;
+    }
+
+    #leaderboard-container,
+    #successMessage {
+        display: none !important;
+    }
+
+    #welcomeBanner {
+        display: block !important;
+        font-size: 1.5rem;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 12px 20px;
+        border-radius: 20px;
+        text-align: center;
+        position: fixed;
+        top: 30px;
+        left: 10%;
+        width: 80%;
+        z-index: 999;
+        font-family: var(--main-font);
     }
 
     #user-info-container {
         position: fixed;
         top: 10px;
-        left: 0;
-        right: 0;
+        left: 10px;
+        right: 10px;
         display: flex;
+        align-items: flex-start;
         justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
         z-index: 9999;
     }
 
@@ -45,7 +66,8 @@
 
     #currency-bar {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-end;
         background-color: #fff;
         padding: 4px 10px;
         border-radius: 20px;
@@ -53,52 +75,54 @@
     }
 
     #coin-icon {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         margin-left: 5px;
     }
 
     #coin-display {
-        font-size: 1rem;
+        font-size: 1.1rem;
         color: #d4af37;
         font-weight: bold;
+        margin-left: 4px;
     }
 
     #user-avatar {
-        position: absolute;
-        top: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         object-fit: contain;
-        background: none;
-        box-shadow: none;
-        z-index: 9999;
+        margin-top: 4px;
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 
     #quizContainer {
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: flex-start;
-        padding-top: 80px;
+        align-items: center;
+        height: 100vh;
+        padding-top: 90px;
+        box-sizing: border-box;
         gap: 10px;
     }
 
     #questionText {
-        width: 85%;
         font-size: 1rem;
         padding: 10px;
         background: var(--card-bg);
         border: 2px solid var(--answer-border);
         border-radius: var(--radius);
+        width: 85%;
+        text-align: center;
     }
 
     .answer-grid {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
+        overflow-y: auto;
         width: 85%;
     }
 
@@ -110,11 +134,12 @@
         font-size: 0.9rem;
         width: 100%;
         text-align: center;
+        color: #2c3e50;
     }
 
     #progressBarContainer {
         width: 85%;
-        height: 10px;
+        height: 12px;
         background-color: #d0f0c0;
         border-radius: 8px;
         overflow: hidden;
@@ -127,6 +152,16 @@
         transition: width 1s linear;
     }
 
+    #dashboard {
+        width: 85%;
+        font-size: 0.75rem;
+        background: #1c3d5a;
+        color: #fff;
+        padding: 10px 12px;
+        border-radius: var(--radius);
+        text-align: center;
+    }
+
     #skipWrapper {
         text-align: center;
         width: 85%;
@@ -135,22 +170,13 @@
     #skipButton {
         font-size: 0.8rem;
         padding: 8px 14px;
+        margin: 5px auto;
         border-radius: var(--radius);
         background: var(--button-bg);
         color: white;
         border: none;
         box-shadow: var(--button-shadow);
         width: 100%;
-    }
-
-    #dashboard {
-        width: 90%;
-        font-size: 0.75rem;
-        background: #1c3d5a;
-        color: #fff;
-        padding: 10px 12px;
-        border-radius: var(--radius);
-        text-align: center;
     }
 
     #startBtn, #retryBtn, #nextStageBtn {
@@ -167,11 +193,17 @@
         display: block;
     }
 
+    .correct, .wrong {
+        background: white !important;
+        border-color: var(--answer-border) !important;
+        color: #2c3e50 !important;
+    }
+
     @media (orientation: landscape) and (max-height: 500px) {
         .answer-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
     }
 }

@@ -152,6 +152,7 @@
     border-radius: var(--radius);
     padding: 12px;
     font-size: 1.1rem;
+    color: #1C2833; /* צבע כחול-אפרפר כהה וברור */
     
     /* --- שורות חדשות --- */
     min-height: 80px;            /* קביעת גובה מינימלי */
@@ -179,6 +180,7 @@
         border: 2px solid var(--answer-border);
         border-radius: var(--radius);
         padding: 10px;
+        color: #1C2833; /* צבע כחול-אפרפר כהה וברור */
     }
     
     #dashboard {

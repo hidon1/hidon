@@ -337,93 +337,87 @@
     text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
     margin: 0 0 25px 0;
 }
-/* ================================================================ */
-/* ===== עיצוב חדש ומקיף למצב שוכב (Landscape) - גרסה 2.0 ===== */
-/* ================================================================ */
+/* ==================================================================== */
+/* ===== עיצוב סופי ומוחלט למצב שוכב (Landscape) - גרסה 3.0 ===== */
+/* ==================================================================== */
 @media (orientation: landscape) and (max-height: 550px) {
 
-    /* === טיפול במסך הפתיחה (כפתור 'התחל') === */
-    #welcomeBanner {
-        font-size: 2rem !important; /* מקטינים דרסטית את הבאנר */
-        padding: 10px 15px !important;
-        top: 15px !important; /* מזיזים אותו למעלה */
-    }
-    #startScreen {
-        justify-content: flex-end; /* דוחפים את הכפתור לתחתית המסך */
-        padding-bottom: 20px;
-    }
-
-
-    /* === טיפול במסך 'תחילת שלב' (האנימציה) === */
-    #stageIntro iframe#bannerIframe {
-        height: 85vh; /* גובה האנימציה יהיה 85% מגובה המסך */
-        width: 100%;
-    }
+    /* === 1. טיפול במסך תחילת שלב (האנימציה) === */
     #stageIntro {
-        padding-top: 50px; /* ריווח מהכפתורים הקבועים למעלה */
-    }
-
-
-    /* === טיפול במסך החידון (הבעיה המרכזית) === */
-    
-    /* הזזת הכפתורים העליונים למעלה כדי לפנות מקום */
-    #user-info-container {
-        top: 10px;
-    }
-    #muteButton {
-        top: 10px;
-    }
-
-    /* סידור מחדש של הקונטיינר הראשי */
-    #quizContainer {
-        padding-top: 60px; /* פחות ריווח מלמעלה כי הכפתורים זזו */
-        gap: 8px;
-        justify-content: flex-start;
-        height: 100vh;
-    }
-
-    /* שאלה: הזזה למעלה וחיסכון במקום */
-    #questionText {
-        font-size: 1rem;
-        min-height: auto;
-        padding: 10px;
-        margin-bottom: 8px; /* צמצום רווח תחתון */
-    }
-
-    /* תשובות: רשת של 2 על 2 שתופסת את רוב המקום */
-    .answer-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        width: 100%;
-        max-width: 700px; /* מרחיבים במצב שוכב */
-        flex-grow: 1; /* מאפשר לתיבת התשובות לתפוס את כל הגובה הפנוי */
-        max-height: none;
-        overflow-y: auto; /* מאפשר גלילה אם התשובות ארוכות מאוד */
-    }
-
-    .answer {
-        font-size: 0.9rem;
-        min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+    #stageIntro iframe#bannerIframe {
+        /* מקטינים את כל האנימציה באופן יחסי כדי שתתאים למסך */
+        transform: scale(0.75);
+        transform-origin: center;
+        border: none;
+        height: 450px; /* גובה מספיק כדי להכיל את האנימציה המוקטנת */
+    }
+    /* הערה חשובה: לא ניתן לשלוט על האייקונים הקטנים בתוך האנימציה עצמה
+       מכיוון שהיא רכיב חיצוני, אך ההקטנה היחסית תכניס את כולם למסך. */
+
+
+    /* === 2. טיפול במסך החידון (שאלה ותשובות) === */
+    
+    /* מיקום השאלה למעלה, בין הכפתורים, כפי שביקשת */
+    #questionText {
+        position: fixed; /* מקבעים את השאלה למעלה */
+        top: 10px;
+        left: 80px;  /* משאירים מקום לכפתור השתק */
+        right: 140px; /* משאירים מקום לאווטאר והמטבעות */
+        z-index: 3999; /* שכבה אחת מתחת לכפתורים העליונים */
+        padding: 8px;
+        font-size: 0.9rem;
     }
 
-    /* דשבורד: הקטנה משמעותית */
-    #dashboard {
-        font-size: 0.65rem;
+    /* סידור מחדש של הקונטיינר הראשי כדי לפנות מקום לשאלה הקבועה */
+    #quizContainer {
+        padding-top: 80px; /* ריווח גדול כדי שהתשובות יתחילו מתחת לשאלה */
+        padding-bottom: 10px;
+        justify-content: space-between; /* דוחף את התשובות למעלה ואת הדשבורד למטה */
+        height: 100vh;
+        box-sizing: border-box;
+    }
+
+    /* תשובות: רשת של 2 על 2, צרה יותר ומתאימה לגובה */
+    .answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
+        max-width: 550px; /* קצת יותר צר */
+        margin: 0 auto; /* מרכוז */
+    }
+
+    .answer {
+        font-size: 0.85rem;
+        min-height: 40px;
         padding: 5px;
-        flex-shrink: 0; /* מונע מהדשבורד להתכווץ */
     }
-    
-    #skipWrapper {
-        margin-top: 5px;
-        flex-shrink: 0;
+
+    /* דשבורד וכפתור דילוג בתחתית המסך */
+    #dashboard, #skipWrapper {
+        flex-shrink: 0; /* מונע מהם להתכווץ */
+        width: 100%;
+        max-width: 550px;
+        margin: 0 auto;
     }
-    #skipButton, #hintButton {
-        padding: 6px;
-        font-size: 0.7rem;
+    #dashboard { font-size: 0.7rem; padding: 5px; }
+    #skipButton, #hintButton { font-size: 0.7rem; padding: 6px; }
+
+
+    /* === 3. טיפול במסך הפתיחה (כדי שכפתור "התחל" יופיע) === */
+    #welcomeBanner {
+        font-size: 2rem !important;
+        padding: 10px !important;
+        top: 10px !important;
     }
-}
+    #startScreen {
+        justify-content: flex-end;
+        padding-bottom: 20px;
+    }
 }

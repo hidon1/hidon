@@ -1,5 +1,5 @@
 /* ================================================= */
-/* =====        קוד CSS למובייל - גרסה 3.0        ===== */
+/* =====        קוד CSS למובייל - גרסה 4.0        ===== */
 /* ================================================= */
 @media (max-width: 900px) {
 
@@ -43,13 +43,12 @@
         font-size: 0.8rem;
     }
 
-    /* תיקון חשוב: הסרת important כדי לאפשר ל-JS להסתיר את האזור בפתיח */
     #user-info-container {
         position: fixed;
         top: 15px;
         right: 15px;
         z-index: 4000;
-        display: flex; /* ללא important */
+        display: flex;
         flex-direction: column;
         align-items: flex-end;
         gap: 8px;
@@ -64,11 +63,10 @@
         box-shadow: none !important;
     }
     
-    /* הקטנת האווטאר ב-30% נוספים */
     #user-avatar {
         display: block !important;
-        width: 35px;   /* הוקטן מ-50px */
-        height: 35px;  /* הוקטן מ-50px */
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
         border: 2px solid white;
         box-shadow: 0 1px 4px rgba(0,0,0,0.3);
@@ -78,15 +76,13 @@
        padding: 5px 12px;
     }
     
-    /* --- באנר פתיחה והסתרה --- */
+    /* --- באנרים והודעות --- */
     #welcomeBanner.hide {
         display: none !important;
     }
 
-    /* --- עיצוב חדש להודעת ההצלחה --- */
     #successMessage {
-        /* הסרת הגדרות קודמות כדי לאפשר מיקום ועיצוב חדשים */
-        display: none; /* ברירת המחדל היא מוסתר */
+        display: none;
         position: fixed;
         top: 50%;
         left: 50%;
@@ -110,13 +106,13 @@
     #quizContainer {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start; /* שינוי חזרה ל-flex-start */
         align-items: center;
         height: 100%;
         padding: 0 10px;
         box-sizing: border-box;
-        gap: 12px; /* הגדלת הרווח מעט */
-        padding-top: 20px; /* הזזת התוכן מעט למטה */
+        gap: 12px;
+        padding-top: 120px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
     }
 
     #questionText {
@@ -164,13 +160,45 @@
         box-sizing: border-box;
     }
 
+    #progressBarContainer {
+        width: 100%;
+        max-width: 450px;
+        height: 12px;
+        background-color: #d0f0c0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* --- החזרת עיצוב הכפתורים --- */
     #skipWrapper {
+        text-align: center;
         width: 100%;
         max-width: 450px;
     }
 
-    /* שאר הסגנונות נשארים ללא שינוי */
-    #welcomeBanner, #progressBarContainer, #progressBar, #startBtn, #retryBtn, #nextStageBtn, #skipButton {
-         /* אין צורך לשנות את אלה, הם כבר מוגדרים היטב מהגרסה הקודמת */
+    #skipButton, #hintButton {
+        font-size: 0.8rem;
+        padding: 8px 14px;
+        margin: 5px auto;
+        border-radius: var(--radius);
+        background: var(--button-bg);
+        color: white;
+        border: none;
+        box-shadow: var(--button-shadow);
+        width: 100%;
+    }
+
+    #startBtn, #retryBtn, #nextStageBtn {
+        padding: 14px 30px;
+        font-size: 1.2rem;
+        background: var(--button-bg);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--button-shadow);
+        margin: 0 auto;
+        width: 80%;
+        max-width: 280px;
+        display: block;
     }
 }

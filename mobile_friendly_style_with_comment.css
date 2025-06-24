@@ -104,26 +104,29 @@
         display: none !important;
     }
 
-    #successMessage {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 5000;
-        background: linear-gradient(145deg, #2980b9, #3498db);
-        color: white;
-        padding: 25px 40px;
-        border-radius: var(--radius);
-        text-align: center;
-        width: 85%;
-        max-width: 350px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        border: 2px solid #ffffffaa;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-    }
+  #successMessage {
+    display: none; /* יידלק על ידי JavaScript */
+    position: fixed;
+    z-index: 5000;
+    top: 30vh; /* מיקום במרחק 30% מגובה החלק העליון של המסך */
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 90%; /* רוחב של 90% מהמסך */
+    max-width: 400px; /* אבל לא יותר רחב מ-400 פיקסלים */
+    
+    background: linear-gradient(145deg, #2980b9, #3498db);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 16px; /* פינות עגולות וברורות */
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-sizing: border-box;
+}
 
     /* --- התאמת תוכן החידון --- */
     #quizContainer {

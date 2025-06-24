@@ -332,4 +332,56 @@
     text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
     margin: 0 0 25px 0;
 }
+    /* ================================================= */
+/* =====        עיצוב למצב שוכב (Landscape)      ===== */
+/* ================================================= */
+@media (orientation: landscape) and (max-height: 500px) {
+
+    /* סידור מחדש של הקונטיינר הראשי */
+    #quizContainer {
+        padding-top: 85px; /* פחות ריווח מלמעלה כי המסך נמוך */
+        gap: 10px;
+        justify-content: flex-start;
+    }
+
+    /* הקטנת תיבת השאלה כדי שתתאים למעלה */
+    #questionText {
+        font-size: 1rem;
+        min-height: 50px;
+        margin-bottom: 5px; /* להקטין רווח תחתון */
+    }
+
+    /* *** זה החלק החשוב ביותר - הופך את התשובות לרשת ***
+    */
+    .answer-grid {
+        display: grid; /* משנה את התצוגה לרשת */
+        grid-template-columns: repeat(2, 1fr); /* יוצר 2 עמודות ברוחב שווה */
+        gap: 12px; /* קובע את הרווח בין כפתורי התשובות */
+        width: 100%;
+        max-width: 600px; /* אפשר לתת יותר רוחב במצב שוכב */
+        max-height: none; /* מסיר את מגבלת הגובה שהייתה במצב מאונך */
+        overflow-y: hidden; /* מסתיר גלילה אפשרית */
+    }
+
+    .answer {
+        font-size: 0.9rem; /* מקטין מעט את הטקסט בתשובות */
+        min-height: 45px; /* מוודא שהתשובות בגובה אחיד */
+    }
+
+    /* הקטנת הלוח התחתון כדי לחסוך מקום */
+    #dashboard {
+        font-size: 0.7rem;
+        padding: 6px;
+        order: 10; /* דוחף את הלוח לסוף, אם נרצה */
+    }
+    
+    #skipWrapper {
+        margin-top: 5px;
+    }
+
+    #skipButton, #hintButton {
+        padding: 8px;
+        font-size: 0.75rem;
+    }
+}
 }

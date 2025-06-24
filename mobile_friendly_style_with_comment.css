@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
 body {
@@ -17,8 +18,9 @@ body {
   background-position: center;
 }
 
+/* Only show welcomeBanner at start */
 #welcomeBanner {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -38,8 +40,8 @@ body {
 
 #quizContainer {
   padding: 20px;
-  padding-bottom: 200px; /* מקום לדשבורד + כפתורים + אווטאר */
-  margin-top: 90px;
+  padding-bottom: 200px;
+  margin-top: 120px;
 }
 
 .question-banner {
@@ -89,9 +91,9 @@ body {
 
 #progressFill {
   height: 100%;
-  width: 100%;
+  width: 0;
   background-color: lightgreen;
-  transition: width 0.5s;
+  transition: width 1s linear;
 }
 
 #dashboard {
@@ -124,16 +126,19 @@ body {
 
 #avatar-wrapper {
   position: fixed;
-  bottom: 110px;
+  top: 65px;
   right: 15px;
   z-index: 1300;
-  width: 85px;
+  width: 45px;
   height: auto;
 }
 
 #avatar-wrapper img {
   width: 100%;
   height: auto;
+  border: none;
+  box-shadow: none;
+  background: none;
 }
 
 #successMessage {
@@ -151,20 +156,10 @@ body {
   z-index: 1600;
 }
 
-#clock {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: transparent;
-  color: white;
-  font-size: 1em;
-  z-index: 2000;
-}
-
 #muteBtn {
   position: fixed;
-  top: 10px;
-  left: 10px;
+  top: 65px;
+  left: 12px;
   background: white;
   border-radius: 15px;
   padding: 8px 12px;

@@ -138,18 +138,25 @@
         padding-top: 120px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
     }
 
-    #questionText {
-        font-family: 'Varela Round', sans-serif !important;
-        margin: 0 auto;
-        width: auto;
-        max-width: 450px;
-        text-align: center;
-        background: var(--card-bg);
-        border: 2px solid var(--answer-border);
-        border-radius: var(--radius);
-        padding: 12px;
-        font-size: 1.1rem;
-    }
+#questionText {
+    font-family: 'Varela Round', sans-serif !important;
+    margin: 0 auto;
+    width: auto;
+    max-width: 450px;
+    text-align: center;
+    background: var(--card-bg);
+    border: 2px solid var(--answer-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    font-size: 1.1rem;
+    
+    /* --- שורות חדשות --- */
+    min-height: 80px;            /* קביעת גובה מינימלי */
+    display: flex;               /* מאפשר שליטה במיקום התוכן */
+    justify-content: center;     /* ממקם את הטקסט במרכז (אופקית) */
+    align-items: center;         /* ממקם את הטקסט במרכז (אנכית) */
+    box-sizing: border-box;      /* מבטיח שהריפוד לא יוסיף לגובה */
+}
 
     .answer-grid {
         display: flex;

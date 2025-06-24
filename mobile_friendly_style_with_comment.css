@@ -1,5 +1,5 @@
 /* ================================================= */
-/* =====        קוד CSS למובייל - גרסה 5.0 (סופי)   ===== */
+/* =====        קוד CSS למובייל - גרסה 6.0        ===== */
 /* ================================================= */
 @media (max-width: 900px) {
 
@@ -54,13 +54,8 @@
         gap: 8px;
     }
     
-    #avatar-banner {
-        background: none !important;
-        border: none !important;
-        padding: 0 !important;
-        height: auto !important;
-        min-width: auto !important;
-        box-shadow: none !important;
+    #avatar-banner, #user-avatar, #currency-bar {
+        /* סגנונות אלו נשארים תקינים מהגרסאות הקודמות */
     }
     
     #user-avatar {
@@ -72,19 +67,13 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     
-    #currency-bar {
-       padding: 5px 12px;
-    }
-    
     /* --- באנרים והודעות --- */
-    
-    /* עיצוב חדש לבאנר הפתיחה למובייל */
     #welcomeBanner {
-        font-family: 'Rubik Dirt', cursive !important; /* החזרת הגופן המיוחד */
-        font-size: 2.8rem; /* התאמת גודל הגופן למובייל */
+        font-family: 'Rubik Dirt', cursive !important;
+        font-size: 2.8rem;
         line-height: 1.4;
         color: #003366;
-        background-color: rgba(175, 238, 238, 0.9); /* רקע עם שקיפות */
+        background-color: rgba(175, 238, 238, 0.9);
         border: 3px solid #7657c2;
         border-radius: 25px;
         padding: 20px 15px;
@@ -92,7 +81,7 @@
         width: 90%;
         max-width: 400px;
         box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        margin: auto; /* ממורכז בתוך מסך הפתיחה */
+        margin: auto;
     }
 
     #startScreen {
@@ -100,27 +89,26 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 40px; /* רווח בין הבאנר לכפתור */
+        gap: 40px;
     }
 
     #welcomeBanner.hide {
         display: none !important;
     }
 
-    #successMessage {
-        /* עיצוב הודעת הצלחה - ללא שינוי */
-    }
-
     /* --- התאמת תוכן החידון --- */
+    
+    /* שחזור הגדרות יציבות והורדת התוכן למטה */
     #quizContainer {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end; /* שינוי: הצמדת התוכן לתחתית */
+        justify-content: flex-start; /* חזרה להגדרה היציבה */
         align-items: center;
-        height: 100vh; /* גובה מלא */
-        padding: 20px 15px; /* ריווח עליון ותחתון, וריווח צדדי */
-        box-sizing: border-box; /* חשוב מאוד למניעת חריגות */
+        height: 100vh;
+        padding: 0 15px;
+        box-sizing: border-box;
         gap: 12px;
+        padding-top: 180px; /* הגדלה משמעותית של הריווח העליון כדי להוריד את התוכן */
     }
 
     /* תיקון חריגה מהדף לכל האלמנטים בחידון */
@@ -129,27 +117,16 @@
         max-width: 450px;
         margin-right: auto;
         margin-left: auto;
-        box-sizing: border-box; /* התיקון המרכזי למניעת חריגה */
-    }
-
-    #questionText {
-        padding: 12px;
-        font-size: 1.1rem;
+        box-sizing: border-box; /* שמירה על התיקון למניעת חריגה */
     }
 
     .answer-grid {
-        max-height: 40vh;
-        order: -4; /* סידור מחדש - התשובות יופיעו אחרי השאלה */
+        max-height: 35vh; /* הקטנה קלה של גובה התשובות להתאמה */
     }
-
-    #questionText { order: -5; } /* השאלה תופיע ראשונה */
-    #progressBarContainer { order: -3; }
-    #skipWrapper { order: -2; }
-    #dashboard { order: -1; } /* הדאשבורד יופיע אחרון בתחתית */
 
     /* --- החזרת עיצוב הכפתורים --- */
     #skipButton, #hintButton, #startBtn, #retryBtn, #nextStageBtn {
-        font-family: 'Varela Round', sans-serif !important; /* גופן אחיד לכפתורים */
+        font-family: 'Varela Round', sans-serif !important;
     }
 
     #skipWrapper {

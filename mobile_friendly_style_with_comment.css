@@ -141,7 +141,7 @@
 #questionText {
     font-family: 'Varela Round', sans-serif !important;
     margin: 0 auto;
-    width: auto;
+    width: 100%;
     max-width: 450px;
     text-align: center;
     background: var(--card-bg);

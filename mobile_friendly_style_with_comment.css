@@ -172,7 +172,7 @@
     }
 
     .answer {
-        font-family: 'Varela Round', sans-serif !important;
+        font-family: 'Frank Ruhl Libre', serif !important;
         width: auto;
         text-align: center;
         background: var(--card-bg);
@@ -182,6 +182,7 @@
     }
     
     #dashboard {
+        font-family: 'Frank Ruhl Libre', serif !important;
         width: 100%;
         max-width: 450px;
         font-size: 0.75rem;
@@ -219,6 +220,7 @@
     }
 
     #skipButton, #hintButton {
+        font-family: 'Frank Ruhl Libre', serif !important;
         font-size: 0.8rem;
         padding: 8px 14px;
         margin: 5px auto;
@@ -231,6 +233,7 @@
     }
 
     #startBtn, #retryBtn, #nextStageBtn {
+        font-family: 'Frank Ruhl Libre', serif !important;
         padding: 14px 30px;
         font-size: 1.2rem;
         background: var(--button-bg);

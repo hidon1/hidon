@@ -1,5 +1,5 @@
 /* ================================================= */
-/* =====            קוד CSS למובייל מתוקן         ===== */
+/* =====        קוד CSS למובייל - גרסה 2.0        ===== */
 /* ================================================= */
 @media (max-width: 900px) {
 
@@ -15,7 +15,7 @@
     body {
         margin: 0;
         padding: 0;
-        font-family: 'Varela Round', sans-serif; /* שימוש בגופן אחיד לכל האפליקציה */
+        font-family: 'Varela Round', sans-serif !important; /* חיזוק הגופן הראשי */
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -26,6 +26,11 @@
         position: fixed;
     }
     
+    /* קיבוע תמונת הרקע הראשית לכל המשחק במובייל */
+    body::before {
+        background-image: url('backgrounds/main.jpg') !important;
+    }
+
     /* --- סידור האלמנטים העליונים --- */
 
     /* כפתור השתק - צד שמאל למעלה */
@@ -33,7 +38,7 @@
         position: fixed;
         top: 15px;
         left: 15px;
-        z-index: 4001; /* Z-index גבוה כדי להיות מעל הכל */
+        z-index: 4001;
         background: rgba(255, 255, 255, 0.8);
         border: 1px solid #999;
         border-radius: 8px;
@@ -41,63 +46,45 @@
         font-size: 0.8rem;
     }
 
-    /* מיקום חדש לאזור המידע של המשתמש - צד ימין למעלה */
+    /* מיקום אזור המידע של המשתמש - צד ימין למעלה */
     #user-info-container {
         position: fixed;
         top: 15px;
         right: 15px;
         z-index: 4000;
-        display: flex !important; /* חשוב כדי להבטיח שהתצוגה תפעל */
+        display: flex !important;
         flex-direction: column;
-        align-items: flex-end; /* יישור האלמנטים הפנימיים לימין */
-        gap: 10px; /* רווח בין המטבעות לאווטאר */
+        align-items: flex-end;
+        gap: 10px;
     }
 
-    /* הסתרת מסגרת האווטאר במובייל */
+    /* הפיכת המסגרת לשקופה במקום להסתיר אותה */
     #avatar-banner {
-        display: none !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-width: auto !important;
+        box-shadow: none !important;
     }
     
-    /* עיצוב האווטאר עצמו - קטן ובלי מסגרת */
+    /* עיצוב האווטאר עצמו - עכשיו הוא יוצג */
     #user-avatar {
+        display: block !important; /* וידוא שהתמונה מוצגת */
         width: 50px;
         height: 50px;
-        border-radius: 50%; /* עיגול התמונה */
-        border: 2px solid white; /* מסגרת לבנה דקה */
+        border-radius: 50%;
+        border: 2px solid white;
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     
-    /* עיצוב בר המטבעות */
     #currency-bar {
        padding: 5px 12px;
     }
     
-    #coin-display {
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-
-    #coin-icon {
-        width: 20px;
-        height: 20px;
-    }
-
-    /* --- התאמת תוכן החידון --- */
+    /* --- באנר פתיחה והסתרה --- */
     
-    /* הוספת ריפוד עליון כדי למנוע חפיפה עם האלמנטים החדשים */
-    #quizContainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        height: 100vh;
-        padding-top: 120px; /* מרווח מהחלק העליון */
-        box-sizing: border-box;
-        gap: 10px;
-    }
-
     #welcomeBanner {
-        /* הסרת הגדרות מיותרות שמונעות את היעלמות הבאנר */
         font-family: 'Varela Round', sans-serif;
         font-size: 1.5rem;
         text-align: center;
@@ -105,33 +92,43 @@
         background: rgba(0, 0, 0, 0.5);
         color: white;
         border-radius: 16px;
-        margin: 80px auto 0; /* ממורכז ועם מרווח עליון */
+        margin: 80px auto 0;
         width: 90%;
         max-width: 400px;
         z-index: 999;
     }
 
-    #successMessage {
-        display: none;
-        font-size: 1.3rem;
-        background: rgba(0,0,0,0.6);
-        color: white;
-        padding: 10px;
-        border-radius: var(--radius);
-        text-align: center;
-        margin: 20px auto;
-        width: 90%;
-        z-index: 1000;
+    /* כלל חשוב להסתרה סופית של הבאנר במהלך המשחק */
+    #welcomeBanner.hide {
+        display: none !important;
     }
 
-    #questionText, .answer {
+
+    /* --- התאמת תוכן החידון --- */
+    
+    /* הזזת החידון למעלה */
+    #quizContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* שינוי ל-center כדי למרכז אנכית */
+        align-items: center;
+        height: 100%; /* שימוש ב-100% במקום 100vh כדי להתאים לגוף */
+        padding: 0 10px; /* ריפוד צדדי */
+        box-sizing: border-box;
+        gap: 10px;
+    }
+
+    #questionText {
+        font-family: 'Varela Round', sans-serif !important;
         margin: 0 auto;
-        width: 85%;
+        width: 100%;
+        max-width: 450px;
         text-align: center;
         background: var(--card-bg);
         border: 2px solid var(--answer-border);
         border-radius: var(--radius);
-        padding: 10px;
+        padding: 12px;
+        font-size: 1.1rem;
     }
 
     .answer-grid {
@@ -139,11 +136,46 @@
         flex-direction: column;
         gap: 8px;
         overflow-y: auto;
-        width: 85%;
+        width: 100%;
+        max-width: 450px;
+        max-height: 40vh; /* הגבלת גובה התשובות */
     }
 
+    .answer {
+        font-family: 'Varela Round', sans-serif !important;
+        width: auto;
+        text-align: center;
+        background: var(--card-bg);
+        border: 2px solid var(--answer-border);
+        border-radius: var(--radius);
+        padding: 10px;
+    }
+    
+    #dashboard {
+        width: 100%;
+        max-width: 450px;
+        font-size: 0.75rem;
+        background: #1c3d5a;
+        color: #fff;
+        padding: 8px;
+        border-radius: var(--radius);
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    #skipWrapper {
+        width: 100%;
+        max-width: 450px;
+    }
+
+    #skipButton {
+        width: 100%;
+    }
+    
+    /* שמירה על שאר הסגנונות כפי שהיו... */
     #progressBarContainer {
-        width: 85%;
+        width: 100%;
+        max-width: 450px;
         height: 12px;
         background-color: #d0f0c0;
         border-radius: 8px;
@@ -158,33 +190,6 @@
         transition: width 1s linear, background-color 0.5s ease;
     }
 
-    #dashboard {
-        width: 88%;
-        font-size: 0.75rem;
-        background: #1c3d5a;
-        color: #fff;
-        padding: 10px 12px;
-        border-radius: var(--radius);
-        text-align: center;
-    }
-
-    #skipWrapper {
-        text-align: center;
-        width: 85%;
-    }
-
-    #skipButton, #hintButton {
-        font-size: 0.8rem;
-        padding: 8px 14px;
-        margin: 5px auto;
-        border-radius: var(--radius);
-        background: var(--button-bg);
-        color: white;
-        border: none;
-        box-shadow: var(--button-shadow);
-        width: 100%;
-    }
-
     #startBtn, #retryBtn, #nextStageBtn {
         padding: 14px 30px;
         font-size: 1.2rem;
@@ -197,27 +202,5 @@
         width: 80%;
         max-width: 280px;
         display: block;
-    }
-
-    .correct, .wrong {
-        background: white !important;
-        border-color: var(--answer-border) !important;
-        color: #2c3e50 !important;
-    }
-
-    /* תמיכה במצב מאוזן (Landscape) למכשירים קטנים */
-    @media (orientation: landscape) and (max-height: 500px) {
-        .answer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .answer {
-            font-size: 0.8rem;
-            padding: 8px;
-        }
-        #quizContainer {
-             padding-top: 80px; /* הקטנת ריפוד עליון במצב מאוזן */
-        }
     }
 }

@@ -338,63 +338,66 @@
     margin: 0 0 25px 0;
 }
 /* ======================================================================= */
-/* ===== עיצוב סופי ומוחלט למצב שוכב (Landscape) - גרסה 5.0 (יציבה) ===== */
+/* ===== עיצוב סופי למצב שוכב (Landscape) - גרסה 6.0 (קומפקטית) ===== */
 /* ======================================================================= */
 @media (orientation: landscape) and (max-height: 550px) {
 
     /* === 1. טיפול במסך תחילת שלב (האנימציה) === */
     #stageIntro iframe#bannerIframe {
-        /* הגדלנו שוב לבקשתך, ל-95% מהגודל המקורי */
-        transform: scale(0.95);
+        /* הקטנו שוב מעט את האנימציה לבקשתך, מ-0.95 ל-0.9 */
+        transform: scale(0.9);
         transform-origin: center;
         border: none;
-        height: 500px; /* הגדלנו את המסגרת כדי שהאנימציה לא תיחתך */
+        height: 500px;
     }
 
 
-    /* === 2. טיפול במסך החידון (הפתרון היציב) === */
+    /* === 2. טיפול במסך החידון (קומפקטי) === */
     #quizContainer {
-        padding: 60px 15px 20px 15px; /* ריווח עליון ותחתון */
-        justify-content: center; /* ממורכז אנכית */
-        overflow-y: auto; /* מאפשר גלילה אם התוכן חורג מהמסך */
-        min-height: 100vh; /* מבטיח שהרקע יכסה תמיד את כל המסך */
-        height: auto; /* מאפשר לתוכן לגדול מעבר לגובה המסך */
+        /* מיקמנו את התוכן גבוה יותר ופיזרנו את הרווח */
+        padding: 55px 15px 10px 15px;
+        justify-content: space-around; /* פיזור הרווח הפנוי */
+        height: 100vh;
+        box-sizing: border-box;
     }
 
-    /* שאלה: החזרנו אותה להיות רגילה (לא קבועה), ממורכזת וצרה יותר */
+    /* שאלה: הונמכה (בגובהה) ומוקמה גבוה יותר (על המסך) */
     #questionText {
-        position: relative; /* לא קבוע יותר! */
+        position: relative;
         width: 100%;
-        max-width: 480px; /* רוחב אחיד עם התשובות */
-        margin: 0 auto 15px auto; /* מרכוז אוטומטי ורווח תחתון */
-        padding: 8px 12px; /* ריפוד מופחת לגובה */
+        max-width: 480px;
+        margin: 0 auto; /* מרכוז אוטומטי, ללא רווח תחתון קבוע */
+        padding: 6px 10px; /* ריפוד מינימלי להנמכת התיבה */
         font-size: 1rem;
     }
 
-    /* תשובות: רשת 2x2 ברוחב אחיד עם השאלה */
+    /* תשובות: הונמכו והוצרו */
     .answer-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 6px; /* צמצום הרווח בין התשובות */
         width: 100%;
-        max-width: 480px; /* רוחב אחיד עם השאלה */
+        max-width: 480px;
         margin: 0 auto;
     }
 
     .answer {
-        min-height: 38px;
-        padding: 5px;
+        min-height: 32px; /* הנמכה נוספת */
+        padding: 4px;
         font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* דשבורד וכפתורים: גם הם ברוחב אחיד */
+    /* דשבורד וכפתורים: קומפקטיים מתמיד */
     #dashboard, #skipWrapper {
         width: 100%;
         max-width: 480px;
-        margin: 10px auto 0 auto;
+        margin: 0 auto;
     }
-    #dashboard { font-size: 0.75rem; padding: 6px; }
-    #skipButton, #hintButton { font-size: 0.75rem; padding: 7px; }
+    #dashboard { font-size: 0.7rem; padding: 4px; }
+    #skipButton, #hintButton { font-size: 0.7rem; padding: 5px; }
 
 
     /* === 3. טיפול במסך הפתיחה === */

@@ -335,56 +335,93 @@
     text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
     margin: 0 0 25px 0;
 }
-    /* ================================================= */
-/* =====        עיצוב למצב שוכב (Landscape)      ===== */
-/* ================================================= */
-@media (orientation: landscape) and (max-height: 500px) {
+/* ================================================================ */
+/* ===== עיצוב חדש ומקיף למצב שוכב (Landscape) - גרסה 2.0 ===== */
+/* ================================================================ */
+@media (orientation: landscape) and (max-height: 550px) {
+
+    /* === טיפול במסך הפתיחה (כפתור 'התחל') === */
+    #welcomeBanner {
+        font-size: 2rem !important; /* מקטינים דרסטית את הבאנר */
+        padding: 10px 15px !important;
+        top: 15px !important; /* מזיזים אותו למעלה */
+    }
+    #startScreen {
+        justify-content: flex-end; /* דוחפים את הכפתור לתחתית המסך */
+        padding-bottom: 20px;
+    }
+
+
+    /* === טיפול במסך 'תחילת שלב' (האנימציה) === */
+    #stageIntro iframe#bannerIframe {
+        height: 85vh; /* גובה האנימציה יהיה 85% מגובה המסך */
+        width: 100%;
+    }
+    #stageIntro {
+        padding-top: 50px; /* ריווח מהכפתורים הקבועים למעלה */
+    }
+
+
+    /* === טיפול במסך החידון (הבעיה המרכזית) === */
+    
+    /* הזזת הכפתורים העליונים למעלה כדי לפנות מקום */
+    #user-info-container {
+        top: 10px;
+    }
+    #muteButton {
+        top: 10px;
+    }
 
     /* סידור מחדש של הקונטיינר הראשי */
     #quizContainer {
-        padding-top: 85px; /* פחות ריווח מלמעלה כי המסך נמוך */
-        gap: 10px;
+        padding-top: 60px; /* פחות ריווח מלמעלה כי הכפתורים זזו */
+        gap: 8px;
         justify-content: flex-start;
+        height: 100vh;
     }
 
-    /* הקטנת תיבת השאלה כדי שתתאים למעלה */
+    /* שאלה: הזזה למעלה וחיסכון במקום */
     #questionText {
         font-size: 1rem;
-        min-height: 50px;
-        margin-bottom: 5px; /* להקטין רווח תחתון */
+        min-height: auto;
+        padding: 10px;
+        margin-bottom: 8px; /* צמצום רווח תחתון */
     }
 
-    /* *** זה החלק החשוב ביותר - הופך את התשובות לרשת ***
-    */
+    /* תשובות: רשת של 2 על 2 שתופסת את רוב המקום */
     .answer-grid {
-        display: grid; /* משנה את התצוגה לרשת */
-        grid-template-columns: repeat(2, 1fr); /* יוצר 2 עמודות ברוחב שווה */
-        gap: 12px; /* קובע את הרווח בין כפתורי התשובות */
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
         width: 100%;
-        max-width: 600px; /* אפשר לתת יותר רוחב במצב שוכב */
-        max-height: none; /* מסיר את מגבלת הגובה שהייתה במצב מאונך */
-        overflow-y: hidden; /* מסתיר גלילה אפשרית */
+        max-width: 700px; /* מרחיבים במצב שוכב */
+        flex-grow: 1; /* מאפשר לתיבת התשובות לתפוס את כל הגובה הפנוי */
+        max-height: none;
+        overflow-y: auto; /* מאפשר גלילה אם התשובות ארוכות מאוד */
     }
 
     .answer {
-        font-size: 0.9rem; /* מקטין מעט את הטקסט בתשובות */
-        min-height: 45px; /* מוודא שהתשובות בגובה אחיד */
+        font-size: 0.9rem;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* הקטנת הלוח התחתון כדי לחסוך מקום */
+    /* דשבורד: הקטנה משמעותית */
     #dashboard {
-        font-size: 0.7rem;
-        padding: 6px;
-        order: 10; /* דוחף את הלוח לסוף, אם נרצה */
+        font-size: 0.65rem;
+        padding: 5px;
+        flex-shrink: 0; /* מונע מהדשבורד להתכווץ */
     }
     
     #skipWrapper {
         margin-top: 5px;
+        flex-shrink: 0;
     }
-
     #skipButton, #hintButton {
-        padding: 8px;
-        font-size: 0.75rem;
+        padding: 6px;
+        font-size: 0.7rem;
     }
 }
 }

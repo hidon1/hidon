@@ -337,78 +337,64 @@
     text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
     margin: 0 0 25px 0;
 }
-/* ==================================================================== */
-/* ===== עיצוב סופי ומוחלט למצב שוכב (Landscape) - גרסה 4.0 ===== */
-/* ==================================================================== */
+/* ======================================================================= */
+/* ===== עיצוב סופי ומוחלט למצב שוכב (Landscape) - גרסה 5.0 (יציבה) ===== */
+/* ======================================================================= */
 @media (orientation: landscape) and (max-height: 550px) {
 
     /* === 1. טיפול במסך תחילת שלב (האנימציה) === */
-    #stageIntro {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        overflow: hidden;
-    }
     #stageIntro iframe#bannerIframe {
-        /* הגדלנו מעט את האנימציה לבקשתך, מ-0.75 ל-0.85 */
-        transform: scale(0.85);
+        /* הגדלנו שוב לבקשתך, ל-95% מהגודל המקורי */
+        transform: scale(0.95);
         transform-origin: center;
         border: none;
-        height: 450px;
+        height: 500px; /* הגדלנו את המסגרת כדי שהאנימציה לא תיחתך */
     }
 
 
-    /* === 2. טיפול במסך החידון (שאלה ותשובות) === */
-    #questionText {
-        position: fixed;
-        top: 10px;
-        /* הצרנו את התיבה על ידי הגדלת הרווחים מהצדדים */
-        left: 100px;
-        right: 150px;
-        z-index: 3999;
-        /* הנמכנו את גובה התיבה על ידי הקטנת הריפוד */
-        padding: 5px 10px;
-        font-size: 0.9rem;
-    }
-
+    /* === 2. טיפול במסך החידון (הפתרון היציב) === */
     #quizContainer {
-        padding-top: 70px; /* התאמנו את הריווח לגובה החדש של השאלה */
-        padding-bottom: 10px;
-        justify-content: space-between;
-        height: 100vh;
-        box-sizing: border-box;
+        padding: 60px 15px 20px 15px; /* ריווח עליון ותחתון */
+        justify-content: center; /* ממורכז אנכית */
+        overflow-y: auto; /* מאפשר גלילה אם התוכן חורג מהמסך */
+        min-height: 100vh; /* מבטיח שהרקע יכסה תמיד את כל המסך */
+        height: auto; /* מאפשר לתוכן לגדול מעבר לגובה המסך */
     }
 
-    /* הצרנו את רוחב רשת התשובות */
+    /* שאלה: החזרנו אותה להיות רגילה (לא קבועה), ממורכזת וצרה יותר */
+    #questionText {
+        position: relative; /* לא קבוע יותר! */
+        width: 100%;
+        max-width: 480px; /* רוחב אחיד עם התשובות */
+        margin: 0 auto 15px auto; /* מרכוז אוטומטי ורווח תחתון */
+        padding: 8px 12px; /* ריפוד מופחת לגובה */
+        font-size: 1rem;
+    }
+
+    /* תשובות: רשת 2x2 ברוחב אחיד עם השאלה */
     .answer-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        gap: 10px;
         width: 100%;
-        max-width: 500px; /* הצרנו מ-550px */
+        max-width: 480px; /* רוחב אחיד עם השאלה */
         margin: 0 auto;
     }
 
-    /* הנמכנו את גובה התשובות */
     .answer {
-        font-size: 0.85rem;
-        min-height: 35px; /* הנמכנו מ-40px */
-        padding: 4px; /* הקטנו ריפוד פנימי */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        min-height: 38px;
+        padding: 5px;
+        font-size: 0.9rem;
     }
 
-    /* הצרנו גם את הדשבורד התחתון להתאמה */
+    /* דשבורד וכפתורים: גם הם ברוחב אחיד */
     #dashboard, #skipWrapper {
-        flex-shrink: 0;
         width: 100%;
-        max-width: 500px; /* הצרנו מ-550px */
-        margin: 5px auto 0 auto;
+        max-width: 480px;
+        margin: 10px auto 0 auto;
     }
-    #dashboard { font-size: 0.7rem; padding: 5px; }
-    #skipButton, #hintButton { font-size: 0.7rem; padding: 6px; }
+    #dashboard { font-size: 0.75rem; padding: 6px; }
+    #skipButton, #hintButton { font-size: 0.75rem; padding: 7px; }
 
 
     /* === 3. טיפול במסך הפתיחה === */

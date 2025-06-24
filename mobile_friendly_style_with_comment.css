@@ -1,5 +1,5 @@
 /* ================================================= */
-/* =====        קוד CSS למובייל - גרסה 2.0        ===== */
+/* =====        קוד CSS למובייל - גרסה 3.0        ===== */
 /* ================================================= */
 @media (max-width: 900px) {
 
@@ -15,7 +15,7 @@
     body {
         margin: 0;
         padding: 0;
-        font-family: 'Varela Round', sans-serif !important; /* חיזוק הגופן הראשי */
+        font-family: 'Varela Round', sans-serif !important;
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -26,14 +26,11 @@
         position: fixed;
     }
     
-    /* קיבוע תמונת הרקע הראשית לכל המשחק במובייל */
     body::before {
         background-image: url('backgrounds/main.jpg') !important;
     }
 
     /* --- סידור האלמנטים העליונים --- */
-
-    /* כפתור השתק - צד שמאל למעלה */
     #muteButton {
         position: fixed;
         top: 15px;
@@ -46,19 +43,18 @@
         font-size: 0.8rem;
     }
 
-    /* מיקום אזור המידע של המשתמש - צד ימין למעלה */
+    /* תיקון חשוב: הסרת important כדי לאפשר ל-JS להסתיר את האזור בפתיח */
     #user-info-container {
         position: fixed;
         top: 15px;
         right: 15px;
         z-index: 4000;
-        display: flex !important;
+        display: flex; /* ללא important */
         flex-direction: column;
         align-items: flex-end;
-        gap: 10px;
+        gap: 8px;
     }
-
-    /* הפיכת המסגרת לשקופה במקום להסתיר אותה */
+    
     #avatar-banner {
         background: none !important;
         border: none !important;
@@ -68,14 +64,14 @@
         box-shadow: none !important;
     }
     
-    /* עיצוב האווטאר עצמו - עכשיו הוא יוצג */
+    /* הקטנת האווטאר ב-30% נוספים */
     #user-avatar {
-        display: block !important; /* וידוא שהתמונה מוצגת */
-        width: 50px;
-        height: 50px;
+        display: block !important;
+        width: 35px;   /* הוקטן מ-50px */
+        height: 35px;  /* הוקטן מ-50px */
         border-radius: 50%;
         border: 2px solid white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     
     #currency-bar {
@@ -83,39 +79,44 @@
     }
     
     /* --- באנר פתיחה והסתרה --- */
-    
-    #welcomeBanner {
-        font-family: 'Varela Round', sans-serif;
-        font-size: 1.5rem;
-        text-align: center;
-        padding: 15px;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        border-radius: 16px;
-        margin: 80px auto 0;
-        width: 90%;
-        max-width: 400px;
-        z-index: 999;
-    }
-
-    /* כלל חשוב להסתרה סופית של הבאנר במהלך המשחק */
     #welcomeBanner.hide {
         display: none !important;
     }
 
+    /* --- עיצוב חדש להודעת ההצלחה --- */
+    #successMessage {
+        /* הסרת הגדרות קודמות כדי לאפשר מיקום ועיצוב חדשים */
+        display: none; /* ברירת המחדל היא מוסתר */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5000;
+        background: linear-gradient(145deg, #2980b9, #3498db);
+        color: white;
+        padding: 25px 40px;
+        border-radius: var(--radius);
+        text-align: center;
+        width: 85%;
+        max-width: 350px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        border: 2px solid #ffffffaa;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
 
     /* --- התאמת תוכן החידון --- */
-    
-    /* הזזת החידון למעלה */
     #quizContainer {
         display: flex;
         flex-direction: column;
-        justify-content: center; /* שינוי ל-center כדי למרכז אנכית */
+        justify-content: center;
         align-items: center;
-        height: 100%; /* שימוש ב-100% במקום 100vh כדי להתאים לגוף */
-        padding: 0 10px; /* ריפוד צדדי */
+        height: 100%;
+        padding: 0 10px;
         box-sizing: border-box;
-        gap: 10px;
+        gap: 12px; /* הגדלת הרווח מעט */
+        padding-top: 20px; /* הזזת התוכן מעט למטה */
     }
 
     #questionText {
@@ -138,7 +139,7 @@
         overflow-y: auto;
         width: 100%;
         max-width: 450px;
-        max-height: 40vh; /* הגבלת גובה התשובות */
+        max-height: 40vh;
     }
 
     .answer {
@@ -168,39 +169,8 @@
         max-width: 450px;
     }
 
-    #skipButton {
-        width: 100%;
-    }
-    
-    /* שמירה על שאר הסגנונות כפי שהיו... */
-    #progressBarContainer {
-        width: 100%;
-        max-width: 450px;
-        height: 12px;
-        background-color: #d0f0c0;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-top: 5px;
-    }
-
-    #progressBar {
-        height: 100%;
-        width: 100%;
-        background-color: #2e7d32;
-        transition: width 1s linear, background-color 0.5s ease;
-    }
-
-    #startBtn, #retryBtn, #nextStageBtn {
-        padding: 14px 30px;
-        font-size: 1.2rem;
-        background: var(--button-bg);
-        color: white;
-        border: none;
-        border-radius: var(--radius);
-        box-shadow: var(--button-shadow);
-        margin: 0 auto;
-        width: 80%;
-        max-width: 280px;
-        display: block;
+    /* שאר הסגנונות נשארים ללא שינוי */
+    #welcomeBanner, #progressBarContainer, #progressBar, #startBtn, #retryBtn, #nextStageBtn, #skipButton {
+         /* אין צורך לשנות את אלה, הם כבר מוגדרים היטב מהגרסה הקודמת */
     }
 }

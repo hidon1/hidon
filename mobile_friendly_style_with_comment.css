@@ -267,4 +267,39 @@
     border-radius: 8px !important;
     border: none !important; /* <- הסרנו את המסגרת כאן */
 }
+    /* ======================================= */
+/* ===== עיצוב מסך 'נכשלת' למובייל ===== */
+/* ======================================= */
+
+/* עיצוב ה'כרטיס' שיעטוף את התוכן לבקשתך */
+#failScreen .screen-card {
+    background: rgba(234, 242, 248, 0.95); /* רקע תכלת חצי-שקוף וברור */
+    padding: 25px;                       /* ריפוד פנימי */
+    border-radius: 20px;                 /* קצוות עגולים */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    margin: 0 15px;                      /* שוליים מהצדדים של המסך */
+    max-width: 500px;
+    width: 90%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* עיצוב הכותרת 'לא עברת' */
+#failScreen h2 {
+    font-family: 'Rubik', sans-serif;   /* פונט מעוצב ויפה */
+    color: #e74c3c;                     /* צבע אדום עז */
+    font-size: 2.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    margin: 0 0 15px 0;
+}
+
+/* עיצוב טקסט ההסבר */
+#failText {
+    font-family: 'Varela Round', sans-serif; /* פונט קריא וברור */
+    font-size: 1.1rem;
+    color: #34495e;                     /* צבע טקסט כהה וברור */
+    line-height: 1.6;                   /* רווח בין השורות */
+    margin-bottom: 25px;                /* רווח לפני הכפתור */
+}
 }

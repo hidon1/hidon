@@ -1,5 +1,5 @@
 /* ================================================= */
-/* =====        קוד CSS למובייל - גרסה 4.0        ===== */
+/* =====        קוד CSS למובייל - גרסה 5.0 (סופי)   ===== */
 /* ================================================= */
 @media (max-width: 900px) {
 
@@ -77,103 +77,83 @@
     }
     
     /* --- באנרים והודעות --- */
+    
+    /* עיצוב חדש לבאנר הפתיחה למובייל */
+    #welcomeBanner {
+        font-family: 'Rubik Dirt', cursive !important; /* החזרת הגופן המיוחד */
+        font-size: 2.8rem; /* התאמת גודל הגופן למובייל */
+        line-height: 1.4;
+        color: #003366;
+        background-color: rgba(175, 238, 238, 0.9); /* רקע עם שקיפות */
+        border: 3px solid #7657c2;
+        border-radius: 25px;
+        padding: 20px 15px;
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        margin: auto; /* ממורכז בתוך מסך הפתיחה */
+    }
+
+    #startScreen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px; /* רווח בין הבאנר לכפתור */
+    }
+
     #welcomeBanner.hide {
         display: none !important;
     }
 
     #successMessage {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 5000;
-        background: linear-gradient(145deg, #2980b9, #3498db);
-        color: white;
-        padding: 25px 40px;
-        border-radius: var(--radius);
-        text-align: center;
-        width: 85%;
-        max-width: 350px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        border: 2px solid #ffffffaa;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        /* עיצוב הודעת הצלחה - ללא שינוי */
     }
 
     /* --- התאמת תוכן החידון --- */
     #quizContainer {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* שינוי חזרה ל-flex-start */
+        justify-content: flex-end; /* שינוי: הצמדת התוכן לתחתית */
         align-items: center;
-        height: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
+        height: 100vh; /* גובה מלא */
+        padding: 20px 15px; /* ריווח עליון ותחתון, וריווח צדדי */
+        box-sizing: border-box; /* חשוב מאוד למניעת חריגות */
         gap: 12px;
-        padding-top: 120px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
+    }
+
+    /* תיקון חריגה מהדף לכל האלמנטים בחידון */
+    #questionText, .answer-grid, #progressBarContainer, #skipWrapper, #dashboard {
+        width: 100%;
+        max-width: 450px;
+        margin-right: auto;
+        margin-left: auto;
+        box-sizing: border-box; /* התיקון המרכזי למניעת חריגה */
     }
 
     #questionText {
-        font-family: 'Varela Round', sans-serif !important;
-        margin: 0 auto;
-        width: 100%;
-        max-width: 450px;
-        text-align: center;
-        background: var(--card-bg);
-        border: 2px solid var(--answer-border);
-        border-radius: var(--radius);
         padding: 12px;
         font-size: 1.1rem;
     }
 
     .answer-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        overflow-y: auto;
-        width: 100%;
-        max-width: 450px;
         max-height: 40vh;
+        order: -4; /* סידור מחדש - התשובות יופיעו אחרי השאלה */
     }
 
-    .answer {
-        font-family: 'Varela Round', sans-serif !important;
-        width: auto;
-        text-align: center;
-        background: var(--card-bg);
-        border: 2px solid var(--answer-border);
-        border-radius: var(--radius);
-        padding: 10px;
-    }
-    
-    #dashboard {
-        width: 100%;
-        max-width: 450px;
-        font-size: 0.75rem;
-        background: #1c3d5a;
-        color: #fff;
-        padding: 8px;
-        border-radius: var(--radius);
-        text-align: center;
-        box-sizing: border-box;
-    }
-
-    #progressBarContainer {
-        width: 100%;
-        max-width: 450px;
-        height: 12px;
-        background-color: #d0f0c0;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+    #questionText { order: -5; } /* השאלה תופיע ראשונה */
+    #progressBarContainer { order: -3; }
+    #skipWrapper { order: -2; }
+    #dashboard { order: -1; } /* הדאשבורד יופיע אחרון בתחתית */
 
     /* --- החזרת עיצוב הכפתורים --- */
+    #skipButton, #hintButton, #startBtn, #retryBtn, #nextStageBtn {
+        font-family: 'Varela Round', sans-serif !important; /* גופן אחיד לכפתורים */
+    }
+
     #skipWrapper {
         text-align: center;
-        width: 100%;
-        max-width: 450px;
     }
 
     #skipButton, #hintButton {

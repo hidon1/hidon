@@ -29,7 +29,30 @@
     body::before {
         background-image: url('backgrounds/main.jpg') !important;
     }
+  #welcomeBanner {
+        display: block;  /* הבאנר יוצג */
+        position: fixed;
+        top: 20%;  /* מיקום באנר במרכז המסך */
+        left: 50%;
+        transform: translateX(-50%);  /* מרכז את הבאנר */
+        background: linear-gradient(135deg, #2980b9, #3498db);  /* גרדיאנט צבעוני */
+        color: white;
+        padding: 20px 30px;
+        border-radius: var(--radius);  /* עיגול הפינות */
+        text-align: center;
+        font-size: 2rem;  /* גודל טקסט גדול יותר */
+        font-weight: bold;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);  /* הצללה לטקסט */
+        z-index: 10000;
+        max-width: 80%;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
+    /* --- הסתרת הבאנר אחרי זמן --- */
+    #welcomeBanner.hide {
+        display: none !important;  /* הסתרת הבאנר */
+    }
     /* --- סידור האלמנטים העליונים --- */
     #muteButton {
         position: fixed;

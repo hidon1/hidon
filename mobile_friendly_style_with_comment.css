@@ -190,3 +190,63 @@
         }
     }
 }
+
+
+/* === עדכונים של האווטר === */
+#user-avatar {
+    position: fixed;
+    top: 80px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    z-index: 1000;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* === הסרת מסגרת באווטר === */
+#avatar-banner {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* === פתרון חפיפה - מטבעות בצד ימין === */
+#coin-display {
+    right: 10px;
+    left: auto;
+}
+
+/* === באנר פתיחה מופיע רק כשצריך === */
+#welcomeBanner {
+    display: none;
+}
+#welcomeBanner.active {
+    display: block;
+}
+
+/* === באנר מעוצב כמו בדסקטופ === */
+#welcomeBanner {
+    font-family: 'Rubik Dirt', cursive;
+    font-size: 2.2rem;
+    background-color: #AFEEEE;
+    color: #003366;
+    border: 2px solid #7657c2;
+}
+
+/* === תיקון לתשובות חתוכות ורחבות === */
+.answer {
+    max-width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* === טקסט הצלחה מוצג רק כשצריך === */
+#successMessage {
+    display: none;
+}
+#successMessage.active {
+    display: block;
+}

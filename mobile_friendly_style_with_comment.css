@@ -183,15 +183,16 @@
         box-sizing: border-box;
     }
 
-    #progressBarContainer {
-        width: 100%;
-        max-width: 450px;
-        height: 12px;
-        background-color: #d0f0c0;
-        border-radius: 8px;
-        overflow: hidden;
-         transition: width 1s linear; 
-    }
+   #progressBarContainer {
+    width: 100%;  /* רוחב 100% */
+    max-width: 450px;  /* הגבלת רוחב מקסימלי */
+    height: 12px;  /* גובה של פס השעון */
+    background-color: #d0f0c0;  /* צבע הרקע של פס השעון */
+    border-radius: 8px;  /* עיגול הפינות */
+    overflow: hidden;  /* חיתוך תוכן חורג */
+    transition: width 1s linear;  /* הוספת אנימציה שתעשה את השינוי ברוחב בצורה חלקה */
+}
+
 
     /* --- החזרת עיצוב הכפתורים --- */
     #skipWrapper {

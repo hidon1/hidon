@@ -135,6 +135,7 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div id="authContainer" class="container" style="display:none">
@@ -225,21 +226,29 @@ document.getElementById('toggleModeBtn').onclick = () => {
   document.getElementById('toggleModeBtn').innerHTML = signupMode ? "כבר רשום? <b>להתחברות</b>" : "עדיין אין לך חשבון? <b>להרשמה</b>";
 };
 
-document.getElementById('submitBtn').onclick = async () => {
-  errorMsg.textContent = "";
-  const email = document.getElementById('emailField').value.trim();
-  const password = document.getElementById('passwordField').value;
-  try {
-    if (signupMode) {
-      const username = document.getElementById('usernameField').value.trim();
-      if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
-      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-      await userCredential.user.updateProfile({ displayName: username });
-      showUser(userCredential.user);
-    } else {
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
-      showUser(userCredential.user);
-    }
+if (signupMode) {
+    const username = document.getElementById('usernameField').value.trim();
+    if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
+
+    // יצירת משתמש במערכת האימות
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    // עדכון שם התצוגה בפרופיל האימות
+    await userCredential.user.updateProfile({ displayName: username });
+
+    // --- קטע קוד חדש שנוסף ---
+    // יצירת הרשומה הראשונית במסד הנתונים
+    const db = firebase.database();
+    await db.ref('users/' + userCredential.user.uid).set({
+        displayName: username,
+        coins: 0, // מתחילים עם 0 מטבעות
+        avatar: 'images/default-avatar.png',
+        ownedAvatars: ['images/default-avatar.png']
+    });
+    // --- סוף הקטע החדש ---
+
+    // המשך התהליך כרגיל
+    showUser(userCredential.user);
+}
   } catch (err) {
     errorMsg.textContent = err.message;
   }

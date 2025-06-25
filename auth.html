@@ -232,27 +232,32 @@
       document.getElementById('toggleModeBtn').innerHTML = signupMode ? "כבר רשום? <b>להתחברות</b>" : "עדיין אין לך חשבון? <b>להרשמה</b>";
     };
 
-    document.getElementById('submitBtn').onclick = async () => {
-      errorMsg.textContent = "";
-      const email = document.getElementById('emailField').value.trim();
-      const password = document.getElementById('passwordField').value;
-      handlingLogin = true;
-      try {
-        if (signupMode) {
-          const username = document.getElementById('usernameField').value.trim();
-          if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
-          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          await userCredential.user.updateProfile({ displayName: username });
-           showUser(userCredential.user);
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-        }
-      } catch (err) {
-        errorMsg.textContent = err.message;
-      } finally {
-        handlingLogin = false;
-      }
-    };
+   document.getElementById('submitBtn').onclick = async () => {
+  errorMsg.textContent = "";
+  const email = document.getElementById('emailField').value.trim();
+  const password = document.getElementById('passwordField').value;
+  handlingLogin = true;
+  try {
+    if (signupMode) {
+      // הרשמה (תקין)
+      const username = document.getElementById('usernameField').value.trim();
+      if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      await userCredential.user.updateProfile({ displayName: username });
+       showUser(userCredential.user);
+    } else {
+      // --- כאן נמצא התיקון ---
+      // 1. שומרים את תוצאת ההתחברות במשתנה
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      // 2. קוראים לפונקציה שתעדכן את המסך עם פרטי המשתמש
+      showUser(userCredential.user);
+    }
+  } catch (err) {
+    errorMsg.textContent = err.message;
+  } finally {
+    handlingLogin = false;
+  }
+};
     
     document.getElementById('googleBtn').onclick = async () => {
       errorMsg.textContent = "";

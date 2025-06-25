@@ -56,7 +56,7 @@
     /* --- סידור האלמנטים העליונים --- */
     #muteButton {
         position: fixed;
-        top: 40px;
+        top: 30px;
         left: 15px;
         z-index: 4001;
         background: rgba(255, 255, 255, 0.8);

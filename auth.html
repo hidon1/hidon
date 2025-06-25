@@ -243,6 +243,7 @@
           if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
           await userCredential.user.updateProfile({ displayName: username });
+           showUser(userCredential.user);
         } else {
           await auth.signInWithEmailAndPassword(email, password);
         }

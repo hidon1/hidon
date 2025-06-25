@@ -801,13 +801,19 @@
             });
         }
 
-        function showQuestion() {
-            let isAnswerLocked = false;
-            if (current >= 10) {
-                document.getElementById('skipButton').style.display = 'none';
-                correct >= 9 ? showSuccessScreen() : showFailScreen();
-                return;
-            }
+       if (current >= 10) {
+    document.getElementById('skipButton').style.display = 'none';
+    if (correct >= 9) { // אם המשתמש עבר את השלב
+        if (stage === 10) { // ואם זהו השלב האחרון (שלב 10)
+            showEndScreen(); // הצג את מסך הסיום החגיגי
+        } else {
+            showSuccessScreen(); // אחרת, הצג את מסך המעבר הרגיל
+        }
+    } else {
+        showFailScreen(); // אם המשתמש נכשל
+    }
+    return;
+}
             const q = questions[current];
             shuffleQuestionAnswers(q);
             document.getElementById('questionText').textContent = q.question;

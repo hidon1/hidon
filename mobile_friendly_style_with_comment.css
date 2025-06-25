@@ -338,69 +338,74 @@
     margin: 0 0 25px 0;
 }
 /* ======================================================================= */
-/* ===== עיצוב סופי למצב שוכב (Landscape) - גרסה 6.0 (קומפקטית) ===== */
+/* ===== עיצוב למצב שוכב (Landscape) - גרסה 7.0 (עם שאלה קבועה) ===== */
 /* ======================================================================= */
 @media (orientation: landscape) and (max-height: 550px) {
 
-    /* === 1. טיפול במסך תחילת שלב (האנימציה) === */
+    /* === שלב א': קיבוע השאלה למעלה בשורה עם הכפתורים === */
+    #questionText {
+        position: fixed;   /* מקבע את השאלה למסך */
+        top: 10px;         /* מרחק מהחלק העליון */
+        z-index: 3000;
+        
+        /* ממקם את השאלה בין הכפתורים בצדדים */
+        left: 75px;        /* רווח מכפתור ההשתק */
+        right: 140px;      /* רווח מאזור המטבעות והאווטאר */
+
+        /* מקטין את גובה התיבה עצמה, כפי שביקשת */
+        padding: 6px 12px;
+        
+        /* עיצובים נוספים */
+        width: auto;
+        font-size: 0.9rem;
+        box-sizing: border-box;
+    }
+
+    /* === שלב ב': סידור שאר התוכן מתחת לשאלה הקבועה === */
+    #quizContainer {
+        /* דוחפים את כל התוכן למטה כדי שלא יוסתר מתחת לשאלה */
+        padding-top: 70px;
+        padding-bottom: 10px;
+        
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* ממורכז אנכית */
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* רשת התשובות: מבנה של 2 על 2 שתמיד ייכנס למסך */
+    .answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        max-width: 500px; /* רוחב מותאם למצב שוכב */
+    }
+
+    .answer {
+        min-height: 35px; /* גובה נמוך יותר לתשובות */
+        padding: 5px;
+        font-size: 0.85rem;
+    }
+
+    /* כפתור דילוג ודשבורד בתחתית */
+    #dashboard, #skipWrapper {
+        width: 100%;
+        max-width: 500px;
+    }
+    #dashboard { font-size: 0.7rem; padding: 5px; }
+    #skipButton, #hintButton { font-size: 0.7rem; padding: 6px; }
+
+
+    /* === (עיצובים תומכים למסכים אחרים נשארים זהים) === */
     #stageIntro iframe#bannerIframe {
-        /* הקטנו שוב מעט את האנימציה לבקשתך, מ-0.95 ל-0.9 */
         transform: scale(0.9);
         transform-origin: center;
         border: none;
         height: 500px;
     }
-
-
-    /* === 2. טיפול במסך החידון (קומפקטי) === */
-    #quizContainer {
-        /* מיקמנו את התוכן גבוה יותר ופיזרנו את הרווח */
-        padding: 55px 15px 10px 15px;
-        justify-content: space-around; /* פיזור הרווח הפנוי */
-        height: 100vh;
-        box-sizing: border-box;
-    }
-
-    /* שאלה: הונמכה (בגובהה) ומוקמה גבוה יותר (על המסך) */
-    #questionText {
-        position: relative;
-        width: 100%;
-        max-width: 480px;
-        margin: 0 auto; /* מרכוז אוטומטי, ללא רווח תחתון קבוע */
-        padding: 6px 10px; /* ריפוד מינימלי להנמכת התיבה */
-        font-size: 1rem;
-    }
-
-    /* תשובות: הונמכו והוצרו */
-    .answer-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px; /* צמצום הרווח בין התשובות */
-        width: 100%;
-        max-width: 480px;
-        margin: 0 auto;
-    }
-
-    .answer {
-        min-height: 32px; /* הנמכה נוספת */
-        padding: 4px;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* דשבורד וכפתורים: קומפקטיים מתמיד */
-    #dashboard, #skipWrapper {
-        width: 100%;
-        max-width: 480px;
-        margin: 0 auto;
-    }
-    #dashboard { font-size: 0.7rem; padding: 4px; }
-    #skipButton, #hintButton { font-size: 0.7rem; padding: 5px; }
-
-
-    /* === 3. טיפול במסך הפתיחה === */
     #welcomeBanner {
         font-size: 2rem !important;
         padding: 10px !important;

@@ -608,21 +608,6 @@
                 box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
             }
 
-            #leaderboard-container {
-                position: fixed;
-                top: 200px; 
-                right: 15px;
-                z-index: 4000;
-                direction: ltr;
-                background: rgba(0, 30, 60, 0.7);
-                backdrop-filter: blur(5px);
-                border-radius: 12px;
-                padding: 10px 15px;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                font-family: 'Alef', sans-serif;
-                color: white;
-                width: 220px;
-            }
             #leaderboard-title {
                 font-size: 1.2rem;
                 font-weight: 700;
@@ -693,11 +678,7 @@
             <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
         </div>
     </div>
-    <div id="leaderboard-container" style="display: none;">
-        <div id="leaderboard-title">טבלת המובילים</div>
-        <div id="leaderboard-list">
-            </div>
-    </div>
+    
     <div id="store-overlay" class="overlay">
         <div class="overlay-content">
             <span class="close-btn" onclick="window.firebase_store.closeStore()">&times;</span>
@@ -1031,61 +1012,6 @@
     <script src="sound_manager.js"></script>
 
     <script> 
-        // =======================================================
-// ====== קוד חדש: פונקציה להקמת טבלת המובילים ======
-// =======================================================
-
-function setupLeaderboard() {
-    const leaderboardContainer = document.getElementById('leaderboard-container');
-    if (leaderboardContainer) {
-        leaderboardContainer.style.display = 'block'; // הצגת הטבלה
-    }
-
-    // ודא שמשתנה 'db' קיים ומוגדר מהקריאה ל-getDatabase()
-    const usersRef = ref(db, 'users');
-    // שאילתה שמביאה את 5 המשתמשים עם הכי הרבה מטבעות
-    const topUsersQuery = query(usersRef, orderByChild('coins'), limitToLast(5));
-
-    // האזנה לשינויים בזמן אמת בטבלה
-    onValue(topUsersQuery, (snapshot) => {
-        const leaderboardList = document.getElementById('leaderboard-list');
-        if (!leaderboardList) return; // יציאה אם האלמנט לא קיים
-        
-        leaderboardList.innerHTML = ''; // ניקוי הרשימה הקודמת
-
-        if (snapshot.exists()) {
-            let users = [];
-            // פיירבייס מחזיר את התוצאות בסדר עולה, לכן נהפוך אותן
-            snapshot.forEach((childSnapshot) => {
-                users.unshift({ // unshift מוסיף לתחילת המערך וכך הופך את הסדר
-                    ...childSnapshot.val()
-                });
-            });
-
-            // יצירת שורה בטבלה עבור כל משתמש
-            users.forEach((user, index) => {
-                const row = document.createElement('div');
-                row.className = 'leaderboard-row';
-                
-                // שימוש בברירת מחדל אם אין שם, תמונה או מטבעות
-                const displayName = user.displayName || 'משתמש';
-                const avatar = user.avatar || 'images/default-avatar.png';
-                const coins = user.coins || 0;
-
-                row.innerHTML = `
-                    <span>${index + 1}.</span>
-                    <img src="${avatar}" alt="${displayName}">
-                    <span class="leaderboard-name">${displayName}</span>
-                    <span class="leaderboard-coins">${coins}</span>
-                `;
-                leaderboardList.appendChild(row);
-            });
-        } else {
-            leaderboardList.innerHTML = '<div>אין נתונים להצגה</div>';
-        }
-    });
-}
-
 
 // =======================================================
 // ====== עדכון פונקציות קיימות להצגה והסתרה ======

@@ -399,13 +399,26 @@
     #skipButton, #hintButton { font-size: 0.7rem; padding: 6px; }
 
 
-    /* === (עיצובים תומכים למסכים אחרים נשארים זהים) === */
-    #stageIntro iframe#bannerIframe {
-        transform: scale(0.9);
-        transform-origin: center;
-        border: none;
-        height: 500px;
-    }
+ /* === טיפול במסך 'תחילת שלב' (האנימציה) - גרסה מתוקנת === */
+#stageIntro {
+    display: flex;
+    align-items: center;     /* ממורכז אנכית */
+    justify-content: center; /* ממורכז אופקית */
+    height: 100vh;           /* תופס את כל גובה המסך */
+    overflow: hidden;        /* מונע גלישה החוצה */
+    padding-top: 0;          /* איפוס ריווחים ישנים */
+}
+#stageIntro iframe#bannerIframe {
+    /* הקטנו שוב את האנימציה כדי למנוע חיתוך */
+    transform: scale(0.8);
+    transform-origin: center;
+    border: none;
+
+    /* הגדרת גובה ורוחב שמתאימים למסגרת */
+    width: 100%;
+    height: 100%;
+    max-width: 600px; /* הגבלת רוחב למניעת עיוותים */
+}
     #welcomeBanner {
         font-size: 2rem !important;
         padding: 10px !important;

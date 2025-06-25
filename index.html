@@ -1107,19 +1107,26 @@
             window.updateScore(0);
         },
 
-        saveUserDataToDB() {
-            localStorage.setItem('userCoins', this.coins);
-            localStorage.setItem('userAvatar', this.userAvatar);
-            localStorage.setItem('ownedAvatars', JSON.stringify(this.ownedAvatars)); 
+       saveUserDataToDB() {
+    localStorage.setItem('userCoins', this.coins);
+    localStorage.setItem('userAvatar', this.userAvatar);
+    localStorage.setItem('ownedAvatars', JSON.stringify(this.ownedAvatars));
 
-            if (!currentUser) return; 
-            const userRef = ref(db, 'users/' + currentUser.uid);
-            set(userRef, {
-                coins: this.coins,
-                avatar: this.userAvatar,
-                ownedAvatars: this.ownedAvatars 
-            }).catch(error => console.error("DB Save Error:", error));
-        },
+    if (!currentUser) return;
+
+    // גם כאן נוסיף שמירה של השם ל-localStorage, זה נוהג טוב
+    localStorage.setItem('userDisplayName', currentUser.displayName);
+
+    const userRef = ref(db, 'users/' + currentUser.uid);
+    set(userRef, {
+        // --- הוספנו את השורה הזו ---
+        displayName: currentUser.displayName,
+        // -------------------------
+        coins: this.coins,
+        avatar: this.userAvatar,
+        ownedAvatars: this.ownedAvatars
+    }).catch(error => console.error("DB Save Error:", error));
+},
         
         updateCoins(change) {
             this.coins += change;

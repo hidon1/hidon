@@ -161,170 +161,165 @@
 
 
   <script>
-    // --- Firebase Config ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
-      authDomain: "hidon1-e4c91.firebaseapp.com",
-      projectId: "hidon1-e4c91",
-      storageBucket: "hidon1-e4c91.firebasestorage.app",
-      messagingSenderId: "411517496015",
-      appId: "1:411517496015:web:2d9c176783d062110465ba",
-      measurementId: "G-FWTSZNY72T"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+ // --- Firebase Config ---
+const firebaseConfig = {
+  apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
+  authDomain: "hidon1-e4c91.firebaseapp.com",
+  projectId: "hidon1-e4c91",
+  storageBucket: "hidon1-e4c91.firebasestorage.app",
+  messagingSenderId: "411517496015",
+  appId: "1:411517496015:web:2d9c176783d062110465ba",
+  measurementId: "G-FWTSZNY72T"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-    // --- DOM Elements ---
-    const authContainer = document.getElementById('authContainer');
-    const usernameModal = document.getElementById('usernameModal');
-    const errorMsg = document.getElementById('errorMsg');
-    const userInfo = document.getElementById('userInfo');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const formTitle = document.getElementById('formTitle');
-    const formElements = [
-        document.getElementById('usernameField'), document.getElementById('emailField'), 
-        document.getElementById('passwordField'), document.getElementById('submitBtn'),
-        document.getElementById('googleBtn'), document.getElementById('toggleModeBtn'), 
-        document.getElementById('skipBtn')
-    ];
+// --- DOM Elements ---
+const authContainer = document.getElementById('authContainer');
+const usernameModal = document.getElementById('usernameModal');
+const errorMsg = document.getElementById('errorMsg');
+const userInfo = document.getElementById('userInfo');
+const logoutBtn = document.getElementById('logoutBtn');
+const formTitle = document.getElementById('formTitle');
+const formElements = [
+    document.getElementById('usernameField'), document.getElementById('emailField'), 
+    document.getElementById('passwordField'), document.getElementById('submitBtn'),
+    document.getElementById('googleBtn'), document.getElementById('toggleModeBtn'), 
+    document.getElementById('skipBtn')
+];
 
-    // --- State ---
-    let signupMode = false;
-    let handlingLogin = false; // Flag to prevent race conditions
+// --- State ---
+let signupMode = false;
 
-    // --- Functions ---
-    const showUser = (user) => {
-        usernameModal.style.display = 'none'; // Ensure username modal is hidden
-        authContainer.style.display = "grid";
-        
-        userInfo.innerHTML = `<b>שלום ${user.displayName || "משתמש"}</b><br>מייל: ${user.email}`;
-        
-        // Hide form elements and show user info
-        formElements.forEach(el => el.style.display = "none");
-        userInfo.style.display = "block";
-        logoutBtn.style.display = "block";
-        
-        formTitle.textContent = "ברוך הבא";
-        errorMsg.textContent = "";
-        
-        window.parent.postMessage('authComplete', '*');
-    };
+// --- Functions ---
+const showUser = (user) => {
+    usernameModal.style.display = 'none';
+    authContainer.style.display = "grid";
+    userInfo.innerHTML = `<b>שלום ${user.displayName || "משתמש"}</b><br>מייל: ${user.email}`;
+    formElements.forEach(el => el.style.display = "none");
+    userInfo.style.display = "block";
+    logoutBtn.style.display = "block";
+    formTitle.textContent = "ברוך הבא";
+    errorMsg.textContent = "";
+    window.parent.postMessage('authComplete', '*');
+};
 
-    const showForm = () => {
-        authContainer.style.display = 'grid';
-        usernameModal.style.display = 'none';
-        userInfo.style.display = "none";
-        logoutBtn.style.display = "none";
-        
-        formElements.forEach(el => el.style.display = "block");
-        
-        document.getElementById('usernameField').style.display = signupMode ? "block" : "none";
-        formTitle.textContent = signupMode ? "הרשמה לאתר" : "התחברות לאתר";
-    };
+const showForm = () => {
+    authContainer.style.display = 'grid';
+    usernameModal.style.display = 'none';
+    userInfo.style.display = "none";
+    logoutBtn.style.display = "none";
+    formElements.forEach(el => el.style.display = "block");
+    document.getElementById('usernameField').style.display = signupMode ? "block" : "none";
+    formTitle.textContent = signupMode ? "הרשמה לאתר" : "התחברות לאתר";
+};
 
-    // --- Event Listeners ---
-    document.getElementById('toggleModeBtn').onclick = () => {
-      signupMode = !signupMode;
-      errorMsg.textContent = "";
-      formTitle.textContent = signupMode ? 'הרשמה לאתר' : 'התחברות לאתר';
-      document.getElementById('usernameField').style.display = signupMode ? "block" : "none";
-      document.getElementById('submitBtn').textContent = signupMode ? "הרשם" : "התחבר";
-      document.getElementById('toggleModeBtn').innerHTML = signupMode ? "כבר רשום? <b>להתחברות</b>" : "עדיין אין לך חשבון? <b>להרשמה</b>";
-    };
+// --- Event Listeners ---
+document.getElementById('toggleModeBtn').onclick = () => {
+  signupMode = !signupMode;
+  errorMsg.textContent = "";
+  formTitle.textContent = signupMode ? 'הרשמה לאתר' : 'התחברות לאתר';
+  document.getElementById('usernameField').style.display = signupMode ? "block" : "none";
+  document.getElementById('submitBtn').textContent = signupMode ? "הרשם" : "התחבר";
+  document.getElementById('toggleModeBtn').innerHTML = signupMode ? "כבר רשום? <b>להתחברות</b>" : "עדיין אין לך חשבון? <b>להרשמה</b>";
+};
 
-   document.getElementById('submitBtn').onclick = async () => {
+document.getElementById('submitBtn').onclick = async () => {
   errorMsg.textContent = "";
   const email = document.getElementById('emailField').value.trim();
   const password = document.getElementById('passwordField').value;
-  handlingLogin = true;
   try {
     if (signupMode) {
-      // הרשמה (תקין)
       const username = document.getElementById('usernameField').value.trim();
       if (!username) { errorMsg.textContent = "יש להזין שם משתמש"; return; }
       const userCredential = await auth.createUserWithEmailAndPassword(email, password);
       await userCredential.user.updateProfile({ displayName: username });
-       showUser(userCredential.user);
+      showUser(userCredential.user);
     } else {
-      // --- כאן נמצא התיקון ---
-      // 1. שומרים את תוצאת ההתחברות במשתנה
       const userCredential = await auth.signInWithEmailAndPassword(email, password);
-      // 2. קוראים לפונקציה שתעדכן את המסך עם פרטי המשתמש
       showUser(userCredential.user);
     }
   } catch (err) {
     errorMsg.textContent = err.message;
-  } finally {
-    handlingLogin = false;
   }
 };
-    
-    document.getElementById('googleBtn').onclick = async () => {
-      errorMsg.textContent = "";
-      handlingLogin = true; // Set flag to control the observer
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        const result = await auth.signInWithPopup(provider);
-        const isNewUser = result.additionalUserInfo.isNewUser;
 
-        if (isNewUser) {
-          authContainer.style.display = 'none';
-          usernameModal.style.display = 'grid';
-          // The observer is paused by handlingLogin flag.
-          // Flow continues in submitUsernameBtn listener.
-        } else {
-          // It's an existing user, observer was blocked, so we manually show the user.
-          showUser(result.user);
+// ===================================================
+//      השינוי להתחברות עם גוגל מתחיל כאן
+// ===================================================
+
+document.getElementById('googleBtn').onclick = () => {
+  errorMsg.textContent = "";
+  const provider = new firebase.auth.GoogleAuthProvider();
+  // במקום popup, אנחנו מבצעים redirect
+  auth.signInWithRedirect(provider);
+};
+
+// פונקציה זו תופסת את התוצאה לאחר שהמשתמש חוזר מההתחברות בגוגל
+const handleRedirectResult = async () => {
+    try {
+        const result = await auth.getRedirectResult();
+        // בודקים אם יש תוצאה (כלומר, אם חזרנו מהתחברות)
+        if (result && result.user) {
+            const isNewUser = result.additionalUserInfo.isNewUser;
+            if (isNewUser) {
+                // אם זה משתמש חדש, הצג את מסך בחירת שם המשתמש
+                authContainer.style.display = 'none';
+                usernameModal.style.display = 'grid';
+            } else {
+                // אם זה משתמש חוזר, הצג את פרטיו
+                showUser(result.user);
+            }
         }
-      } catch (err) {
+    } catch (err) {
         errorMsg.textContent = err.message;
-      } finally {
-        handlingLogin = false;
-      }
-    };
+    }
+};
 
-    document.getElementById('submitUsernameBtn').onclick = async () => {
-        const user = auth.currentUser;
-        if (!user) return;
+// קריאה לפונקציה מיד כשהדף נטען כדי לבדוק אם חזרנו מגוגל
+handleRedirectResult();
 
-        const usernameErrorMsg = document.getElementById('usernameErrorMsg');
-        const newUsername = document.getElementById('newUsernameField').value.trim();
+// ===================================================
+//             סוף השינוי
+// ===================================================
 
-        if (!newUsername) {
-            usernameErrorMsg.textContent = "שם המשתמש אינו יכול להיות ריק.";
-            return;
-        }
-        usernameErrorMsg.textContent = "";
 
-        try {
-            await user.updateProfile({ displayName: newUsername });
-            showUser(user); // Update UI immediately with the new name
-        } catch (err) {
-            usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
-        }
-    };
-
-    document.getElementById('logoutBtn').onclick = () => auth.signOut();
-    
-    document.getElementById('skipBtn').onclick = () => {
-        authContainer.style.display = 'none';
-        window.parent.postMessage('authComplete', '*');
-    };
-
-    // --- Firebase Auth State Observer ---
-    auth.onAuthStateChanged((user) => {
-      // This observer now primarily handles session persistence and logouts.
-      // Active login flow is controlled by the `handlingLogin` flag.
-      if (handlingLogin) {
+document.getElementById('submitUsernameBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const usernameErrorMsg = document.getElementById('usernameErrorMsg');
+    const newUsername = document.getElementById('newUsernameField').value.trim();
+    if (!newUsername) {
+        usernameErrorMsg.textContent = "שם המשתמש אינו יכול להיות ריק.";
         return;
-      }
-      if (user) {
-        // This will run on page load if user is already logged in.
+    }
+    usernameErrorMsg.textContent = "";
+    try {
+        await user.updateProfile({ displayName: newUsername });
         showUser(user);
-      } else {
-        showForm();
-      }
-    });
+    } catch (err) {
+        usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
+    }
+};
+
+document.getElementById('logoutBtn').onclick = () => auth.signOut();
+document.getElementById('skipBtn').onclick = () => {
+    authContainer.style.display = 'none';
+    window.parent.postMessage('authComplete', '*');
+};
+
+// --- Firebase Auth State Observer ---
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // Observer עדיין שימושי אם המשתמש פותח את הדף כשהוא כבר מחובר
+    // נבדוק אם אחד המסכים האחרים כבר מוצג כדי למנוע דריסה
+    if (usernameModal.style.display === 'none') {
+        showUser(user);
+    }
+  } else {
+    showForm();
+  }
+});
   </script>
 </body>
 </html>

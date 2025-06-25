@@ -286,7 +286,61 @@
             color: #28a745;
             font-size: 1.1rem;
         }
+   #leaderboard-container {
+    position: fixed;
+    top: 70px;  /* מתחת לכפתור ההשתקה (שנמצא בערך ב-top: 15px) */
+    left: 15px;
+    z-index: 4000;
+    direction: rtl; /* שינוי כיוון הטקסט לימין-לשמאל */
+    background: rgba(0, 30, 60, 0.7); /* רקע כחול כהה חצי-שקוף */
+    backdrop-filter: blur(5px); /* אפקט טשטוש לרקע שמאחור */
+    border-radius: 12px;
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-family: 'Alef', sans-serif;
+    color: white;
+    width: 220px; /* רוחב קבוע לבאנר */
+}
 
+   #leaderboard-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 5px;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.leaderboard-row span:first-child {
+    width: 20px; /* רוחב קבוע למספור */
+}
+
+.leaderboard-row img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 8px;
+    border: 1px solid white;
+}
+
+.leaderboard-name {
+    flex-grow: 1; /* גורם לשם לתפוס את כל המקום הפנוי */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* מוסיף '...' אם השם ארוך מדי */
+}
+
+.leaderboard-coins {
+    font-weight: 700;
+    color: #ffd700; /* צבע זהב למטבעות */
+}
 
         /* ================================================= */
         /* ===== עיצוב למחשב בלבד (מסך רחב) ===== */
@@ -660,7 +714,11 @@
     <div id="startScreen">
         <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
     </div>
-
+<div id="leaderboard-container" style="display: none;">
+    <div id="leaderboard-title">טבלת המובילים</div>
+    <div id="leaderboard-list">
+        </div>
+</div>
     <div id="stageIntro">
         <iframe src="banner-animation/index.html" id="bannerIframe" style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;" loading="lazy"></iframe>
     </div>
@@ -972,7 +1030,91 @@
 
     <script src="sound_manager.js"></script>
 
-    <script>
+    <script> 
+        // =======================================================
+// ====== קוד חדש: פונקציה להקמת טבלת המובילים ======
+// =======================================================
+
+function setupLeaderboard() {
+    const leaderboardContainer = document.getElementById('leaderboard-container');
+    if (leaderboardContainer) {
+        leaderboardContainer.style.display = 'block'; // הצגת הטבלה
+    }
+
+    // ודא שמשתנה 'db' קיים ומוגדר מהקריאה ל-getDatabase()
+    const usersRef = ref(db, 'users');
+    // שאילתה שמביאה את 5 המשתמשים עם הכי הרבה מטבעות
+    const topUsersQuery = query(usersRef, orderByChild('coins'), limitToLast(5));
+
+    // האזנה לשינויים בזמן אמת בטבלה
+    onValue(topUsersQuery, (snapshot) => {
+        const leaderboardList = document.getElementById('leaderboard-list');
+        if (!leaderboardList) return; // יציאה אם האלמנט לא קיים
+        
+        leaderboardList.innerHTML = ''; // ניקוי הרשימה הקודמת
+
+        if (snapshot.exists()) {
+            let users = [];
+            // פיירבייס מחזיר את התוצאות בסדר עולה, לכן נהפוך אותן
+            snapshot.forEach((childSnapshot) => {
+                users.unshift({ // unshift מוסיף לתחילת המערך וכך הופך את הסדר
+                    ...childSnapshot.val()
+                });
+            });
+
+            // יצירת שורה בטבלה עבור כל משתמש
+            users.forEach((user, index) => {
+                const row = document.createElement('div');
+                row.className = 'leaderboard-row';
+                
+                // שימוש בברירת מחדל אם אין שם, תמונה או מטבעות
+                const displayName = user.displayName || 'משתמש';
+                const avatar = user.avatar || 'images/default-avatar.png';
+                const coins = user.coins || 0;
+
+                row.innerHTML = `
+                    <span>${index + 1}.</span>
+                    <img src="${avatar}" alt="${displayName}">
+                    <span class="leaderboard-name">${displayName}</span>
+                    <span class="leaderboard-coins">${coins}</span>
+                `;
+                leaderboardList.appendChild(row);
+            });
+        } else {
+            leaderboardList.innerHTML = '<div>אין נתונים להצגה</div>';
+        }
+    });
+}
+
+
+// =======================================================
+// ====== עדכון פונקציות קיימות להצגה והסתרה ======
+// =======================================================
+
+function showStartScreen() {
+    // ... כל הקוד הקיים בפונקציה ...
+    document.getElementById('startScreen').style.display = 'flex';
+    if (document.getElementById('leaderboard-container')) {
+        document.getElementById('leaderboard-container').style.display = 'none'; // הסתרת הטבלה
+    }
+    // ...
+}
+
+function showStageIntro() {
+    // ... כל הקוד הקיים בפונקציה ...
+    document.getElementById('stageIntro').style.display = 'flex';
+    setupLeaderboard(); // הצגה וטעינה של הטבלה
+    // ...
+}
+
+function showEndScreen() {
+    // ... כל הקוד הקיים בפונקציה ...
+    document.getElementById('endScreen').style.display = 'flex';
+    if (document.getElementById('leaderboard-container')) {
+        document.getElementById('leaderboard-container').style.display = 'none'; // הסתרת הטבלה
+    }
+    // ...
+}
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -999,6 +1141,7 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
       import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+      import { getDatabase, ref, query, orderByChild, limitToLast, onValue } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",

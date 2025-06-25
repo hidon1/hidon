@@ -343,24 +343,24 @@
 @media (orientation: landscape) and (max-height: 550px) {
 
     /* === שלב א': קיבוע השאלה למעלה בשורה עם הכפתורים === */
-    #questionText {
-        position: fixed;   /* מקבע את השאלה למסך */
-        top: 10px;         /* מרחק מהחלק העליון */
-        z-index: 3000;
-        
-        /* ממקם את השאלה בין הכפתורים בצדדים */
-        left: 75px;        /* רווח מכפתור ההשתק */
-        right: 140px;      /* רווח מאזור המטבעות והאווטאר */
+  #questionText {
+    position: fixed;
+    top: 10px;
+    z-index: 3000;
 
-        /* מקטין את גובה התיבה עצמה, כפי שביקשת */
-        padding: 3.5px 12px;
-        
-        /* עיצובים נוספים */
-        width: auto;
-        font-size: 0.9rem;
-        box-sizing: border-box;
-    }
+    /* --- התיקון למרכוז מושלם --- */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 220px); /* רוחב: 100% מהמסך פחות 220px לכפתורים בצדדים */
+    max-width: 500px; /* הגבלת רוחב מקסימלי */
 
+    /* --- שליטה על הגובה --- */
+    padding: 3.5px 12px; /* שנה את הערך הראשון (8px) כדי לשנות את הגובה */
+
+    /* עיצובים נוספים */
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
     /* === שלב ב': סידור שאר התוכן מתחת לשאלה הקבועה === */
     #quizContainer {
         /* דוחפים את כל התוכן למטה כדי שלא יוסתר מתחת לשאלה */

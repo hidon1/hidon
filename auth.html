@@ -147,6 +147,7 @@
         <button class="button googleBtn" id="googleBtn">התחבר עם Google</button>
         <button id="skipBtn" class="button">לא עכשיו</button>
         <button class="switch-mode" id="toggleModeBtn">עדיין אין לך חשבון? <b>להרשמה</b></button>
+        <button class="switch-mode" id="forgotPasswordBtn" style="margin-top: 0;">שכחתי סיסמה?</button>
         <div id="userInfo" style="display:none"></div>
         <button id="logoutBtn" class="button logoutBtn" style="display:none">התנתק</button>
     </div>
@@ -241,6 +242,25 @@ document.getElementById('submitBtn').onclick = async () => {
     }
   } catch (err) {
     errorMsg.textContent = err.message;
+  }
+  
+};
+    // --- הוסף את הקוד הבא ---
+document.getElementById('forgotPasswordBtn').onclick = () => {
+  // הקפצת חלונית שמבקשת מהמשתמש את המייל שלו
+  const email = prompt("לאיפוס סיסמה, אנא הזן את כתובת המייל שאיתה נרשמת:");
+
+  // בודקים שהמשתמש אכן הזין כתובת מייל
+  if (email) {
+    auth.sendPasswordResetEmail(email)
+      .then(() => {
+        // אם הבקשה הצליחה, הצג הודעת הצלחה
+        alert("מייל לאיפוס סיסמה נשלח לכתובת שהזנת. יש לבדוק את תיבת הדואר הנכנס (וגם את תיבת הספאם).");
+      })
+      .catch((error) => {
+        // אם הייתה שגיאה (למשל, המייל לא קיים), הצג אותה
+        alert("אירעה שגיאה: " + error.message);
+      });
   }
 };
 

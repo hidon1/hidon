@@ -1079,6 +1079,11 @@ async loadUserData() {
         this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
         this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
         this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);
+            // השלמת displayName חסר ב-DB מתוך המשתמש המחובר
+    if (!data.displayName && currentUser.displayName) {
+        await update(userRef, { displayName: currentUser.displayName });
+    }
+
     } else {
         const userRef = ref(db, 'users/' + currentUser.uid);
         try {

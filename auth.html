@@ -175,7 +175,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.database(); // הגדרת משתנה למסד הנתונים
+    const db = firebase.database();
 
     // --- DOM Elements ---
     const authContainer = document.getElementById('authContainer');
@@ -204,7 +204,6 @@
         logoutBtn.style.display = "block";
         formTitle.textContent = "ברוך הבא";
         errorMsg.textContent = "";
-        // שליחת הודעה לחלון הראשי שהאימות הושלם
         window.parent.postMessage('authComplete', '*');
     };
 
@@ -234,7 +233,6 @@
         const password = document.getElementById('passwordField').value;
         try {
             if (signupMode) {
-                // לוגיקת הרשמה
                 const username = document.getElementById('usernameField').value.trim();
                 if (!username) { throw new Error("יש להזין שם משתמש"); }
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -247,7 +245,6 @@
                 });
                 showUser(userCredential.user);
             } else {
-                // לוגיקת התחברות
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 showUser(userCredential.user);
             }
@@ -275,43 +272,34 @@
       auth.signInWithRedirect(provider);
     };
 
- const handleRedirectResult = async () => {
-    try {
-        const result = await auth.getRedirectResult();
-        if (result && result.user) {
-            const isNewUser = result.additionalUserInfo.isNewUser;
-            const user = result.user;
+    const handleRedirectResult = async () => {
+        try {
+            const result = await auth.getRedirectResult();
+            if (result && result.user) {
+                const isNewUser = result.additionalUserInfo.isNewUser;
+                const user = result.user;
 
-            if (isNewUser) {
-                // =========================================================
-                //      הוספנו את הקוד הבא כדי ליצור רשומה זמנית
-                // =========================================================
-                // יצירת רשומה ראשונית מיד, לפני שהמשתמש בוחר שם.
-                // השם יהיה ריק באופן זמני.
-                await db.ref('users/' + user.uid).set({
-                    displayName: user.displayName || "", // שמירת שם מגוגל אם קיים, אחרת ריק
-                    coins: 0,
-                    avatar: user.photoURL || 'images/default-avatar.png',
-                    ownedAvatars: [user.photoURL || 'images/default-avatar.png']
-                });
-                // =========================================================
+                if (isNewUser) {
+                    await db.ref('users/' + user.uid).set({
+                        displayName: user.displayName || "", 
+                        coins: 0,
+                        avatar: user.photoURL || 'images/default-avatar.png',
+                        ownedAvatars: [user.photoURL || 'images/default-avatar.png']
+                    });
 
-                // הצגת החלון לבחירת/אישור שם המשתמש
-                authContainer.style.display = 'none';
-                usernameModal.style.display = 'grid';
-                // אם יש שם מגוגל, נציג אותו בשדה הקלט
-                document.getElementById('newUsernameField').value = user.displayName || "";
+                    authContainer.style.display = 'none';
+                    usernameModal.style.display = 'grid';
+                    document.getElementById('newUsernameField').value = user.displayName || "";
 
-            } else {
-                // אם זה משתמש חוזר, פשוט הצג את פרטיו
-                showUser(result.user);
+                } else {
+                    showUser(result.user);
+                }
             }
+        } catch (err) {
+            errorMsg.textContent = err.message;
         }
-    } catch (err) {
-        errorMsg.textContent = err.message;
-    }
-};
-handleRedirectResult();
+    };
+    handleRedirectResult();
 
     document.getElementById('submitUsernameBtn').onclick = async () => {
         const user = auth.currentUser;
@@ -325,13 +313,12 @@ handleRedirectResult();
         usernameErrorMsg.textContent = "";
         try {
             await user.updateProfile({ displayName: newUsername });
-            // גם כאן, ניצור רשומה במסד הנתונים עבור משתמש גוגל חדש
-            await db.ref('users/' + user.uid).set({
-                displayName: newUsername,
-                coins: 0,
-                avatar: user.photoURL || 'images/default-avatar.png',
-                ownedAvatars: [user.photoURL || 'images/default-avatar.png']
+            
+            // כאן אנחנו מעדכנים את הרשומה הקיימת, לא יוצרים חדשה
+            await db.ref('users/' + user.uid).update({
+                displayName: newUsername
             });
+            
             showUser(user);
         } catch (err) {
             usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
@@ -346,7 +333,6 @@ handleRedirectResult();
 
     // --- Firebase Auth State Observer ---
     auth.onAuthStateChanged((user) => {
-      // בודקים שאנחנו לא באמצע תהליך התחברות עם גוגל או בחירת שם
       if (usernameModal.style.display === 'none') {
           if (user) {
             showUser(user);

@@ -629,9 +629,6 @@
     
     <div id="successMessage">כל הכבוד עברת בהצלחה</div>
 
-    <div id="authOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:4000; background:rgba(255,255,255,0.93);">
-        <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
-    </div>
 
     <div id="user-info-container" style="display: none;">
         <div id="currency-bar" onclick="window.firebase_store.openStore()">
@@ -1273,20 +1270,10 @@ saveUserDataToDB() {
       }
       window.setupLeaderboard = setupLeaderboard; // חשיפת הפונקציה לחלקים אחרים של הקוד
 
-      function openAuthBanner() {
-        document.getElementById('welcomeBanner').classList.add('hide');
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('authOverlay').style.display = 'block';
-        document.getElementById('authFrame').src = "auth.html";
-      }
-
-      window.addEventListener("message", function(event) {
-        if(event.data === "authComplete") {
-          document.getElementById('authOverlay').style.display = 'none';
-          document.getElementById('authFrame').src = "";
-          showStageIntro();
-        }
-      });
+    function openAuthBanner() {
+    window.location.href = "auth.html"; // מעביר את המשתמש לדף ההתחברות
+}
+     
       window.openAuthBanner = openAuthBanner;
     </script>
       

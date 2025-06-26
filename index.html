@@ -1124,26 +1124,27 @@ async loadUserData() {
 
     if (!currentUser) return;
 
+    // נשמור את השם בזיכרון המקומי רק אם הוא קיים
     if (currentUser.displayName) {
         localStorage.setItem('userDisplayName', currentUser.displayName);
     }
 
     const userRef = ref(db, 'users/' + currentUser.uid);
 
-    // אובייקט שיכיל רק את העדכונים שאנחנו רוצים לבצע
+    // ניצור אובייקט עדכון שיכיל רק את הנתונים שאנחנו רוצים לעדכן
     const updates = {
         coins: this.coins,
         avatar: this.userAvatar,
         ownedAvatars: this.ownedAvatars
     };
     
-    // נוסיף את שם המשתמש לעדכון רק אם הוא קיים ואינו ריק
-    // זה מונע דריסה של שם תקין עם ערך ריק
+    // נוסיף את שם המשתמש לאובייקט העדכון רק אם הוא קיים ואינו ריק
+    // זה החלק החשוב שמונע את הדריסה!
     if (currentUser.displayName) {
         updates.displayName = currentUser.displayName;
     }
 
-    // שימוש ב-update כדי לעדכן רק את השדות הרלוונטיים
+    // נשתמש בפקודת update שמעדכנת רק את השדות שציינו
     update(userRef, updates).catch(error => console.error("DB Save Error:", error));
 },
         

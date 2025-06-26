@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<script>
-  // אם המשתמש כבר מחובר דרך localStorage, דלג מיד ל-index.html
-  // (בדרך כלל לא יקרה כי ה-Observer מטפל בזה, אבל זה גיבוי טוב)
-  if (localStorage.getItem("firebase:authUser:" + "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g" + ":[DEFAULT]")) {
-    window.parent.postMessage('authComplete', '*');
-  }
-</script>
-
   <meta charset="UTF-8">
   <title>התחברות והרשמה</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

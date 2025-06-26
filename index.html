@@ -1083,15 +1083,12 @@ async loadUserData() {
                 this.userAvatar = data.avatar || defaultAvatar;
                 this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 
             } else {
-                // אם המשתמש לא קיים במסד הנתונים (מצב שלא אמור לקרות)
-                // אנחנו נרשום שגיאה בקונסול ולא נדרוס את המידע.
-                // auth.html אחראי על יצירת המשתמש.
-                console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
-                // נטען ערכי ברירת מחדל מקומיים בלבד
-                this.coins = 0;
-                this.userAvatar = defaultAvatar;
-                this.ownedAvatars = [defaultAvatar];
-            }
+                 console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
+    // נטען ערכי ברירת מחדל מקומיים בלבד, ללא שמירה לדאטהבייס
+    this.coins = 0;
+    this.userAvatar = defaultAvatar;
+    this.ownedAvatars = [defaultAvatar];
+}
         } catch(error) {
             console.error("DB Load Error:", error);
             this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);

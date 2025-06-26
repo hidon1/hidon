@@ -280,6 +280,7 @@
                 const user = result.user;
 
                 if (isNewUser) {
+                    // יוצרים רשומה ראשונית במסד הנתונים כדי למנוע בעיות תזמון
                     await db.ref('users/' + user.uid).set({
                         displayName: user.displayName || "", 
                         coins: 0,
@@ -287,11 +288,12 @@
                         ownedAvatars: [user.photoURL || 'images/default-avatar.png']
                     });
 
+                    // הצגת החלון לבחירת/אישור שם המשתמש
                     authContainer.style.display = 'none';
                     usernameModal.style.display = 'grid';
                     document.getElementById('newUsernameField').value = user.displayName || "";
-
                 } else {
+                    // אם זה משתמש חוזר, פשוט הצג את פרטיו
                     showUser(result.user);
                 }
             }
@@ -312,13 +314,15 @@
         }
         usernameErrorMsg.textContent = "";
         try {
+            // 1. עדכון הפרופיל במערכת האימות של פיירבייס
             await user.updateProfile({ displayName: newUsername });
             
-            // כאן אנחנו מעדכנים את הרשומה הקיימת, לא יוצרים חדשה
+            // 2. עדכון השם הספציפי במסד הנתונים, מבלי לדרוס נתונים אחרים
             await db.ref('users/' + user.uid).update({
                 displayName: newUsername
             });
             
+            // 3. המשך התהליך כרגיל
             showUser(user);
         } catch (err) {
             usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
@@ -333,6 +337,7 @@
 
     // --- Firebase Auth State Observer ---
     auth.onAuthStateChanged((user) => {
+      // בודקים שאנחנו לא באמצע תהליך בחירת שם כדי למנוע לולאה
       if (usernameModal.style.display === 'none') {
           if (user) {
             showUser(user);

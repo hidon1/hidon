@@ -287,31 +287,31 @@
         errorMsg.textContent = err.message;
       }
     };
-
-    document.getElementById('submitUsernameBtn').onclick = async () => {
-        const user = auth.currentUser;
-        if (!user) return;
-        const usernameErrorMsg = document.getElementById('usernameErrorMsg');
-        const newUsername = document.getElementById('newUsernameField').value.trim();
-        if (!newUsername) {
-            usernameErrorMsg.textContent = "שם המשתמש אינו יכול להיות ריק.";
-            return;
-        }
-        usernameErrorMsg.textContent = "";
-        try {
-            await user.updateProfile({ displayName: newUsername });
-            await db.ref('users/' + user.uid).set({
-                displayName: newUsername,
-                coins: 0,
-                avatar: user.photoURL || 'images/default-avatar.png',
-                ownedAvatars: [user.photoURL || 'images/default-avatar.png']
-            });
-            showUser(user);
-        } catch (err) {
-            usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
-        }
-    };
-
+document.getElementById('submitUsernameBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const usernameErrorMsg = document.getElementById('usernameErrorMsg');
+    const newUsername = document.getElementById('newUsernameField').value.trim();
+    if (!newUsername) {
+        usernameErrorMsg.textContent = "שם המשתמש אינו יכול להיות ריק.";
+        return;
+    }
+    usernameErrorMsg.textContent = "";
+    try {
+        // 1. עדכון הפרופיל במערכת האימות של פיירבייס
+        await user.updateProfile({ displayName: newUsername });
+        
+        // 2. עדכון השם הספציפי במסד הנתונים, מבלי לדרוס נתונים אחרים
+        await db.ref('users/' + user.uid).update({
+            displayName: newUsername
+        });
+        
+        // 3. המשך התהליך כרגיל
+        showUser(user);
+    } catch (err) {
+        usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
+    }
+};
     document.getElementById('logoutBtn').onclick = () => auth.signOut();
     document.getElementById('skipBtn').onclick = () => {
         authContainer.style.display = 'none';

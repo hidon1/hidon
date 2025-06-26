@@ -164,7 +164,7 @@
 
 
   <script>
-  // --- Firebase Config ---
+// --- Firebase Config ---
 const firebaseConfig = {
   apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
   authDomain: "hidon1-e4c91.firebaseapp.com",
@@ -194,6 +194,7 @@ const formElements = [
 
 // --- State ---
 let signupMode = false;
+let disableObserver = false; // דגל למניעת מרוץ תהליכים
 
 // --- Functions ---
 const showUser = (user) => {
@@ -269,6 +270,7 @@ document.getElementById('forgotPasswordBtn').onclick = () => {
 
 document.getElementById('googleBtn').onclick = async () => {
   errorMsg.textContent = "";
+  disableObserver = true; // נטרול המאזין כדי למנוע התנגשות
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
     const result = await auth.signInWithPopup(provider);
@@ -279,12 +281,15 @@ document.getElementById('googleBtn').onclick = async () => {
     if (snapshot.exists()) {
       showUser(user);
     } else {
+      // אם המשתמש חדש, נקפיץ לו את חלון בחירת השם
       authContainer.style.display = 'none';
       usernameModal.style.display = 'grid';
       document.getElementById('newUsernameField').value = user.displayName || "";
     }
   } catch (err) {
     errorMsg.textContent = err.message;
+  } finally {
+    disableObserver = false; // הפעלה מחדש של המאזין
   }
 };
 
@@ -300,6 +305,7 @@ document.getElementById('submitUsernameBtn').onclick = async () => {
     usernameErrorMsg.textContent = "";
     try {
         await user.updateProfile({ displayName: newUsername });
+        // יצירת הרשומה הראשונית המלאה במסד הנתונים
         await db.ref('users/' + user.uid).set({
             displayName: newUsername,
             coins: 0,
@@ -320,6 +326,8 @@ document.getElementById('skipBtn').onclick = () => {
 
 // --- Firebase Auth State Observer ---
 auth.onAuthStateChanged((user) => {
+  if (disableObserver) return; // בדיקת הדגל שמונע התנגשות
+
   if (usernameModal.style.display === 'none') {
       if (user) {
         showUser(user);

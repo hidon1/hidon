@@ -275,23 +275,43 @@
       auth.signInWithRedirect(provider);
     };
 
-    const handleRedirectResult = async () => {
-        try {
-            const result = await auth.getRedirectResult();
-            if (result && result.user) {
-                const isNewUser = result.additionalUserInfo.isNewUser;
-                if (isNewUser) {
-                    authContainer.style.display = 'none';
-                    usernameModal.style.display = 'grid';
-                } else {
-                    showUser(result.user);
-                }
+ const handleRedirectResult = async () => {
+    try {
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+            const isNewUser = result.additionalUserInfo.isNewUser;
+            const user = result.user;
+
+            if (isNewUser) {
+                // =========================================================
+                //      הוספנו את הקוד הבא כדי ליצור רשומה זמנית
+                // =========================================================
+                // יצירת רשומה ראשונית מיד, לפני שהמשתמש בוחר שם.
+                // השם יהיה ריק באופן זמני.
+                await db.ref('users/' + user.uid).set({
+                    displayName: user.displayName || "", // שמירת שם מגוגל אם קיים, אחרת ריק
+                    coins: 0,
+                    avatar: user.photoURL || 'images/default-avatar.png',
+                    ownedAvatars: [user.photoURL || 'images/default-avatar.png']
+                });
+                // =========================================================
+
+                // הצגת החלון לבחירת/אישור שם המשתמש
+                authContainer.style.display = 'none';
+                usernameModal.style.display = 'grid';
+                // אם יש שם מגוגל, נציג אותו בשדה הקלט
+                document.getElementById('newUsernameField').value = user.displayName || "";
+
+            } else {
+                // אם זה משתמש חוזר, פשוט הצג את פרטיו
+                showUser(result.user);
             }
-        } catch (err) {
-            errorMsg.textContent = err.message;
         }
-    };
-    handleRedirectResult();
+    } catch (err) {
+        errorMsg.textContent = err.message;
+    }
+};
+handleRedirectResult();
 
     document.getElementById('submitUsernameBtn').onclick = async () => {
         const user = auth.currentUser;

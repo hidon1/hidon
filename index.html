@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <meta charset="utf-g"/>
+    <meta charset="utf-8"/>
     <title>חידון התנ"ך</title>
 <meta name="theme-color" content="#00000000">
     <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
@@ -623,6 +623,29 @@
 </head>
 <body>
 
+    <div id="top-bar-container">
+        <div id="top-bar-left">
+            <button id="muteButton" onclick="toggleMute()">
+                🔇 השתק
+            </button>
+            <div id="leaderboard-container" style="display: none;">
+                <div id="leaderboard-title">טבלת המובילים</div>
+                <div id="leaderboard-list"></div>
+            </div>
+        </div>
+        <div id="top-bar-right">
+            <div id="user-info-container">
+                <div id="currency-bar" onclick="window.firebase_store.openStore()">
+                    <span id="coin-display">0</span>
+                    <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
+                </div>
+                <div id="avatar-banner">
+                    <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="welcomeBanner">
         ברוכים הבאים<br>לחידון התנ"ך
     </div>
@@ -631,16 +654,6 @@
 
     <div id="authOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:4000; background:rgba(255,255,255,0.93);">
         <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
-    </div>
-
-    <div id="user-info-container" style="display: none;">
-        <div id="currency-bar" onclick="window.firebase_store.openStore()">
-            <span id="coin-display">0</span>
-            <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
-        </div>
-        <div id="avatar-banner">
-            <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
-        </div>
     </div>
     
     <div id="store-overlay" class="overlay">
@@ -651,15 +664,6 @@
             <hr style="border: none; border-top: 1px solid #bdc3c7; margin: 15px 0;">
             <div id="store-items"></div>
         </div>
-    </div>
-
-    <button id="muteButton" onclick="toggleMute()" style="position: fixed; left: 12px; z-index: 2000; background: #ffffffcc; border: 1px solid #999; padding: 6px 12px; font-size: 0.95rem; font-family: 'Frank Ruhl Libre', serif; border-radius: 8px; cursor: pointer;">
-        🔇 השתק
-    </button>
-    
-    <div id="leaderboard-container" style="display: none;">
-        <div id="leaderboard-title">טבלת המובילים</div>
-        <div id="leaderboard-list"></div>
     </div>
 
     <div id="startScreen">
@@ -759,10 +763,7 @@
         }
         
         function showStartScreen() {
-            document.getElementById('user-info-container').style.display = 'none';
-            if(document.getElementById('leaderboard-container')) {
-                 document.getElementById('leaderboard-container').style.display = 'none';
-            }
+            document.getElementById('top-bar-container').style.display = 'none';
             setBackgroundOpacity(1);
             document.documentElement.style.setProperty('--bg-image', "url('backgrounds/main.jpg')");
             document.getElementById('startScreen').style.display = 'flex';
@@ -772,7 +773,7 @@
         }
 
         function showStageIntro() {
-            document.getElementById('user-info-container').style.display = 'block';
+            document.getElementById('top-bar-container').style.display = 'flex';
             window.firebase_store.loadUserData(); 
             setTimeout(alignAvatarBannerWidth, 50);
             const bannerIframe = document.getElementById('bannerIframe');
@@ -975,10 +976,7 @@
         }
         
         function showEndScreen() {
-            document.getElementById('user-info-container').style.display = 'none';
-            if(document.getElementById('leaderboard-container')) {
-                 document.getElementById('leaderboard-container').style.display = 'none';
-            }
+            document.getElementById('top-bar-container').style.display = 'none';
             setBackgroundOpacity(1);
             clearInterval(timer);
             document.body.style.backgroundImage = "url('backgrounds/end.jpg')";
@@ -1044,7 +1042,7 @@
 
       onAuthStateChanged(auth, (user) => {
         currentUser = user;
-        if (user && document.getElementById('user-info-container').style.display === 'block') {
+        if (user && document.getElementById('top-bar-container').style.display === 'flex') {
             window.firebase_store.loadUserData();
         }
       });
@@ -1066,38 +1064,36 @@
                 });
             }
         },
-async loadUserData() {
-    const defaultAvatar = 'images/default-avatar.png';
-    if (!currentUser) {
-        this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
-        this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
-        this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);
-    } else {
-        const userRef = ref(db, 'users/' + currentUser.uid);
-        try {
-            const snapshot = await get(userRef);
-            if (snapshot.exists()) {
-                // אם המשתמש קיים במסד הנתונים, טען את הנתונים שלו
-                const data = snapshot.val();
-                this.coins = data.coins || 0;
-                this.userAvatar = data.avatar || defaultAvatar;
-                this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 
+        async loadUserData() {
+            const defaultAvatar = 'images/default-avatar.png';
+            if (!currentUser) {
+                this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
+                this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
+                this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);
             } else {
-                 console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
-    // נטען ערכי ברירת מחדל מקומיים בלבד, ללא שמירה לדאטהבייס
-    this.coins = 0;
-    this.userAvatar = defaultAvatar;
-    this.ownedAvatars = [defaultAvatar];
-}
-        } catch(error) {
-            console.error("DB Load Error:", error);
-            this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
-            this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
-            this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);
-        }
-    }
-    this.updateUIAfterDataLoad();
-},
+                const userRef = ref(db, 'users/' + currentUser.uid);
+                try {
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        this.coins = data.coins || 0;
+                        this.userAvatar = data.avatar || defaultAvatar;
+                        this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 
+                    } else {
+                        console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
+                        this.coins = 0;
+                        this.userAvatar = defaultAvatar;
+                        this.ownedAvatars = [defaultAvatar];
+                    }
+                } catch(error) {
+                    console.error("DB Load Error:", error);
+                    this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
+                    this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
+                    this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);
+                }
+            }
+            this.updateUIAfterDataLoad();
+        },
         
         updateUIAfterDataLoad() {
             document.getElementById("coin-display").textContent = this.coins;
@@ -1108,33 +1104,29 @@ async loadUserData() {
             window.updateScore(0);
         },
 
-    saveUserDataToDB() {
-    localStorage.setItem('userCoins', this.coins);
-    localStorage.setItem('userAvatar', this.userAvatar);
-    localStorage.setItem('ownedAvatars', JSON.stringify(this.ownedAvatars));
+        saveUserDataToDB() {
+            localStorage.setItem('userCoins', this.coins);
+            localStorage.setItem('userAvatar', this.userAvatar);
+            localStorage.setItem('ownedAvatars', JSON.stringify(this.ownedAvatars));
 
-    if (!currentUser) return;
+            if (!currentUser) return;
 
-    // גם כאן נוסיף שמירה של השם ל-localStorage, זה נוהג טוב
-    if (currentUser.displayName) {
-        localStorage.setItem('userDisplayName', currentUser.displayName);
-    }
+            if (currentUser.displayName) {
+                localStorage.setItem('userDisplayName', currentUser.displayName);
+            }
 
-    const userRef = ref(db, 'users/' + currentUser.uid);
-    // שימוש בפונקציית update במקום set כדי למנוע דריסה של displayName אם הוא כבר קיים
-    const updates = {
-        coins: this.coins,
-        avatar: this.userAvatar,
-        ownedAvatars: this.ownedAvatars
-    };
-    // נוסיף את שם המשתמש לעדכון רק אם הוא קיים
-    if (currentUser.displayName) {
-        updates.displayName = currentUser.displayName;
-    }
-    
-    // שימוש ב-update כדי לעדכן רק את השדות הרלוונטיים
-    update(userRef, updates).catch(error => console.error("DB Save Error:", error));
-},
+            const userRef = ref(db, 'users/' + currentUser.uid);
+            const updates = {
+                coins: this.coins,
+                avatar: this.userAvatar,
+                ownedAvatars: this.ownedAvatars
+            };
+            if (currentUser.displayName) {
+                updates.displayName = currentUser.displayName;
+            }
+            
+            update(userRef, updates).catch(error => console.error("DB Save Error:", error));
+        },
         
         updateCoins(change) {
             this.coins += change;

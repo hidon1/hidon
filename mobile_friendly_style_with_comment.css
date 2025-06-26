@@ -352,7 +352,7 @@
         /* גודל וצורה */
         width: 140px; /* רוחב קטן יותר למובייל */
         border-radius: 10px;
-        padding: 8px;
+        padding: 6px;
 
         /* רקע חצי שקוף */
         background: rgba(0, 20, 40, 0.75);
@@ -378,7 +378,7 @@
     .leaderboard-row {
         display: flex;
         align-items: center;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
         font-size: 0.8rem; /* גופן קטן יותר לשורות */
     }
 
@@ -387,8 +387,8 @@
     }
 
     .leaderboard-row img {
-        width: 22px; /* תמונת אוואטר קטנה יותר */
-        height: 22px;
+        width: 19px; /* תמונת אוואטר קטנה יותר */
+        height: 19px;
         border-radius: 50%;
         margin: 0 5px;
         border: 1px solid white;

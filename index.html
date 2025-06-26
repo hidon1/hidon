@@ -1117,7 +1117,7 @@ async loadUserData() {
             window.updateScore(0);
         },
 
-   saveUserDataToDB() {
+ saveUserDataToDB() {
     localStorage.setItem('userCoins', this.coins);
     localStorage.setItem('userAvatar', this.userAvatar);
     localStorage.setItem('ownedAvatars', JSON.stringify(this.ownedAvatars));
@@ -1129,17 +1129,20 @@ async loadUserData() {
     }
 
     const userRef = ref(db, 'users/' + currentUser.uid);
-    // שימוש בפונקציית update במקום set כדי למנוע דריסה של displayName אם הוא כבר קיים
+
+    // אובייקט שיכיל רק את העדכונים שאנחנו רוצים לבצע
     const updates = {
         coins: this.coins,
         avatar: this.userAvatar,
         ownedAvatars: this.ownedAvatars
     };
-    // נוסיף את שם המשתמש לעדכון רק אם הוא קיים
+    
+    // נוסיף את שם המשתמש לעדכון רק אם הוא קיים ואינו ריק
+    // זה מונע דריסה של שם תקין עם ערך ריק
     if (currentUser.displayName) {
         updates.displayName = currentUser.displayName;
     }
-    
+
     // שימוש ב-update כדי לעדכן רק את השדות הרלוונטיים
     update(userRef, updates).catch(error => console.error("DB Save Error:", error));
 },

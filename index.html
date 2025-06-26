@@ -1181,7 +1181,7 @@ async loadUserData() {
         populateStore() {
             const itemsContainer = document.getElementById('store-items');
             itemsContainer.innerHTML = ''; 
-            
+             if (!Array.isArray(this.ownedAvatars)) this.ownedAvatars = [];
             document.getElementById("store-coin-display").textContent = this.coins;
 
             this.storeItems.forEach(item => {

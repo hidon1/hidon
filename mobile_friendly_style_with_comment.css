@@ -496,4 +496,5 @@
     font-weight: 700;
     color: #ffd700;
     margin-right: 5px; /* רווח קטן מימין */
+       background-color: red !important;
 }

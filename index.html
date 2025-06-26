@@ -775,11 +775,18 @@
             document.getElementById('user-info-container').style.display = 'block';
             window.firebase_store.loadUserData(); 
             setTimeout(alignAvatarBannerWidth, 50);
-            const bannerIframe = document.getElementById('bannerIframe');
-            if (bannerIframe) {
-                bannerIframe.src = '';
-                setTimeout(() => { bannerIframe.src = 'banner-animation/index.html'; }, 50);
-            }
+         const bannerIframe = document.getElementById('bannerIframe');
+if (bannerIframe) {
+    // --- החלפנו את הקוד הישן בקוד החדש והאמין יותר ---
+    try {
+        // זוהי פקודה ישירה שמרעננת את התוכן של ה-iframe
+        bannerIframe.contentWindow.location.reload();
+    } catch (e) {
+        // אם הרענון נכשל מסיבה כלשהי, נחזור לשיטה הישנה כגיבוי
+        console.error("Iframe reload failed, falling back to src reset:", e);
+        bannerIframe.src = 'banner-animation/index.html';
+    }
+}
             if (document.getElementById('welcomeBanner')) {
                 document.getElementById('welcomeBanner').classList.add('hide');
             }

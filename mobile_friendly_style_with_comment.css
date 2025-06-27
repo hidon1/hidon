@@ -66,38 +66,96 @@
         font-size: 0.8rem;
     }
 
-    #user-info-container {
-        position: fixed;
-        top: 30px;
-        right: 15px;
-        z-index: 4002;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
-    }
     
-    #avatar-banner {
-        background: none !important;
-        border: none !important;
-        padding: 0 !important;
-        height: auto !important;
-        min-width: auto !important;
-        box-shadow: none !important;
-    }
+  
     
-    #user-avatar {
-        display: block !important;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    }
-    
-    #currency-bar {
-       padding: 5px 12px;
-    }
+/* ================================================= */
+/* =====  עיצוב וידג'ט משתמש למובייל (אנכי)   ===== */
+/* ================================================= */
+
+#user-info-container {
+    position: fixed;
+    top: 15px; /* מרווח קטן מהקצה העליון */
+    right: 15px;
+    z-index: 4002;
+    display: block; /* ודא שהאלמנט מוצג */
+}
+
+#user-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#widget-coins {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 8px; /* רווח קטן יותר */
+}
+
+#coin-display {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #d4af37;
+    margin-right: 6px;
+}
+
+#coin-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* מאפס את העיצובים הישנים של האווטאר */
+#avatar-banner {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    height: auto !important;
+    min-width: auto !important;
+    border: 3px solid white !important; /* מסגרת לבנה */
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25) !important;
+    cursor: pointer;
+    width: 60px; /* גודל מותאם למובייל */
+    height: 60px;
+}
+
+#user-avatar {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    border-radius: 8px !important;
+    border: none !important;
+}
+
+#widget-username {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 8px; /* רווח קטן יותר */
+    padding: 4px 12px;
+    background-color: rgba(0, 86, 179, 0.08);
+    border-radius: 16px;
+}
+
+#username-display {
+    font-family: 'Alef', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1A5276;
+}
+
+#edit-username-icon {
+    font-size: 0.8rem;
+    margin-left: 6px;
+}
     
     /* --- באנרים והודעות --- */
     #welcomeBanner.hide {

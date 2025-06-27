@@ -236,21 +236,16 @@ document.getElementById('submitBtn').onclick = async () => {
     const email = document.getElementById('emailField').value.trim();
     const password = document.getElementById('passwordField').value;
     try {
-    if (signupMode) {
-    // שלב 1: יצירת משתמש רק עם אימייל וסיסמה
-    await auth.createUserWithEmailAndPassword(email, password);
-    // שלב 2: לאחר ההצלחה, הצג את החלון לבחירת שם משתמש
-    // הלוגיקה הזו זהה למה שקורה בהרשמה חדשה עם גוגל
-    authContainer.style.display = 'none';
-    usernameModal.style.display = 'grid';
-    document.getElementById('newUsernameField').value = ""; // נקה את השדה למקרה הצורך
-    document.getElementById('newUsernameField').focus();    // מקד את הסמן בשדה
-} else {
-    // לוגיקת התחברות נשארת ללא שינוי
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    showUser(userCredential.user);
-}
+        if (signupMode) {
+            // שלב 1: יצירת משתמש רק עם אימייל וסיסמה
+            await auth.createUserWithEmailAndPassword(email, password);
+            // שלב 2: לאחר ההצלחה, הצג את החלון לבחירת שם משתמש
+            authContainer.style.display = 'none';
+            usernameModal.style.display = 'grid';
+            document.getElementById('newUsernameField').value = ""; // נקה את השדה למקרה הצורך
+            document.getElementById('newUsernameField').focus();    // מקד את הסמן בשדה
         } else {
+            // לוגיקת התחברות נשארת ללא שינוי
             const userCredential = await auth.signInWithEmailAndPassword(email, password);
             showUser(userCredential.user);
         }
@@ -338,6 +333,8 @@ auth.onAuthStateChanged((user) => {
       } else {
         showForm();
       }
+  }
+});
   }
 });
 

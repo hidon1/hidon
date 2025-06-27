@@ -304,13 +304,7 @@
                 opacity: 0;
                 pointer-events: none;
             }
-           #user-info-container {
-                position: fixed;
-                top: 15px;
-                right: 15px;
-                z-index: 4001;
-                direction: ltr;
-            }
+         
             #successMessage {
                 position: fixed;
                 top: 12vh;
@@ -584,71 +578,99 @@
             #muteButton {
                 top: 12px; /* החזרת המיקום המקורי עבור תצוגת מחשב */
             }
-           /* העיצוב החדש למסגרת המאוחדת */
-#currency-bar {
+/* ================================================= */
+/* =====   עיצוב וידג'ט משתמש למחשב (אנכי)   ===== */
+/* ================================================= */
+
+#user-info-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 4001;
+    direction: ltr;
+}
+
+#user-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    padding: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 220px; /* רוחב קבוע למראה מסודר */
+}
+
+#widget-coins {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* דוחף את שני החלקים לקצוות */
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 5px 8px; /* פדינג מותאם */
-    border-radius: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    direction: ltr; /* חשוב ליישור נכון של התוכן */
-    min-width: 200px;
-}
-
-/* עיצוב כללי לכל אחד מהאזורים בתוך המסגרת */
-.bar-section {
-    display: inline-flex;
-    align-items: center;
     cursor: pointer;
-    padding: 0 8px;
-    transition: transform 0.2s;
+    margin-bottom: 12px;
 }
 
-.bar-section:hover {
-    transform: scale(1.05);
-}
-
-/* קו ההפרדה האנכי */
-.bar-separator {
-    width: 2px;
-    height: 28px;
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 1px;
-}
-
-/* אייקון המטבע */
-#coin-icon {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-}
-
-/* טקסט המטבעות */
 #coin-display {
     font-family: 'Rubik', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: #d4af37;
+    margin-right: 10px;
 }
 
-/* טקסט שם המשתמש */
+#coin-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* מאפס את העיצובים הישנים של האווטאר */
+#avatar-banner {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    height: auto !important;
+    min-width: auto !important;
+    border: 4px solid white !important; /* מסגרת לבנה עבה */
+    border-radius: 16px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+    cursor: pointer;
+    width: 150px; /* גודל מוגדל למחשב */
+    height: 150px;
+}
+
+#user-avatar {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    border-radius: 10px !important;
+    border: none !important;
+}
+
+#widget-username {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 12px;
+    padding: 6px 18px;
+    background-color: rgba(0, 86, 179, 0.1);
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+#widget-username:hover {
+    background-color: rgba(0, 86, 179, 0.25);
+}
+
 #username-display {
     font-family: 'Alef', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #1A5276;
 }
 
-/* אייקון העיפרון לעריכה */
 #edit-username-icon {
-    font-size: 0.9rem;
-    margin-left: 8px;
+    font-size: 1rem;
+    margin-left: 10px;
 }
-    
-    
-
         }
     </style>
 
@@ -674,8 +696,9 @@
     <div id="authOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:4000; background:rgba(255,255,255,0.93);">
         <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
     </div>
-<div id="user-info-container" style="display: none;">
+<div id="user-info-container">
     <div id="user-widget">
+        
         <div id="widget-coins" onclick="window.firebase_store.openStore()">
             <span id="coin-display">0</span>
             <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
@@ -689,7 +712,9 @@
             <span id="username-display">טוען...</span>
             <span id="edit-username-icon">✏️</span>
         </div>
+
     </div>
+</div>
 </div>
 
 <div id="username-change-overlay" class="overlay">

@@ -1091,6 +1091,10 @@ async loadUserData() {
             if (snapshot.exists()) {
                 // אם המשתמש קיים במסד הנתונים, טען את הנתונים שלו
                 const data = snapshot.val();
+                if (!data.displayName && currentUser.displayName) {
+    await update(userRef, { displayName: currentUser.displayName });
+}
+
                 this.coins = data.coins || 0;
                 this.userAvatar = data.avatar || defaultAvatar;
                 this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 

@@ -1299,6 +1299,28 @@ saveUserDataToDB() {
       });
       window.openAuthBanner = openAuthBanner;
     </script>
-      
+    <script>
+  function openAuthBanner() {
+    const iframe = document.createElement('iframe');
+    iframe.src = "auth.html";
+    iframe.style.position = "fixed";
+    iframe.style.top = "0";
+    iframe.style.left = "0";
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.zIndex = "9999";
+    iframe.style.border = "none";
+    iframe.id = "authFrame";
+    document.body.appendChild(iframe);
+  }
+
+  window.addEventListener("message", function(event) {
+    if (event.data === "authComplete") {
+      const frame = document.getElementById("authFrame");
+      if (frame) frame.remove();
+    }
+  });
+</script>
+  
 </body>
 </html>

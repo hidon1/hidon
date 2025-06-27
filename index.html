@@ -607,6 +607,30 @@
             #muteButton {
                 top: 12px; /* החזרת המיקום המקורי עבור תצוגת מחשב */
             }
+            #username-display-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 15px;
+    border-radius: 20px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+    cursor: pointer;
+    text-align: center;
+    margin-top: 8px;
+    font-family: 'Alef', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1A5276;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s;
+}
+#username-display-container:hover {
+    transform: scale(1.03);
+}
+#edit-username-icon {
+    font-size: 0.9rem;
+}
         }
     </style>
 
@@ -633,15 +657,30 @@
         <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
     </div>
 
-    <div id="user-info-container" style="display: none;">
-        <div id="currency-bar" onclick="window.firebase_store.openStore()">
-            <span id="coin-display">0</span>
-            <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
-        </div>
-        <div id="avatar-banner">
-            <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
-        </div>
+  <div id="user-info-container" style="display: none;">
+    <div id="currency-bar" onclick="window.firebase_store.openStore()">
+        <span id="coin-display">0</span>
+        <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
     </div>
+    <div id="avatar-banner">
+        <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
+    </div>
+    <div id="username-display-container" onclick="openUsernameChangeModal()">
+        <span id="username-display">טוען...</span>
+        <span id="edit-username-icon">✏️</span>
+    </div>
+</div>
+
+<div id="username-change-overlay" class="overlay">
+    <div class="overlay-content">
+        <span class="close-btn" onclick="closeUsernameChangeModal()">&times;</span>
+        <h2>שינוי שם משתמש</h2>
+        <p>אנא בחר שם משתמש חדש.</p>
+        <input id="new-username-input" class="inputField" placeholder="הקלד שם חדש" style="text-align:center; font-size: 1.2rem; padding: 12px; border-radius: 12px; border: 1px solid #ccc; width: 80%;">
+        <p id="username-change-error" style="color: red; min-height: 20px;"></p>
+        <button id="save-username-btn" class="button" onclick="saveNewUsername()">שמור שינויים</button>
+    </div>
+</div>
     
     <div id="store-overlay" class="overlay">
         <div class="overlay-content">
@@ -1031,7 +1070,7 @@ if (bannerIframe) {
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+      import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";  
       import { getDatabase, ref, set, get, query, orderByChild, limitToLast, onValue, update } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
       const firebaseConfig = {
@@ -1112,15 +1151,22 @@ async loadUserData() {
     }
     this.updateUIAfterDataLoad();
 },
-        
-        updateUIAfterDataLoad() {
-            document.getElementById("coin-display").textContent = this.coins;
-            document.getElementById("store-coin-display").textContent = this.coins;
-            document.getElementById('user-avatar').src = this.userAvatar;
-            
-            window.score = parseInt(localStorage.getItem('userScore') || '0', 10);
-            window.updateScore(0);
-        },
+    updateUIAfterDataLoad() {
+    document.getElementById("coin-display").textContent = this.coins;
+    document.getElementById("store-coin-display").textContent = this.coins;
+    document.getElementById('user-avatar').src = this.userAvatar;
+
+    // --- הוספנו עדכון לשם המשתמש ---
+    if (currentUser && currentUser.displayName) {
+        document.getElementById('username-display').textContent = currentUser.displayName;
+    } else {
+        // אם אין שם משתמש, נציג טקסט ברירת מחדל
+        document.getElementById('username-display').textContent = "בחר שם";
+    }
+
+    window.score = parseInt(localStorage.getItem('userScore') || '0', 10);
+    window.updateScore(0);
+},
 
 saveUserDataToDB() {
     localStorage.setItem('userCoins', this.coins);
@@ -1293,6 +1339,75 @@ saveUserDataToDB() {
         }
       });
       window.openAuthBanner = openAuthBanner;
+        // ===== פונקציות חדשות לניהול שינוי שם המשתמש =====
+
+function openUsernameChangeModal() {
+    const overlay = document.getElementById('username-change-overlay');
+    const input = document.getElementById('new-username-input');
+    const errorMsg = document.getElementById('username-change-error');
+
+    // ודא שהמשתמש מחובר לפני פתיחת החלון
+    if (!currentUser) {
+        alert("עליך להיות מחובר כדי לשנות את שם המשתמש.");
+        return;
+    }
+
+    input.value = currentUser.displayName || '';
+    errorMsg.textContent = ''; // איפוס הודעת שגיאה
+    overlay.classList.add('visible');
+}
+
+function closeUsernameChangeModal() {
+    document.getElementById('username-change-overlay').classList.remove('visible');
+}
+
+async function saveNewUsername() {
+    if (!currentUser) return;
+
+    const input = document.getElementById('new-username-input');
+    const errorMsg = document.getElementById('username-change-error');
+    const newName = input.value.trim();
+
+    if (!newName || newName.length < 2) {
+        errorMsg.textContent = "שם המשתמש חייב להכיל לפחות 2 תווים.";
+        return;
+    }
+
+    errorMsg.textContent = '';
+    document.getElementById('save-username-btn').disabled = true;
+    document.getElementById('save-username-btn').textContent = "שומר...";
+
+    try {
+        // עדכון ב-Firebase Authentication
+        await updateProfile(currentUser, { displayName: newName });
+
+        // עדכון ב-Realtime Database
+        const userRef = ref(db, 'users/' + currentUser.uid);
+        await update(userRef, { displayName: newName });
+
+        // עדכון התצוגה המקומית
+        document.getElementById('username-display').textContent = newName;
+
+        alert("שם המשתמש עודכן בהצלחה!");
+        closeUsernameChangeModal();
+
+    } catch (error) {
+        console.error("Error updating username:", error);
+        errorMsg.textContent = "אירעה שגיאה. נסה שוב.";
+    } finally {
+        document.getElementById('save-username-btn').disabled = false;
+        document.getElementById('save-username-btn').textContent = "שמור שינויים";
+    }
+}
+
+// --- חשיפת הפונקציות לחלון הגלובלי ---
+window.openUsernameChangeModal = openUsernameChangeModal;
+window.closeUsernameChangeModal = closeUsernameChangeModal;
+window.saveNewUsername = saveNewUsername;
+
+// --- הוספת ייבוא פונקציות חסרות מ-Firebase ---
+// ודא שבראש קטע ה-script module מופיעה השורה הבאה:
+// import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
     </script>
       
 </body>

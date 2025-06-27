@@ -575,9 +575,7 @@
                 font-weight: 700;
                 color: #ffd700;
             }
-            #muteButton {
-                top: 12px; /* החזרת המיקום המקורי עבור תצוגת מחשב */
-            }
+          
 /* ================================================= */
 /* =====   עיצוב וידג'ט משתמש למחשב (אנכי)   ===== */
 /* ================================================= */
@@ -670,6 +668,27 @@
 #edit-username-icon {
     font-size: 1rem;
     margin-left: 10px;
+}
+            #muteButton {
+    position: fixed;
+    z-index: 4001; /* Z-index שדומה לזה של הווידג'ט */
+    
+    /* --- מיקום חדש --- */
+    top: 280px;      /* הערכה של מיקום מתחת לווידג'ט, שנה לפי הצורך */
+    right: 15px;     /* אותו מרחק מהצד כמו הווידג'ט */
+    left: auto;      /* ביטול המיקום מצד שמאל */
+
+    width: 220px;    /* אותו רוחב כמו הווידג'ט למראה אחיד */
+
+    /* --- שאר העיצובים נשארים --- */
+    background: #ffffffcc;
+    border: 1px solid #999;
+    padding: 6px 12px;
+    font-size: 0.95rem;
+    font-family: 'Frank Ruhl Libre', serif;
+    border-radius: 8px;
+    cursor: pointer;
+    box-sizing: border-box; /* מבטיח שה-padding לא ירחיב את הכפתור */
 }
         }
     </style>

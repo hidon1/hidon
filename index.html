@@ -89,70 +89,7 @@
             border: 2px solid #910d0d !important;
         }
         
-    /* העיצוב החדש למסגרת המאוחדת */
-#currency-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* דוחף את שני החלקים לקצוות */
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 5px 8px; /* פדינג מותאם */
-    border-radius: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    direction: ltr; /* חשוב ליישור נכון של התוכן */
-    min-width: 200px;
-}
-
-/* עיצוב כללי לכל אחד מהאזורים בתוך המסגרת */
-.bar-section {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 0 8px;
-    transition: transform 0.2s;
-}
-
-.bar-section:hover {
-    transform: scale(1.05);
-}
-
-/* קו ההפרדה האנכי */
-.bar-separator {
-    width: 2px;
-    height: 28px;
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 1px;
-}
-
-/* אייקון המטבע */
-#coin-icon {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-}
-
-/* טקסט המטבעות */
-#coin-display {
-    font-family: 'Rubik', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #d4af37;
-}
-
-/* טקסט שם המשתמש */
-#username-display {
-    font-family: 'Alef', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1A5276;
-}
-
-/* אייקון העיפרון לעריכה */
-#edit-username-icon {
-    font-size: 0.9rem;
-    margin-left: 8px;
-}
     
-        
         #avatar-banner {
             margin-top: 10px;
             background: rgba(0, 51, 102, 0.5);
@@ -647,7 +584,70 @@
             #muteButton {
                 top: 12px; /* החזרת המיקום המקורי עבור תצוגת מחשב */
             }
-       
+           /* העיצוב החדש למסגרת המאוחדת */
+#currency-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* דוחף את שני החלקים לקצוות */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 8px; /* פדינג מותאם */
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    direction: ltr; /* חשוב ליישור נכון של התוכן */
+    min-width: 200px;
+}
+
+/* עיצוב כללי לכל אחד מהאזורים בתוך המסגרת */
+.bar-section {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: transform 0.2s;
+}
+
+.bar-section:hover {
+    transform: scale(1.05);
+}
+
+/* קו ההפרדה האנכי */
+.bar-separator {
+    width: 2px;
+    height: 28px;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 1px;
+}
+
+/* אייקון המטבע */
+#coin-icon {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+/* טקסט המטבעות */
+#coin-display {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #d4af37;
+}
+
+/* טקסט שם המשתמש */
+#username-display {
+    font-family: 'Alef', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1A5276;
+}
+
+/* אייקון העיפרון לעריכה */
+#edit-username-icon {
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+    
+    
 
         }
     </style>
@@ -675,21 +675,22 @@
         <iframe id="authFrame" src="" style="width:100vw; height:100vh; border:none;"></iframe>
     </div>
 <div id="user-info-container" style="display: none;">
-    <div id="currency-bar">
-        <div class="bar-section" id="username-section" onclick="openUsernameChangeModal()">
-            <span id="username-display">טוען...</span>
-            <span id="edit-username-icon">✏️</span>
-        </div>
-        <div class="bar-separator"></div>
-        <div class="bar-section" id="coin-section" onclick="window.firebase_store.openStore()">
+    <div id="user-widget">
+        <div id="widget-coins" onclick="window.firebase_store.openStore()">
             <span id="coin-display">0</span>
             <img src="images/coin-icon.png" id="coin-icon" alt="מטבעות">
         </div>
+        
+        <div id="avatar-banner" onclick="window.firebase_store.openStore()">
+            <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
+        </div>
+
+        <div id="widget-username" onclick="openUsernameChangeModal()">
+            <span id="username-display">טוען...</span>
+            <span id="edit-username-icon">✏️</span>
+        </div>
     </div>
-    <div id="avatar-banner">
-        <img src="images/default-avatar.png" id="user-avatar" alt="סמל אישי">
-    </div>
-    </div>
+</div>
 
 <div id="username-change-overlay" class="overlay">
     <div class="overlay-content">

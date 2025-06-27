@@ -1085,30 +1085,30 @@ async loadUserData() {
     }
 
     } else {
-        const userRef = ref(db, 'users/' + currentUser.uid);
-        try {
-            const snapshot = await get(userRef);
-            if (snapshot.exists()) {
-                // אם המשתמש קיים במסד הנתונים, טען את הנתונים שלו
-                const data = snapshot.val();
-                if (!data.displayName && currentUser.displayName) {
-    await update(userRef, { displayName: currentUser.displayName });
+       const userRef = ref(db, 'users/' + currentUser.uid);
+try {
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+
+        // השלמה: אם אין displayName במסד, אבל יש ב־auth – נשלים אותו
+        if (!data.displayName && currentUser.displayName) {
+            await update(userRef, { displayName: currentUser.displayName });
+            data.displayName = currentUser.displayName; // נשלים גם באובייקט המקומי
+        }
+
+        this.coins = data.coins || 0;
+        this.userAvatar = data.avatar || defaultAvatar;
+        this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 
+
+    } else {
+        // אם המשתמש קיים ב־auth אך לא במסד – מצב חריג
+        console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
+    }
+} catch (error) {
+    console.error("שגיאה בטעינת נתוני המשתמש:", error);
 }
 
-                this.coins = data.coins || 0;
-                this.userAvatar = data.avatar || defaultAvatar;
-                this.ownedAvatars = data.ownedAvatars || [defaultAvatar]; 
-            } else {
-                // אם המשתמש לא קיים במסד הנתונים, זה מצב חריג ש-auth.html אמור לטפל בו.
-                // לא ניצור כאן רשומה חדשה כדי למנוע דריסה.
-                console.error("User exists in Auth, but not in Realtime Database. This should not happen.");
-                // נטען ערכי ברירת מחדל מקומיים בלבד
-                this.coins = 0;
-                this.userAvatar = defaultAvatar;
-                this.ownedAvatars = [defaultAvatar];
-            }
-        } catch(error) {
-            console.error("DB Load Error:", error);
             this.coins = parseInt(localStorage.getItem('userCoins') || '0', 10);
             this.userAvatar = localStorage.getItem('userAvatar') || defaultAvatar;
             this.ownedAvatars = JSON.parse(localStorage.getItem('ownedAvatars') || `["${defaultAvatar}"]`);

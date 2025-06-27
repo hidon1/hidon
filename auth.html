@@ -304,15 +304,21 @@ document.getElementById('submitUsernameBtn').onclick = async () => {
     }
     usernameErrorMsg.textContent = "";
     try {
-        await user.updateProfile({ displayName: newUsername });
-        // יצירת הרשומה הראשונית המלאה במסד הנתונים
-        await db.ref('users/' + user.uid).set({
-            displayName: newUsername,
-            coins: 0,
-            avatar: user.photoURL || 'images/default-avatar.png',
-            ownedAvatars: [user.photoURL || 'images/default-avatar.png']
-        });
-        showUser(user);
+      await userCredential.user.updateProfile({ displayName: username });
+
+await db.ref('users/' + userCredential.user.uid).set({
+    displayName: username,
+    coins: 0,
+    avatar: 'images/default-avatar.png',
+    ownedAvatars: ['images/default-avatar.png']
+});
+
+// טען מחדש את המשתמש כדי לקבל displayName מעודכן
+await userCredential.user.reload();
+const updatedUser = auth.currentUser;
+
+showUser(updatedUser);
+
     } catch (err) {
         usernameErrorMsg.textContent = `שגיאה: ${err.message}`;
     }

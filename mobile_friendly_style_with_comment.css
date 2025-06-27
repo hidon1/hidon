@@ -75,7 +75,7 @@
 
 #user-info-container {
     position: fixed;
-    top: 15px; /* מרווח קטן מהקצה העליון */
+    top: 30px; /* מרווח קטן מהקצה העליון */
     right: 15px;
     z-index: 4002;
     display: block; /* ודא שהאלמנט מוצג */

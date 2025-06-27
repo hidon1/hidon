@@ -55,16 +55,23 @@
     }
     /* --- סידור האלמנטים העליונים --- */
     #muteButton {
-        position: fixed;
-        top: 30px;
-        left: 15px;
-        z-index: 4001;
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid #999;
-        border-radius: 8px;
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
+    position: fixed;
+    z-index: 4001;
+
+    /* --- מיקום חדש --- */
+    top: 155px;      /* הערכה למיקום במובייל, שנה לפי הצורך */
+    right: 15px;     /* אותו מרחק מהצד כמו הווידג'ט */
+    left: auto;      /* ביטול המיקום מצד שמאל */
+    
+
+    /* --- שאר העיצובים נשארים --- */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
 
     
   
@@ -95,7 +102,7 @@
     padding: 10px;
     border: 1px solid rgba(255, 255, 255, 0.2); /* מסגרת בהירה על רקע כהה */
     width: 90px; /* הגדרת רוחב */
-    min-height: 200px;
+    min-height: 160px;
 }
 
 #widget-coins {

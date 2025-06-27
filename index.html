@@ -1259,7 +1259,8 @@ saveUserDataToDB() {
                   users.forEach((user, index) => {
                       const row = document.createElement('div');
                       row.className = 'leaderboard-row';
-                      const displayName = user.displayName || 'משתמש';
+                      const displayName = (user.displayName && user.displayName.trim()) ? user.displayName : 'משתמש';
+
                       const avatar = user.avatar || 'images/default-avatar.png';
                       const coins = user.coins || 0;
 

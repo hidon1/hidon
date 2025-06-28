@@ -270,10 +270,14 @@
 
 /* עיצוב התוכן של חלון הכללים שייטען מהקובץ החיצוני */
 #rules-content {
+    position: relative; /* חשוב למיקום כפתור הסגירה */
     text-align: right;
-    max-height: 80vh;
+    /* הריווח הפנימי הועבר לכלל המקורי של overlay-content */
+}
+    #rules-scroll-area {
+    max-height: 70vh; /* גובה מותאם כדי להשאיר מקום למסגרת */
     overflow-y: auto;
-    padding-left: 15px; /* דוחף את התוכן ימינה מפס הגלילה */
+    padding: 0 15px; /* ריווח פנימי כדי שהטקסט לא ייצמד לקצוות */
 }
 
 #rules-content h2 {
@@ -814,10 +818,12 @@
     <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
     <button class="button" id="rulesBtn" onclick="openRulesModal()">כללי המשחק</button>
 </div>
-    <div id="rules-overlay" class="overlay">
+  <div id="rules-overlay" class="overlay">
     <div class="overlay-content" id="rules-content">
         <span class="close-btn" onclick="closeRulesModal()">&times;</span>
-        </div>
+        <div id="rules-scroll-area">
+             </div>
+    </div>
 </div>
 
     <div id="stageIntro">
@@ -1189,27 +1195,28 @@ if (bannerIframe) {
             if (sound && typeof sound.muted === 'boolean') sound.muted = isMuted;
           });
         }
-        function openRulesModal() {
+        
+       function openRulesModal() {
     const overlay = document.getElementById('rules-overlay');
-    const contentDiv = document.getElementById('rules-content');
+    // המטרה שלנו עכשיו היא המיכל הפנימי של הגלילה
+    const scrollArea = document.getElementById('rules-scroll-area'); 
     
-    // בודק אם התוכן כבר נטען בעבר כדי לחסוך טעינה חוזרת
-    if (contentDiv.children.length <= 1) { // בודק אם קיים רק כפתור הסגירה
+    // בודק אם אזור הגלילה ריק לפני טעינה
+    if (scrollArea.children.length === 0) { 
         fetch('rules.html')
             .then(response => response.text())
             .then(html => {
-                // מכניס את תוכן הכללים שנטען מהקובץ לתוך ה-div
-                contentDiv.insertAdjacentHTML('beforeend', html);
+                // טוען את הכללים לתוך אזור הגלילה
+                scrollArea.innerHTML = html;
             })
             .catch(error => {
                 console.error('Error loading rules:', error);
-                contentDiv.insertAdjacentHTML('beforeend', '<p>שגיאה בטעינת הכללים.</p>');
+                scrollArea.innerHTML = '<p>שגיאה בטעינת הכללים.</p>';
             });
     }
     
     overlay.classList.add('visible');
 }
-
 function closeRulesModal() {
     document.getElementById('rules-overlay').classList.remove('visible');
 }

@@ -814,10 +814,10 @@
     <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
     <button class="button" id="rulesBtn" onclick="openRulesModal()">כללי המשחק</button>
 </div>
-    <div id="rules-overlay" class="overlay">
+ <div id="rules-overlay" class="overlay">
     <div class="overlay-content" id="rules-content">
-        <span class="close-btn" onclick="closeRulesModal()">&times;</span>
         </div>
+    <span class="close-btn" onclick="closeRulesModal()">&times;</span>
 </div>
 
     <div id="stageIntro">
@@ -1189,27 +1189,26 @@ if (bannerIframe) {
             if (sound && typeof sound.muted === 'boolean') sound.muted = isMuted;
           });
         }
-        function openRulesModal() {
+        
+   function openRulesModal() {
     const overlay = document.getElementById('rules-overlay');
     const contentDiv = document.getElementById('rules-content');
     
-    // בודק אם התוכן כבר נטען בעבר כדי לחסוך טעינה חוזרת
-    if (contentDiv.children.length <= 1) { // בודק אם קיים רק כפתור הסגירה
+    // בודק אם ה-div של התוכן ריק לגמרי
+    if (contentDiv.children.length === 0) { 
         fetch('rules.html')
             .then(response => response.text())
             .then(html => {
-                // מכניס את תוכן הכללים שנטען מהקובץ לתוך ה-div
-                contentDiv.insertAdjacentHTML('beforeend', html);
+                contentDiv.innerHTML = html; // שינינו לאכלוס פשוט יותר
             })
             .catch(error => {
                 console.error('Error loading rules:', error);
-                contentDiv.insertAdjacentHTML('beforeend', '<p>שגיאה בטעינת הכללים.</p>');
+                contentDiv.innerHTML = '<p>שגיאה בטעינת הכללים.</p>';
             });
     }
     
     overlay.classList.add('visible');
 }
-
 function closeRulesModal() {
     document.getElementById('rules-overlay').classList.remove('visible');
 }

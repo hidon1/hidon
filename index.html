@@ -822,7 +822,7 @@
         <div id="questionText"></div>
         <div class="answer-grid" id="answers"></div>
         <div id="progressBarContainer"><div id="progressBar"></div></div>
-        <div id="skipWrapper"><button disabled id="skipButton" onclick="skipQuestion()">דלג שאלה (50 נקודות)</button></div>
+        <div id="skipWrapper"><button disabled class="skip-disabled" id="skipButton">דלג שאלה (50 נקודות)</button></div>
         <div id="dashboard">
             <div id="quizInfo">
                 שלב: <span id="stageNum">1</span> |
@@ -918,7 +918,8 @@
             document.getElementById('quizContainer').style.display = 'none';
             playIntroMusic();
         }
-
+ document.getElementById('skipButton').addEventListener('click', skipQuestion);
+        
         function showStageIntro() {
             document.getElementById('user-info-container').style.display = 'block';
             window.firebase_store.loadUserData(); 

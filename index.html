@@ -273,6 +273,7 @@
     text-align: right;
     max-height: 80vh;
     overflow-y: auto;
+    padding-left: 15px; /* דוחף את התוכן ימינה מפס הגלילה */
 }
 
 #rules-content h2 {
@@ -293,10 +294,9 @@
 }
 
 #rules-content ul {
-    list-style-type: '✔  ';
-    padding-right: 20px;
+    list-style-type: none; /* מסיר את סמל הרשימה */
+    padding-right: 0;      /* מאפס את הריווח המיותר */
 }
-
 #rules-content li {
     font-size: 1.1rem;
     line-height: 1.6;

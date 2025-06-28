@@ -68,23 +68,7 @@
         display: none !important;  /* הסתרת הבאנר */
     }
     /* --- סידור האלמנטים העליונים --- */
-    #muteButton {
-    position: fixed;
-    z-index: 4001;
 
-    /* --- מיקום חדש --- */
-    top: 192px;      /* הערכה למיקום במובייל, שנה לפי הצורך */
-    left: 15px;     /* אותו מרחק מהצד כמו הווידג'ט */
-     width: 90px;     /* אותו רוחב כמו הווידג'ט במובייל */
-
-    /* --- שאר העיצובים נשארים --- */
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid #999;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    box-sizing: border-box;
-}
 
     
   
@@ -426,6 +410,23 @@
 /* =====     עיצוב טבלת מובילים למצב עומד      ===== */
 /* ================================================= */
 @media (orientation: portrait) {
+        #muteButton {
+    position: fixed;
+    z-index: 4001;
+
+    /* --- מיקום חדש --- */
+    top: 200px;      /* הערכה למיקום במובייל, שנה לפי הצורך */
+    left: 15px;     /* אותו מרחק מהצד כמו הווידג'ט */
+     width: 90px;     /* אותו רוחב כמו הווידג'ט במובייל */
+
+    /* --- שאר העיצובים נשארים --- */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
 
     #leaderboard-container {
         /* מיקום בצד שמאל למעלה */
@@ -650,4 +651,17 @@
     font-weight: 700;
     color: #ffd700;
     margin-right: 5px; /* רווח קטן מימין */
+}
+#muteButton {
+    position: fixed;
+    z-index: 4001;
+    top: 150px; /* מיקום מתחת לטבלה במצב שוכב, ניתן לכוונון */
+    left: 10px;
+    width: 135px; /* רוחב מותאם לטבלה במצב שוכב */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
 }

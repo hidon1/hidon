@@ -263,6 +263,45 @@
             color: #28a745;
             font-size: 1.1rem;
         }
+        /* עיצוב כפתורים במסך הפתיחה כדי ליצור רווח ביניהם */
+#startScreen {
+    gap: 15px;
+}
+
+/* עיצוב התוכן של חלון הכללים שייטען מהקובץ החיצוני */
+#rules-content {
+    text-align: right;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#rules-content h2 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 2rem;
+    color: #154360;
+    border-bottom: 2px solid #d6eaf8;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+#rules-content h4 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.5rem;
+    color: #1f618d;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#rules-content ul {
+    list-style-type: '✔  ';
+    padding-right: 20px;
+}
+
+#rules-content li {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
 
         /* ================================================= */
         /* ===== עיצוב למחשב בלבד (מסך רחב) ===== */
@@ -765,9 +804,15 @@
         <div id="leaderboard-list"></div>
     </div>
 
-    <div id="startScreen">
-        <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
-    </div>
+  <div id="startScreen">
+    <button class="button" id="startBtn" onclick="openAuthBanner()">התחל</button>
+    <button class="button" id="rulesBtn" onclick="openRulesModal()">כללי המשחק</button>
+</div>
+    <div id="rules-overlay" class="overlay">
+    <div class="overlay-content" id="rules-content">
+        <span class="close-btn" onclick="closeRulesModal()">&times;</span>
+        </div>
+</div>
 
     <div id="stageIntro">
         <iframe src="banner-animation/index.html" id="bannerIframe" style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;" loading="lazy"></iframe>
@@ -1135,6 +1180,30 @@ if (bannerIframe) {
             if (sound && typeof sound.muted === 'boolean') sound.muted = isMuted;
           });
         }
+        function openRulesModal() {
+    const overlay = document.getElementById('rules-overlay');
+    const contentDiv = document.getElementById('rules-content');
+    
+    // בודק אם התוכן כבר נטען בעבר כדי לחסוך טעינה חוזרת
+    if (contentDiv.children.length <= 1) { // בודק אם קיים רק כפתור הסגירה
+        fetch('rules.html')
+            .then(response => response.text())
+            .then(html => {
+                // מכניס את תוכן הכללים שנטען מהקובץ לתוך ה-div
+                contentDiv.insertAdjacentHTML('beforeend', html);
+            })
+            .catch(error => {
+                console.error('Error loading rules:', error);
+                contentDiv.insertAdjacentHTML('beforeend', '<p>שגיאה בטעינת הכללים.</p>');
+            });
+    }
+    
+    overlay.classList.add('visible');
+}
+
+function closeRulesModal() {
+    document.getElementById('rules-overlay').classList.remove('visible');
+}
     </script>
     
     <script src="sound_manager.js"></script>

@@ -1030,6 +1030,14 @@ if (bannerIframe) {
     startTimer();
     updateDashboard();
 }
+        function skipQuestion() {
+    if (score >= 50) {
+        updateScore(-50);
+        correct++;
+        current++;
+        showQuestion();
+    }
+}
         function startTimer() {
             clearInterval(timer);
             if (stage <= 3) timeLeft = 20;

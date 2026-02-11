@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>חידון התנ"ך - ראש בראש</title>
-    <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
+    <link href="/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="../mobile_friendly_style_with_comment.css">
     <link href="https://fonts.googleapis.com/css2?family=Alef:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
@@ -12,7 +13,7 @@
 
     <style>
         body {
-            background-image: url('backgrounds/main.jpg') !important;
+            background-image: url('../backgrounds/main.jpg') !important;
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -263,17 +264,17 @@
 
     <!-- כרטיסיות שחקנים -->
     <div id="my-widget" class="player-widget">
-        <img id="my-avatar" class="widget-avatar" src="images/default-avatar.png">
+        <img id="my-avatar" class="widget-avatar" src="../images/default-avatar.png">
         <div id="my-name" style="font-weight: bold; overflow: hidden; text-overflow: ellipsis;">אתה</div>
-        <div class="widget-stat"><img src="images/coin-icon.png" onerror="this.style.display='none'"> <span id="my-coins">0</span></div>
-        <div class="widget-stat"><img src="images/trophy-icon.svg" onerror="this.src='images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="my-wins">0</span></div>
+        <div class="widget-stat"><img src="../images/coin-icon.png" onerror="this.style.display='none'"> <span id="my-coins">0</span></div>
+        <div class="widget-stat"><img src="../images/trophy-icon.svg" onerror="this.src='../images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="my-wins">0</span></div>
     </div>
 
     <div id="opp-widget" class="player-widget" style="display: none;">
-        <img id="opp-avatar" class="widget-avatar" src="images/default-avatar.png">
+        <img id="opp-avatar" class="widget-avatar" src="../images/default-avatar.png">
         <div id="opp-name" style="font-weight: bold;">היריב</div>
-        <div class="widget-stat"><img src="images/coin-icon.png" onerror="this.style.display='none'"> <span id="opp-coins">0</span></div>
-        <div class="widget-stat"><img src="images/trophy-icon.svg" onerror="this.src='images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="opp-wins">0</span></div>
+        <div class="widget-stat"><img src="../images/coin-icon.png" onerror="this.style.display='none'"> <span id="opp-coins">0</span></div>
+        <div class="widget-stat"><img src="../images/trophy-icon.svg" onerror="this.src='../images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="opp-wins">0</span></div>
     </div>
 
     <!-- מסך חיבור (Lobby) -->

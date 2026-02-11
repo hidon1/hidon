@@ -63,7 +63,7 @@ const rotationSpeed = totalRotation / (duration / 16);
 let stopRotation = false;
 let arrivedCount = 0;
 
-loader.load('images/quiz-center.png', (texture) => {
+loader.load('../images/quiz-center.png', (texture) => {
   texture.flipY = true;
   const material = new THREE.MeshStandardMaterial({
     map: texture,
@@ -90,7 +90,7 @@ loader.load('images/quiz-center.png', (texture) => {
   scene.add(floatingGroup);
 
   duplicatedElements.forEach((src, i) => {
-    loader.load("images/" + src, (tex) => {
+    loader.load("../images/" + src, (tex) => {
       tex.flipY = true;
       const mat = new THREE.MeshBasicMaterial({
         map: tex,

@@ -16,7 +16,7 @@
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, Socket.io
-- **Hosting**: GitHub Pages (סטטי) + שרת Node.js משלך
+- **אירוח**: GitHub Pages (אירוח סטטי) + שרת Node.js משלך
 - **Database**: Firebase Realtime Database (לנתוני משתמשים)
 
 ## מבנה הפרויקט

@@ -3,7 +3,7 @@
 // If you haven't created a Web app yet, click "Add app" and select the Web platform
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
+  authDomain: "hidon1.com",
   databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_BUCKET",
@@ -21,4 +21,3 @@ window.getUser = async function(uid) {
   const snap = await firebase.database().ref(`users/${uid}`).get();
   return snap.exists() ? snap.val() : null;
 };
-

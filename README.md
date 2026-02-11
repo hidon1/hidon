@@ -16,7 +16,7 @@
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, Socket.io
-- **Deployment**: Render (Free Tier)
+- **Hosting**: GitHub Pages (סטטי) + שרת Node.js משלך
 - **Database**: Firebase Realtime Database (לנתוני משתמשים)
 
 ## מבנה הפרויקט
@@ -25,7 +25,6 @@
 hidon/
 ├── server.js              # שרת Socket.io לתפקוד ריבוי משתתפים
 ├── package.json           # תלויות Node.js וסקריפטים
-├── render.yaml            # תצורת פריסה ל-Render
 ├── .env.example           # דוגמת קובץ משתני סביבה
 ├── public/                # קבצים סטטיים
 │   ├── index.html        # ממשק המשחק ראש-בראש
@@ -77,117 +76,21 @@ http://localhost:3000
 npm run dev
 ```
 
-## פריסה ל-Render
+## פריסה ל-GitHub Pages
 
-Render היא פלטפורמת ענן מודרנית שמקלה על פריסת אפליקציות. התוכנית החינמית מושלמת לאפליקציית החידון הזו.
+GitHub Pages מאפשר להגיש את הדפים הסטטיים ישירות מהמאגר, ללא שירות צד ג'.
 
-### שלב 1: הכנת המאגר שלך
+### שלב 1: הפעלת GitHub Pages
 
-ודא שהקבצים הבאים נמצאים במאגר GitHub שלך:
-- ✅ `server.js` - שרת Socket.io
-- ✅ `package.json` - תצורת תלויות
-- ✅ `render.yaml` - תצורת פריסת Render
-- ✅ `.env.example` - דוגמת משתני סביבה
+1. עבור ל-**Settings → Pages** במאגר.
+2. בחר Branch: `main` ותיקייה: `/` (root).
+3. שמור והמתן שיופיע קישור הפריסה (לדוגמה: `https://hidon1.github.io/hidon`).
 
-כל הקבצים האלה כבר כלולים במאגר זה!
+### שלב 2: חיבור דומיין מותאם אישי (hidon1.com)
 
-### שלב 2: יצירת חשבון Render
-
-1. היכנס ל-[https://render.com](https://render.com)
-2. לחץ על **"Get Started for Free"**
-3. הירשם באמצעות חשבון GitHub שלך (מומלץ לפריסה קלה)
-
-### שלב 3: פריסה מ-GitHub
-
-#### אפשרות א': שימוש ב-render.yaml (מומלץ - הכי קל!)
-
-1. בלוח הבקרה של Render, לחץ **"New +"** → **"Blueprint"**
-2. חבר את חשבון GitHub שלך אם עדיין לא מחובר
-3. בחר את המאגר הזה: `hidon1/hidon`
-4. Render תזהה אוטומטית את קובץ `render.yaml`
-5. לחץ **"Apply"**
-6. המתן עד להשלמת הפריסה (בדרך כלל 2-3 דקות)
-
-#### אפשרות ב': יצירת Web Service ידנית
-
-1. בלוח הבקרה של Render, לחץ **"New +"** → **"Web Service"**
-2. חבר את מאגר GitHub שלך
-3. הגדר את השירות:
-   - **Name**: `hidon-quiz` (או כל שם שתבחר)
-   - **Environment**: `Node`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-   - **Plan**: בחר **"Free"**
-   - **Region**: בחר **"Oregon"** (מומלץ)
-4. לחץ **"Create Web Service"**
-
-### שלב 4: הגדרת משתני סביבה
-
-לאחר יצירת השירות:
-
-1. עבור לדף השירות ב-Render
-2. לחץ על **"Environment"** בתפריט הצד
-3. הוסף את משתה הסביבה הבא (אם לא הוגדר אוטומטית):
-   - **Key**: `ALLOWED_ORIGINS`
-   - **Value**: `https://hidon1.com,https://www.hidon1.com,http://localhost:3000`
-4. לחץ **"Save Changes"**
-
-### שלב 5: הפעלת Auto-Deploy
-
-פריסה אוטומטית מופעלת אוטומטית בעת שימוש באינטגרציה עם GitHub. בכל פעם שתדחוף ל-branch main, Render תפרוס אוטומטית את השינויים.
-
-לאימות ש-auto-deploy מופעל:
-1. עבור ללוח הבקרה של השירות ב-Render
-2. לחץ על **"Settings"**
-3. גלול ל-**"Auto-Deploy"**
-4. ודא שזה מוגדר ל-**"Yes"**
-
-### שלב 6: קבלת כתובת ה-URL החיה שלך
-
-לאחר השלמת הפריסה:
-1. Render תספק לך URL כמו: `https://hidon-quiz.onrender.com`
-2. העתק את ה-URL הזה
-3. כעת תוכל לשתף אותו עם שחקנים כדי לגשת למשחק החידון!
-
-## חיבור דומיין מותאם אישי (hidon1.com)
-
-### שלב 1: הוספת דומיין ב-Render
-
-1. עבור לדף השירות ב-Render Dashboard
-2. לחץ על **"Settings"** בתפריט הצד
-3. גלול ל-**"Custom Domains"**
-4. לחץ **"Add Custom Domain"**
-5. הזן: `hidon1.com`
-6. Render יציג הוראות DNS - השאר את הדף פתוח
-
-### שלב 2: הגדרת DNS
-
-אצל ספק הדומיין שלך (GoDaddy, Namecheap, Cloudflare וכו'):
-
-#### עבור Root Domain (hidon1.com):
-
-אם הספק שלך תומך ב-ANAME/ALIAS:
-- **Type**: ANAME או ALIAS
-- **Name**: @ (או השאר ריק)
-- **Value**: הערך ש-Render סיפק
-
-אם הספק שלך לא תומך (רוב הספקים):
-- **Type**: A
-- **Name**: @ (או השאר ריק)
-- **Value**: כתובת ה-IP ש-Render סיפק
-
-#### עבור www Subdomain (www.hidon1.com):
-
-- **Type**: CNAME
-- **Name**: www
-- **Value**: `hidon-quiz.onrender.com` (או הערך ש-Render סיפק)
-
-### שלב 3: אימות ב-Render
-
-1. חזור ל-Render Dashboard
-2. המתן עד 48 שעות לתפוצת DNS (בדרך כלל 1-2 שעות)
-3. Render תאמת אוטומטית ותפעיל SSL (HTTPS)
-4. כאשר הסטטוס יהיה "Verified" - הדומיין פעיל!
+1. ב-GitHub Pages, הוסף את הדומיין המותאם שלך.
+2. אצל ספק הדומיין שלך (Dynadot וכו') הגדר CNAME או רשומות A לפי הוראות GitHub.
+3. המתן לאימות ול-HTTPS, ואז הדומיין שלך יכוון ישירות ל-GitHub Pages.
 
 ## הוספת Authorized Domains ל-Firebase
 
@@ -207,7 +110,7 @@ Render היא פלטפורמת ענן מודרנית שמקלה על פריסת 
 5. הוסף את הדומיינים הבאים (אחד בכל פעם):
    - `hidon1.com`
    - `www.hidon1.com`
-   - `hidon-quiz.onrender.com` (ה-URL של Render)
+   - `hidon1.github.io`
 6. לחץ **"Add"** לכל דומיין
 
 ### שלב 3: אימות
@@ -239,8 +142,8 @@ Render היא פלטפורמת ענן מודרנית שמקלה על פריסת 
 
 האפליקציה משתמשת במשתני הסביבה הבאים:
 
-- `PORT`: מספר הפורט (מוגדר אוטומטית על ידי Render)
-- `NODE_ENV`: מוגדר ל-`production` ב-render.yaml
+- `PORT`: מספר הפורט שהשרת שלך מאזין לו
+- `NODE_ENV`: מומלץ להגדיר ל-`production` בסביבת שרת
 - `ALLOWED_ORIGINS`: רשימת מקורות מותרים ל-CORS של Socket.io (מופרדים בפסיקים)
   - דוגמה: `https://hidon1.com,https://www.hidon1.com,http://localhost:3000`
   - אם לא מוגדר, ישתמש בברירות מחדל בטוחות
@@ -248,20 +151,8 @@ Render היא פלטפורמת ענן מודרנית שמקלה על פריסת 
 ### המלצות אבטחה
 
 לפריסת production, מומלץ:
-1. להגדיר את משתה הסביבה `ALLOWED_ORIGINS` ב-Render להגבלת גישת CORS
-2. להוסיף זאת ב-Render dashboard: Settings → Environment → Add Environment Variable
-3. להשתמש בדומיינים האמיתיים שלך במקום לאפשר את כל המקורות
-
-### מגבלות תוכנית חינמית
-
-תוכנית החינמית של Render כוללת:
-- ✅ 750 שעות הפעלה לחודש (מספיק לפעולה רצופה)
-- ✅ SSL/HTTPS אוטומטי
-- ✅ Auto-deploy מ-GitHub
-- ⚠️ השירותים "נרדמים" לאחר 15 דקות של חוסר פעילות
-- ⚠️ הבקשה הראשונה לאחר חוסר פעילות עשויה לקחת 30-60 שניות (cold start)
-
-**הערה**: ה-cold start אומר שהשחקן הראשון שניגש למשחק לאחר חוסר פעילות עלול לחוות עיכוב. בקשות עוקבות יהיו מהירות.
+1. להגדיר את משתנה הסביבה `ALLOWED_ORIGINS` כדי להגביל את גישת CORS
+2. להשתמש בדומיינים האמיתיים שלך במקום לאפשר את כל המקורות
 
 ## איך לשחק במצב ראש-בראש
 
@@ -308,44 +199,18 @@ npm start
 PORT=3001 npm start
 ```
 
-### הפריסה נכשלה ב-Render
+### השרת לא עולה בפריסה
 
-1. בדוק את לוגי ה-build בלוח הבקרה של Render
+1. בדוק את לוגי ה-build אצל ספק האחסון שלך
 2. ודא שכל הקבצים (server.js, package.json) מועלים ל-GitHub
-3. אמת ש-branch name תואם למה ש-Render עוקב אחריו
-4. בדוק שגרסת Node.js תואמת (18.x או גבוהה יותר)
+3. בדוק שגרסת Node.js תואמת (18.x או גבוהה יותר)
 
 ### שחקנים לא יכולים להתחבר למשחק
 
-1. אמת שכתובת ה-URL של חיבור Socket.io ב-`public/index.html` תואמת ל-URL של פריסת Render שלך
-2. בדוק שהשרת פועל (לא "נרדם" בגלל חוסר פעילות)
+1. אמת שכתובת ה-URL של חיבור Socket.io ב-`public/index.html` תואמת ל-URL של השרת שלך
+2. בדוק שהשרת פועל
 3. ודא ששני השחקנים משתמשים באותו קוד חדר
 4. בדוק את ה-console של הדפדפן לכל הודעת שגיאה
-
-### עיכובי Cold Start
-
-זה נורמלי לתוכנית החינמית של Render. כדי למזער את ההשפעה:
-- שמור על האפליקציה "ער" על ידי גישה אליה מעת לעת
-- שקול שדרוג לתוכנית בתשלום לשירות תמיד-פעיל
-- הודע לשחקנים שהטעינה הראשונה עשויה לקחת יותר זמן
-
-## ניטור הפריסה שלך
-
-### צפייה בלוגים ב-Render
-
-1. עבור ללוח הבקרה של השירות ב-Render
-2. לחץ על לשונית **"Logs"**
-3. ראה לוגי שרת בזמן אמת, כולל:
-   - חיבורי שחקנים
-   - יצירות חדרים
-   - אירועי משחק
-   - שגיאות
-
-### בדיקת תקינות השירות
-
-1. בלוח הבקרה של Render, בדוק את מחוון סטטוס השירות
-2. ירוק = פועל, אדום = עצור/נכשל
-3. צפה בהיסטוריית הפריסה תחת לשונית **"Events"**
 
 ## תמיכה ותיעוד
 
@@ -384,18 +249,18 @@ ISC
 - `public/images/trophy-icon.svg` - אייקון גביע (✅ קיים)
 - `public/backgrounds/main.jpg` - תמונת רקע ראשית
 
-### הגדרת Socket.IO עבור אירוח סטטי (Netlify/Vercel)
+### הגדרת Socket.IO עבור אירוח סטטי (GitHub Pages)
 
-אם אתה מארח את הדפים הסטטיים (HTML/CSS/JS) על Netlify, Vercel, או פלטפורמה דומה, תצטרך להפנות את הלקוח להתחבר לשרת Socket.IO חיצוני. כדי לעשות זאת:
+אם אתה מארח את הדפים הסטטיים (HTML/CSS/JS) על GitHub Pages, תצטרך להפנות את הלקוח להתחבר לשרת Socket.IO חיצוני (שרת Node.js משלך). כדי לעשות זאת:
 
-1. פרוס את `server.js` על Render, Railway או פלטפורמת Node.js אחרת
-2. קבל את ה-URL של השרת שלך (למשל: `https://your-app.onrender.com`)
+1. פרוס את `server.js` על שרת Node.js משלך
+2. קבל את ה-URL של השרת שלך (למשל: `https://hidon1.com`)
 3. בדפי ה-HTML שלך, הוסף את השורה הבאה **לפני** טעינת `socket-client.js`:
 
 ```html
 <script>
   // הגדר URL של שרת Socket.IO חיצוני
-  window.SOCKET_URL = 'https://your-app.onrender.com';
+  window.SOCKET_URL = 'https://hidon1.com';
 </script>
 <script src="socket-client.js"></script>
 ```
@@ -406,7 +271,7 @@ ISC
 ```html
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <script>
-  window.SOCKET_URL = 'https://hidon-server.onrender.com';
+  window.SOCKET_URL = 'https://hidon1.com';
 </script>
 <script src="socket-client.js"></script>
 ```
@@ -419,7 +284,7 @@ ISC
 - `public/images/trophy-icon.png` - אייקון גביע
 - `public/backgrounds/main.jpg` - תמונת רקע ראשית
 
-### H2H Multiplayer with Firebase (Render + Firebase)
+### H2H Multiplayer with Firebase (Node.js + Firebase)
 
 This adds a simple Socket.IO server and HTML client to play a 20-question head-to-head game with room codes, player cards, and coin settlement through Firebase Admin.
 
@@ -428,7 +293,7 @@ This adds a simple Socket.IO server and HTML client to play a 20-question head-t
 - Shows player cards (avatar, display name, coins, wins).
 - On finish, server transfers stake coins from loser to winner and increments winner's wins.
 - Persists to Firebase Realtime Database.
-- Ready to deploy on Render.
+- Ready to run on any Node.js host.
 
 ### Server (Node + Express + Socket.IO)
 - Entry: `server.js`
@@ -437,11 +302,11 @@ This adds a simple Socket.IO server and HTML client to play a 20-question head-t
 - Uses Firebase Admin credentials from environment variables.
 
 ### Environment variables
-Set these in Render (Dashboard → your service → Environment):
+Set these in your hosting environment:
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY` (ensure newlines are escaped as `\n`)
-- `PORT` (optional; Render provides one automatically)
+- `PORT` (optional; set by your hosting provider if needed)
 
 You can copy from `.env.example`.
 
@@ -480,12 +345,6 @@ Use the following as a baseline to prevent client writes to `coins` and `wins`. 
 }
 ```
 
-### Render deployment
-- Connect the repository to a Render Web Service.
-- Build command: `npm install`
-- Start command: `npm start`
-- Auto Deploy: enabled.
-
 ### How it runs
 - Client calls Socket.IO events (`create_room`, `join_room`, `start_game`, `answer`).
 - Server maintains room state in Firebase RTDB and emits progress events.
@@ -511,7 +370,6 @@ Use the following as a baseline to prevent client writes to `coins` and `wins`. 
 
 ### תחזוקה
 
-- בדוק את הלוגים ב-Render באופן קבוע
-- נטר שימוש בשעות החינמיות (750 שעות/חודש)
+- בדוק את לוגי השרת באופן קבוע
 - עדכן את תיקיות השאלות (*.json) לפי הצורך
 - גבה את נתוני המשתמשים מ-Firebase באופן קבוע

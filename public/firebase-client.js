@@ -3,7 +3,7 @@
 // If you haven't created a Web app yet, click "Add app" and select the Web platform
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
-  authDomain: "hidon1.com",
+  authDomain: "YOUR_AUTH_DOMAIN",
   databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_BUCKET",

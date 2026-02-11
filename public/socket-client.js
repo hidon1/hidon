@@ -4,11 +4,11 @@
  * This script provides a single, reusable Socket.IO client connection that:
  * 1. Loads once per page and exposes a global window.socket
  * 2. Tries to connect to same origin first (for local/server deployments)
- * 3. Falls back to configurable external server URL if same-origin fails (for static hosting like Netlify)
+ * 3. Falls back to configurable external server URL if same-origin fails (for static hosting like GitHub Pages)
  * 
  * Usage:
  * 1. Include Socket.IO CDN script: <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
- * 2. (Optional) Set fallback URL: <script>window.SOCKET_URL = 'https://your-server.onrender.com';</script>
+ * 2. (Optional) Set fallback URL: <script>window.SOCKET_URL = 'https://hidon1.com';</script>
  * 3. Include this script: <script src="socket-client.js"></script>
  * 4. Access socket via: window.socket
  */
@@ -56,7 +56,7 @@
       // If connecting to same origin failed and no fallback is set, show helpful message
       if (!socketUrl) {
         console.warn('Tip: Set window.SOCKET_URL to connect to an external Socket.IO server');
-        console.warn('Example: window.SOCKET_URL = "https://your-server.onrender.com";');
+        console.warn('Example: window.SOCKET_URL = "https://hidon1.com";');
       }
     });
 

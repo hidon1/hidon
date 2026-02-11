@@ -21,4 +21,3 @@ window.getUser = async function(uid) {
   const snap = await firebase.database().ref(`users/${uid}`).get();
   return snap.exists() ? snap.val() : null;
 };
-

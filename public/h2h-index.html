@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he">
+<head>
+  <meta charset="utf-8" />
+  <title>H2H</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body dir="rtl">
+  <h1>משחק ראש-בראש</h1>
+
+  <section id="controls">
+    <button id="createRoomBtn">צור חדר</button>
+    <input id="joinCode" placeholder="הכנס קוד בן 4 ספרות" />
+    <button id="joinBtn">הצטרף</button>
+    <button id="startBtn" disabled>התחל</button>
+  </section>
+
+  <section id="status"></section>
+
+  <section id="players">
+    <div id="p1" class="card"></div>
+    <div id="p2" class="card"></div>
+  </section>
+
+  <section id="question">
+    <div>שאלה <span id="qnum">0</span> / 20</div>
+    <button id="correctBtn" disabled>נכון</button>
+    <button id="wrongBtn" disabled>לא נכון</button>
+  </section>
+
+  <script src="firebase-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

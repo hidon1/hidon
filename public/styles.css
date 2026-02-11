@@ -1,0 +1,5 @@
+body { font-family: system-ui, sans-serif; margin: 24px; }
+#controls button { margin-inline-end: 8px; }
+.card { border: 1px solid #ccc; border-radius: 8px; padding: 12px; min-height: 80px; width: 280px; }
+#players { display: flex; gap: 12px; margin-top: 12px; }
+#question { margin-top: 16px; }

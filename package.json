@@ -1,0 +1,30 @@
+{
+  "name": "hidon-h2h",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Head-to-Head Bible Quiz Server with Socket.io and Firebase",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "quiz",
+    "bible",
+    "multiplayer",
+    "socket.io",
+    "realtime",
+    "head-to-head"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.5",
+    "firebase-admin": "^12.0.0",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}

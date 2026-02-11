@@ -6,7 +6,7 @@
 
       const firebaseConfig = {
         apiKey: "AIzaSyABKn0GfHYi_1UG_0sfSn68CNNz4Q9nS7g",
-        authDomain: "hidon1.com",
+        authDomain: "hidon1-e4c91.firebaseapp.com",
         databaseURL: "https://hidon1-e4c91-default-rtdb.firebaseio.com",
         projectId: "hidon1-e4c91",
         storageBucket: "hidon1-e4c91.appspot.com",

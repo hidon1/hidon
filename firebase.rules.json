@@ -1,0 +1,26 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        "coins": { ".write": false },
+        "wins": { ".write": false },
+        ".write": "false"
+      }
+    },
+    "rooms": {
+      "$code": {
+        ".read": true,
+        "clientFlags": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "matches": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}

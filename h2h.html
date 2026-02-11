@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חידון התנ"ך - ראש בראש</title>
+    <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Alef:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="public/socket-client.js"></script>
+
+    <style>
+        body {
+            background-image: url('backgrounds/main.jpg') !important;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Baloo 2', cursive;
+        }
+
+        /* --- כרטיסיות שחקנים (בסגנון הווידג'ט של האתר) --- */
+        .player-widget {
+            position: fixed;
+            top: 20px;
+            background: rgba(0, 20, 40, 0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 110px;
+            text-align: center;
+            z-index: 4000;
+        }
+        #my-widget { right: 15px; border: 2px solid #4CAF50; }
+        #opp-widget { left: 15px; border: 2px solid #e74c3c; }
+
+        .widget-avatar {
+            width: 60px; height: 60px;
+            border-radius: 12px;
+            border: 2px solid white;
+            margin-bottom: 8px;
+        }
+
+        .widget-stat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .widget-stat img { width: 18px; height: 18px; }
+
+        /* --- עיצוב המשחק (העתק מ-index.html) --- */
+        #quizContainer {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        #questionText {
+            font-size: 2.3rem;
+            color: #0d47a1;
+            font-weight: bold;
+            width: 860px;
+            max-width: 90vw;
+            background: linear-gradient(135deg, #f6fdff 90%, #e0f7fa 100%);
+            border: 2.5px solid #80deea;
+            border-radius: 22px;
+            box-shadow: 0 1px 14px rgba(178, 235, 242, 0.25);
+            padding: 23px 17px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 860px;
+            max-width: 90vw;
+        }
+
+        .answer {
+            background: linear-gradient(120deg, #ffffff 94%, #e0f7fa 100%);
+            border: 2px solid #b2ebf2;
+            border-radius: 13px;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #003b47;
+            text-align: center;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .answer:hover { transform: scale(1.02); background: #e0f7fa; }
+        .answer.correct { background: #007e33 !important; color: white; }
+        .answer.wrong { background: #b71c1c !important; color: white; }
+
+        /* --- דשבורד תחתון --- */
+        #dashboard {
+            position: fixed;
+            bottom: 20px;
+            width: 860px;
+            max-width: 95vw;
+            background: #0097a7;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.5rem;
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #progressBarContainer {
+            width: 860px;
+            max-width: 90vw;
+            height: 16px;
+            background: #c8e6c9;
+            border-radius: 7px;
+            margin-bottom: 10px;
+            margin-top: 5px; /* Added small margin-top */
+            overflow: hidden;
+            display: none;
+        }
+        #progressBar { width: 100%; height: 100%; background: #2e7d32; transition: width 1s linear; }
+
+        /* --- מסך חיבור (Lobby) --- */
+        #lobby {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            z-index: 5000;
+        }
+        .lobby-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%; max-width: 450px;
+        }
+
+        /* --- מסך סיום --- */
+        #bannerFireworksCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: transparent;
+        }
+
+        #endGameBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 5001;
+            overflow: hidden;
+        }
+
+        #endGameBanner.visible #endGameContent {
+            transform: scale(1);
+        }
+
+        #endGameContent {
+            background: linear-gradient(145deg, #f0f8ff, #d6eaf8);
+            padding: 40px 60px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            max-width: 90%;
+            box-sizing: border-box;
+            transform: scale(0.9);
+            transition: transform 0.5s ease-out;
+        }
+
+        #endGameTitle {
+            font-family: 'Rubik Dirt', cursive;
+            font-size: 4em;
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.6), 0 0 15px #FFD700;
+            line-height: 1.1;
+        }
+
+        #endGameMessage {
+            font-family: 'Assistant', sans-serif;
+            font-size: 1.8em;
+            color: #28a745;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        #endGameCongratulations {
+            font-family: 'Alef', sans-serif;
+            font-size: 2.5em;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+
+        #endGameBanner .button {
+            padding: 18px 45px;
+            font-size: 1.6em;
+            background: linear-gradient(45deg, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #endGameBanner .button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Responsiveness for mobile */
+        @media (max-width: 768px) {
+            #endGameTitle {
+                font-size: 2.5em;
+            }
+            #endGameMessage {
+                font-size: 1.2em;
+            }
+            #endGameCongratulations {
+                font-size: 1.8em;
+            }
+            #endGameBanner .button {
+                font-size: 1.3em;
+                padding: 12px 30px;
+            }
+            #endGameContent {
+                padding: 20px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- כרטיסיות שחקנים -->
+    <div id="my-widget" class="player-widget">
+        <img id="my-avatar" class="widget-avatar" src="images/default-avatar.png">
+        <div id="my-name" style="font-weight: bold; overflow: hidden; text-overflow: ellipsis;">אתה</div>
+        <div class="widget-stat"><img src="images/coin-icon.png" onerror="this.style.display='none'"> <span id="my-coins">0</span></div>
+        <div class="widget-stat"><img src="images/trophy-icon.svg" onerror="this.src='images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="my-wins">0</span></div>
+    </div>
+
+    <div id="opp-widget" class="player-widget" style="display: none;">
+        <img id="opp-avatar" class="widget-avatar" src="images/default-avatar.png">
+        <div id="opp-name" style="font-weight: bold;">היריב</div>
+        <div class="widget-stat"><img src="images/coin-icon.png" onerror="this.style.display='none'"> <span id="opp-coins">0</span></div>
+        <div class="widget-stat"><img src="images/trophy-icon.svg" onerror="this.src='images/trophy-icon.png'; this.onerror=function(){this.style.display='none'}"> <span id="opp-wins">0</span></div>
+    </div>
+
+    <!-- מסך חיבור (Lobby) -->
+    <div id="lobby">
+        <div class="lobby-card">
+            <h1 style="color: #154360; font-size: 2.5rem; margin-bottom: 20px;">קרב ראש בראש</h1>
+            <div id="setup-btns">
+                <button class="button" onclick="createGame()">צור חדר חדש</button>
+                <div style="margin: 20px 0; color: #666;">או</div>
+                <input type="text" id="join-code" placeholder="הכנס קוד חדר" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc; width: 80%; text-align: center; font-size: 1.2rem; margin-bottom: 10px;">
+                <button class="button" onclick="joinGame()" style="background: #3498db;">הצטרף לקרב</button>
+            </div>
+            <div id="waiting-area" style="display: none;">
+                <p style="font-size: 1.2rem;">קוד החדר שלך:</p>
+                <div id="room-code-display" style="font-size: 3rem; color: #0097a7; font-weight: bold; letter-spacing: 5px; margin: 15px 0;">----</div>
+                <p id="lobby-status">ממתין ליריב...</p>
+                <button id="ready-btn" class="button" style="display: none; background: #28a745;" onclick="setReady()">אני מוכן - התחל!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ממשק המשחק -->
+    <div id="quizContainer">
+        <div id="questionText">טוען שאלה...</div>
+        <div class="answer-grid" id="answerGrid"></div>
+        
+        <div id="progressBarContainer"><div id="progressBar"></div></div>
+        <div id="dashboard">
+            <div id="q-index">שאלה 1 / 20</div>
+            <div id="timer-text">20 שניות</div>
+            <div id="opp-msg" style="color: #ffeb3b; font-size: 1rem;"></div>
+        </div>
+    </div>
+
+    <!-- מסך סיום -->
+    <div id="endGameBanner">
+        <canvas id="bannerFireworksCanvas"></canvas>
+        <div id="endGameContent">
+            <h2 id="endGameTitle">ניצחת!</h2>
+            <p id="endGameMessage">מזל טוב, הרווחת מטבעות נוספים!</p>
+            <h3 id="endGameCongratulations">כל הכבוד!</h3>
+            <button class="button" onclick="restartH2H()">חזור למשחק</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = window.socket;
+        let currentRoom = null;
+        let timerInterval;
+        let timeLeft = 20;
+
+        // נתונים מהאתר הראשי
+        const userData = {
+            name: localStorage.getItem('userName') || 'שחקן',
+            avatar: localStorage.getItem('userAvatar') || 'images/default-avatar.png',
+            wins: localStorage.getItem('userWins') || '0',
+            coins: parseInt(localStorage.getItem('quizCoins')) || 0
+        };
+
+        document.getElementById('my-name').textContent = userData.name;
+        document.getElementById('my-avatar').src = userData.avatar;
+        document.getElementById('my-wins').textContent = userData.wins;
+        document.getElementById('my-coins').textContent = userData.coins;
+
+        function createGame() {
+            socket.emit('createRoom', userData);
+        }
+
+        socket.on('roomCreated', (code) => {
+            currentRoom = code;
+            document.getElementById('setup-btns').style.display = 'none';
+            document.getElementById('waiting-area').style.display = 'block';
+            document.getElementById('room-code-display').textContent = code;
+        });
+
+        function joinGame() {
+            const code = document.getElementById('join-code').value;
+            if (code) {
+                currentRoom = code;
+                socket.emit('joinRoom', { roomCode: code, userData });
+            }
+        }
+
+        socket.on('playerJoined', (players) => {
+            document.getElementById('setup-btns').style.display = 'none';
+            document.getElementById('waiting-area').style.display = 'block';
+            document.getElementById('lobby-status').textContent = "היריב התחבר!";
+            document.getElementById('ready-btn').style.display = 'block';
+            
+            const opponent = players.find(p => p.id !== socket.id);
+            if (opponent) {
+                document.getElementById('opp-widget').style.display = 'block';
+                document.getElementById('opp-name').textContent = opponent.name;
+                document.getElementById('opp-avatar').src = opponent.avatar;
+                document.getElementById('opp-wins').textContent = opponent.wins || 0;
+            }
+        });
+
+        function setReady() {
+            socket.emit('playerReady', currentRoom);
+            document.getElementById('ready-btn').disabled = true;
+            document.getElementById('ready-btn').textContent = "ממתין ליריב...";
+        }
+
+        socket.on('gameStarted', (data) => {
+            document.getElementById('lobby').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'flex';
+            document.getElementById('progressBarContainer').style.display = 'block';
+            renderQuestion(data.question);
+
+            // עדכן widgets עם players
+            const me = data.players.find(p => p.id === socket.id);
+            const opp = data.players.find(p => p.id !== socket.id);
+            if (me) {
+                document.getElementById('my-name').textContent = me.name;
+                document.getElementById('my-avatar').src = me.avatar;
+                document.getElementById('my-wins').textContent = me.wins;
+                document.getElementById('my-coins').textContent = me.coins;
+            }
+            if (opp) {
+                document.getElementById('opp-widget').style.display = 'block';
+                document.getElementById('opp-name').textContent = opp.name;
+                document.getElementById('opp-avatar').src = opp.avatar;
+                document.getElementById('opp-wins').textContent = opp.wins;
+                document.getElementById('opp-coins').textContent = opp.coins;
+            }
+        });
+
+        function renderQuestion(q) {
+            document.getElementById('opp-msg').textContent = "";
+            document.getElementById('questionText').textContent = q.question;
+            const grid = document.getElementById('answerGrid');
+            grid.innerHTML = '';
+            
+            q.options.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'answer';
+                div.textContent = opt;
+                div.onclick = () => handleAnswer(i, q.correct, div);
+                grid.appendChild(div);
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 20;
+            clearInterval(timerInterval);
+            const bar = document.getElementById('progressBar');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                bar.style.width = (timeLeft / 20 * 100) + '%';
+                document.getElementById('timer-text').textContent = timeLeft + " שניות";
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleAnswer(-1, -1);
+                }
+            }, 1000);
+        }
+
+        function handleAnswer(idx, correct, element) {
+            clearInterval(timerInterval);
+            const isCorrect = idx === correct;
+            const answers = document.querySelectorAll('.answer');
+            answers.forEach(a => a.style.pointerEvents = 'none');
+
+            if (element) {
+                element.classList.add(isCorrect ? 'correct' : 'wrong');
+            }
+            if (!isCorrect && correct !== -1) {
+                answers[correct].classList.add('correct');
+            }
+
+            socket.emit('submitAnswer', { roomCode: currentRoom, isCorrect, timeLeft });
+        }
+
+        socket.on('playerAnsweredUpdate', (data) => {
+            if (data.playerId === socket.id) {
+                document.getElementById('my-coins').textContent = data.coins;
+            } else {
+                document.getElementById('opp-coins').textContent = data.coins;
+                document.getElementById('opp-msg').textContent = "היריב ענה!";
+            }
+        });
+
+        socket.on('nextQuestion', (data) => {
+            document.getElementById('q-index').textContent = `שאלה ${data.index + 1} / 20`;
+            setTimeout(() => renderQuestion(data.question), 1500);
+        });
+
+        socket.on('gameOver', (players) => {
+            const me = players.find(p => p.id === socket.id);
+            const opp = players.find(p => p.id !== socket.id);
+            const win = me.score > opp.score;
+            const totalCoins = me.coins + opp.coins;
+
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('endGameBanner').style.display = 'flex';
+            document.getElementById('endGameBanner').classList.add('visible');
+
+            if (win) {
+                document.getElementById('endGameTitle').textContent = 'ניצחת!';
+                document.getElementById('endGameMessage').textContent = 'מזל טוב, הרווחת מטבעות נוספים!';
+                document.getElementById('endGameCongratulations').textContent = 'כל הכבוד!';
+                initBannerFireworks();
+                // עדכן localStorage עם המטבעות החדשות
+                localStorage.setItem('quizCoins', me.coins);
+            } else {
+                document.getElementById('endGameTitle').textContent = 'הפעם לא הצלחת';
+                document.getElementById('endGameMessage').textContent = 'לא נורא, אולי בפעם הבאה.';
+                document.getElementById('endGameCongratulations').textContent = 'נסה שוב!';
+                // עדכן localStorage עם המטבעות החדשות
+                localStorage.setItem('quizCoins', me.coins);
+            }
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 5000);
+        });
+
+        function restartH2H() {
+            window.location.href = "index.html";
+        }
+
+        function initBannerFireworks() {
+            const canvas = document.getElementById('bannerFireworksCanvas');
+            if (!canvas) {
+                console.error("Canvas element for fireworks not found!");
+                return;
+            }
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const fireworks = [];
+            const particles = [];
+            const gravity = 0.05;
+
+            class Firework {
+                constructor(x, y, targetX, targetY, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.targetX = targetX;
+                    this.targetY = targetY;
+                    this.color = color;
+                    this.radius = 5;
+                    this.velocity = {
+                        x: (targetX - x) / 15,
+                        y: (targetY - y) / 15 - Math.random() * 5
+                    };
+                    this.exploded = false;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                update() {
+                    this.draw();
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    const distanceToTarget = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+                    if (this.y <= this.targetY && !this.exploded) {
+                        this.explode();
+                    }
+                }
+
+                explode() {
+                    this.exploded = true;
+                    for (let i = 0; i < 100; i++) {
+                        particles.push(new Particle(this.x, this.y, this.color));
+                    }
+                }
+            }
+
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.radius = Math.random() * 3 + 1;
+                    this.velocity = {
+                        x: (Math.random() - 0.5) * Math.random() * 10,
+                        y: (Math.random() - 0.5) * Math.random() * 10
+                    };
+                    this.alpha = 1;
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                update() {
+                    this.draw();
+                    this.velocity.y += gravity;
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    this.alpha -= 0.01;
+                }
+            }
+
+            function createFirework() {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height;
+                const targetX = Math.random() * canvas.width;
+                const targetY = canvas.height * (0.2 + Math.random() * 0.4);
+                const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                fireworks.push(new Firework(x, y, targetX, targetY, color));
+            }
+
+            function animateFireworks() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                fireworks.forEach((firework, index) => {
+                    firework.update();
+                    if (firework.exploded) {
+                        fireworks.splice(index, 1);
+                    }
+                });
+                particles.forEach((particle, index) => {
+                    particle.update();
+                    if (particle.alpha <= 0) {
+                        particles.splice(index, 1);
+                    }
+                });
+                if (Math.random() < 0.35) {
+                    createFirework();
+                }
+                requestAnimationFrame(animateFireworks);
+            }
+
+            animateFireworks();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+    </script>
+</body>
+</html>

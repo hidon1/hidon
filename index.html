@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>חידון התנ"ך</title>
     <meta name="theme-color" content="#00000000">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="stylesheet" href="mobile_friendly_style_with_comment.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Alef:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
@@ -1523,11 +1523,7 @@
             <button class="button" onclick="createFriendRoom()">צור חדר חדש</button>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
-<script src="https://www.google.com/recaptcha/api.js?render=6Lf59nwrAAAAAJCbYsye_qEfzQ6bHZ1zxZX5IIUe"></script>
+
 
     <script>
   // --- התחלה של קוד שונה / חדש עבור reCAPTCHA ---
@@ -2675,7 +2671,63 @@ function closeBibleSearchOverlay() {
 
     </script>
     
-    <script src="sound_manager.js"></script>
+    <script>
+// sound_manager.js - צלילים - נתיבי קבצים
+const sounds = {
+  intro: new Audio('sounds/intro.mp3'),
+  game: new Audio('sounds/game.mp3'),
+  success: new Audio('sounds/success.mp3'),
+  fail: new Audio('sounds/fail.mp3'),
+  levelSuccess: new Audio('sounds/level_success.mp3'),
+  levelFail: new Audio('sounds/level_fail.mp3')
+};
+
+sounds.intro.loop = true;
+sounds.game.loop = true;
+sounds.success.loop = false;
+sounds.fail.loop = false;
+sounds.levelSuccess.loop = false;
+sounds.levelFail.loop = false;
+
+function playIntroMusic() {
+  stopAllSounds();
+  sounds.intro.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function playGameMusic() {
+  stopAllSounds();
+  sounds.game.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function playSuccessSound() {
+  sounds.success.currentTime = 0;
+  sounds.success.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function playFailSound() {
+  sounds.fail.currentTime = 0;
+  sounds.fail.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function playLevelSuccessSound() {
+  stopAllSounds();
+  sounds.levelSuccess.currentTime = 0;
+  sounds.levelSuccess.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function playLevelFailSound() {
+  stopAllSounds();
+  sounds.levelFail.currentTime = 0;
+  sounds.levelFail.play().catch(e => console.log("Audio play failed: " + e));
+}
+
+function stopAllSounds() {
+  Object.values(sounds).forEach(sound => {
+    sound.pause();
+    sound.currentTime = 0;
+  });
+}
+    </script>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";

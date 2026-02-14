@@ -1,0 +1,796 @@
+/* ================================================= */
+/* =====        קוד CSS למובייל - גרסה 4.0        ===== */
+/* ================================================= */
+@media (max-width: 900px) {
+
+    :root {
+        --text-color: #1A5276;
+        --card-bg: rgba(255, 255, 255, 0.9);
+        --button-bg: linear-gradient(135deg, #3498db, #2c3e50);
+        --button-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        --answer-border: #d6eaf8;
+        --radius: 16px;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Varela Round', sans-serif !important;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: var(--text-color);
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+    }
+    
+    body::before {
+        background-image: url('backgrounds/main.jpg') !important;
+    }
+/* ================================================================ */
+/* ===== עיצוב חדש למסך הפתיחה במובייל (נקי ומתוקן) ===== */
+/* ================================================================ */
+
+
+/* הופך את הטבלה הקטנה במובייל ללחיצה ומוסיף גלילה */
+#leaderboard-container {
+    cursor: pointer;
+}
+#leaderboard-list {
+    max-height: 150px; /* גובה מותאם למובייל */
+    overflow-y: auto;
+    padding-left: 5px;
+}
+#startButton {
+    /* קובע את הגודל של כפתור ההתחלה במובייל */
+    width: 250px;
+    max-width: 70%;
+}
+    #rulesBtn {
+    font-family: 'Frank Ruhl Libre', serif !important;
+    padding: 10px 25px;           /* ריווח פנימי קטן יותר */
+    font-size: 1rem;              /* גופן קטן יותר */
+    background: #556b2f;          /* אותו צבע רקע שונה */
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: var(--button-shadow);
+    margin: 0 auto;
+    width: 70%;                   /* רוחב מותאם */
+    max-width: 260px;
+    display: block;
+}
+
+    /* --- הסתרת הבאנר אחרי זמן --- */
+    #welcomeBanner.hide {
+        display: none !important;  /* הסתרת הבאנר */
+    }
+    /* --- סידור האלמנטים העליונים --- */
+
+
+    
+  
+    
+/* ================================================= */
+/* =====  עיצוב וידג'ט משתמש למובייל )   ===== */
+/* ================================================= */
+
+#user-info-container {
+    position: fixed;
+    top: 30px; /* מרווח קטן מהקצה העליון */
+    right: 15px;
+    z-index: 4002;
+    display: block; /* ודא שהאלמנט מוצג */
+}
+
+#user-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    /* --- הגדרות הרקע הכהה --- */
+    background: rgba(0, 20, 40, 0.75);
+    backdrop-filter: blur(4px);
+    
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* מסגרת בהירה על רקע כהה */
+    width: 90px; /* הגדרת רוחב */
+    min-height: 132px;
+}
+
+#widget-coins {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 8px; /* רווח קטן יותר */
+}
+
+#coin-display {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #d4af37;
+    margin-right: 6px;
+}
+
+#coin-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* מאפס את העיצובים הישנים של האווטאר */
+#avatar-banner {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    height: auto !important;
+    min-width: auto !important;
+    border: 3px solid white !important; /* מסגרת לבנה */
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25) !important;
+    cursor: pointer;
+    width: 60px; /* גודל מותאם למובייל */
+    height: 60px;
+}
+
+#user-avatar {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    border-radius: 8px !important;
+    border: none !important;
+}
+
+#widget-username {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 8px; /* רווח קטן יותר */
+    padding: 4px 12px;
+    background-color: rgba(0, 86, 179, 0.08);
+    border-radius: 16px;
+}
+
+#username-display {
+    font-family: 'Alef', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+#edit-username-icon {
+    font-size: 0.8rem;
+    margin-left: 6px;
+}
+    
+
+
+  #successMessage {
+    display: none; /* יידלק על ידי JavaScript */
+    position: fixed;
+    z-index: 5000;
+    top: 30vh; /* מיקום במרחק 30% מגובה החלק העליון של המסך */
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 90%; /* רוחב של 90% מהמסך */
+    max-width: 400px; /* אבל לא יותר רחב מ-400 פיקסלים */
+    
+    background: linear-gradient(145deg, #2980b9, #3498db);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 16px; /* פינות עגולות וברורות */
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-sizing: border-box;
+}
+
+    /* --- התאמת תוכן החידון --- */
+    #quizContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* שינוי חזרה ל-flex-start */
+        align-items: center;
+        height: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+        gap: 12px;
+        padding-top: 180px; /* הגדלת הריפוד העליון כדי להוריד את התוכן */
+    }
+
+#questionText {
+    font-family: 'Varela Round', sans-serif !important;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    background: var(--card-bg);
+    border: 2px solid var(--answer-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    font-size: 1.3rem;
+    color: #1C2833; /* צבע כחול-אפרפר כהה וברור */
+    
+    /* --- שורות חדשות --- */
+    min-height: 80px;            /* קביעת גובה מינימלי */
+    display: flex;               /* מאפשר שליטה במיקום התוכן */
+    justify-content: center;     /* ממקם את הטקסט במרכז (אופקית) */
+    align-items: center;         /* ממקם את הטקסט במרכז (אנכית) */
+    box-sizing: border-box;      /* מבטיח שהריפוד לא יוסיף לגובה */
+}
+
+    .answer-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow-y: auto;
+        width: 100%;
+        max-width: 450px;
+        max-height: 40vh;
+    }
+
+    .answer {
+        font-family: 'Frank Ruhl Libre', serif !important;
+        width: auto;
+        text-align: center;
+        background: var(--card-bg);
+        border: 2px solid var(--answer-border);
+        border-radius: var(--radius);
+        padding: 10px;
+        color: #1C2833; /* צבע כחול-אפרפר כהה וברור */
+        font-size: 1.2rem;
+    }
+    
+    #dashboard {
+        font-family: 'Frank Ruhl Libre', serif !important;
+        width: 100%;
+        max-width: 450px;
+        font-size: 0.85rem;
+        background: #1c3d5a;
+        color: #fff;
+        padding: 8px;
+        border-radius: var(--radius);
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+ /* --- עיצוב מתוקן לפס ההתקדמות --- */
+#progressBarContainer {
+    width: 100%;
+    max-width: 450px;
+    height: 12px;
+    background-color: #e0e0e0; /* צבע רקע ניטרלי */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#progressBar {
+    height: 100%;
+    width: 100%; /* מתחיל ברוחב מלא */
+    background-color: #2e7d32; /* צבע ירוק התחלתי */
+    transition: width 1s linear, background-color 0.5s ease; /* אנימציה על הרוחב ועל הצבע */
+    border-radius: 8px;
+}
+
+    /* --- החזרת עיצוב הכפתורים --- */
+    #skipWrapper {
+        text-align: center;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    #skipButton, #hintButton {
+        font-family: 'Frank Ruhl Libre', serif !important;
+        font-size: 0.8rem;
+        padding: 8px 14px;
+        margin: 5px auto;
+        border-radius: var(--radius);
+        background: var(--button-bg);
+        color: white;
+        border: none;
+        box-shadow: var(--button-shadow);
+        width: 100%;
+    }
+
+    #startBtn, #retryBtn, #nextStageBtn {
+        font-family: 'Frank Ruhl Libre', serif !important;
+        padding: 14px 30px;
+        font-size: 1.2rem;
+        background: var(--button-bg);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--button-shadow);
+        margin: 0 auto;
+        width: 80%;
+        max-width: 280px;
+        display: block;
+    }
+/* ================================================= */
+/* ===== הקטנת האווטאר ותיבת המטבעות במובייל ===== */
+/* ================================================= */
+
+/* מקטין עוד יותר את הריפוד */
+#currency-bar {
+   padding: 3px 8px;
+}
+
+/* מקטין עוד יותר את גודל הגופן */
+#coin-display {
+    font-size: 1.1rem !important;
+}
+
+/* מקטין עוד יותר את אייקון המטבע */
+#coin-icon {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* מעדכן את הגדרות האווטאר ללא מסגרת */
+#user-avatar {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: none !important; /* <- הסרנו את המסגרת כאן */
+}
+    /* ======================================= */
+/* ===== עיצוב מסך 'נכשלת' למובייל ===== */
+/* ======================================= */
+
+/* עיצוב ה'כרטיס' שיעטוף את התוכן לבקשתך */
+#failScreen .screen-card {
+    background: rgba(234, 242, 248, 0.95); /* רקע תכלת חצי-שקוף וברור */
+    padding: 9px;                       /* ריפוד פנימי */
+    border-radius: 20px;                 /* קצוות עגולים */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    margin: 0 15px;                      /* שוליים מהצדדים של המסך */
+    max-width: 500px;
+    width: 90%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* עיצוב הכותרת 'לא עברת' */
+#failScreen h2 {
+    font-family: 'Rubik', sans-serif;   /* פונט מעוצב ויפה */
+    color: #e74c3c;                     /* צבע אדום עז */
+    font-size: 2.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    margin: 0 0 15px 0;
+}
+
+/* עיצוב טקסט ההסבר */
+#failText {
+    font-family: 'Varela Round', sans-serif; /* פונט קריא וברור */
+    font-size: 1.1rem;
+    color: #34495e;                     /* צבע טקסט כהה וברור */
+    line-height: 1.6;                   /* רווח בין השורות */
+    margin-bottom: 25px;                /* רווח לפני הכפתור */
+}
+    /* ========================================= */
+/* ===== עיצוב מסך 'הצלחה' למובייל ===== */
+/* ========================================= */
+
+/* עיצוב ה'כרטיס' שיעטוף את התוכן */
+#successScreen .screen-card {
+    background: rgba(234, 242, 248, 0.95);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    margin: 0 15px;
+    max-width: 500px;
+    width: 90%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* עיצוב כותרת ההצלחה */
+#successScreen h2 {
+    font-family: 'Baloo 2', cursive; /* פונט שמח ועגול */
+    color: #3498db;                  /* צבע כחול */
+    font-size: 2.2rem;               /* גודל מותאם למובייל */
+    font-weight: bold;
+    line-height: 1.4;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
+    margin: 0 0 25px 0;
+}
+    /* --- 1. הגדרות בסיס לכל כפתורי התמונה --- */
+    .image-button {
+        cursor: pointer;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .image-button:hover {
+        transform: scale(1.10);
+    }
+    .image-button:active {
+        transform: scale(0.95);
+        box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+    }
+/* ==================================================================== */
+/* =====  חלון מובילים - גרסה סופית ומתוקנת למובייל  ===== */
+/* ==================================================================== */
+
+/* הקוד הזה משתמש בקלאסים הגנריים .overlay ו-.overlay-content שכבר מוגדרים
+בקובץ שלך, ולכן אין צורך להגדיר אותם מחדש.
+הוא מוסיף רק את העיצובים הספציפיים לטבלת המובילים.
+*/
+
+/* עיצוב הכותרת בתוך החלון */
+#leaderboard-modal-overlay h2 {
+    font-size: 1.8rem; /* גופן מוקטן למובייל */
+    margin-bottom: 15px;
+}
+
+/* הגדרת גלילה לרשימה */
+#leaderboard-modal-overlay #full-leaderboard-list {
+    max-height: 65vh; /* גובה מותאם למובייל */
+    overflow-y: auto;
+    direction: rtl;
+    text-align: right;
+    padding-left: 10px; /* ריווח קטן לפס הגלילה */
+}
+
+/* עיצוב כל שורה ברשימה */
+#leaderboard-modal-overlay .full-leaderboard-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 5px;
+    border-bottom: 1px solid #ddeeff;
+}
+#leaderboard-modal-overlay .full-leaderboard-row:last-child {
+    border-bottom: none;
+}
+
+/* מיקום */
+#leaderboard-modal-overlay .full-leaderboard-rank {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    width: 35px; /* רוחב מוקטן */
+    flex-shrink: 0;
+}
+
+/* תמונת פרופיל */
+#leaderboard-modal-overlay .full-leaderboard-avatar {
+    width: 45px; /* גודל מוקטן */
+    height: 45px;
+    border-radius: 50%;
+    margin-left: 10px; /* ריווח מוקטן */
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* שם המשתמש */
+#leaderboard-modal-overlay .full-leaderboard-name {
+    font-size: 1.1rem; /* גופן מוקטן */
+    font-weight: 500;
+    color: #1A5276;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* מטבעות */
+#leaderboard-modal-overlay .full-leaderboard-coins {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #b7950b;
+    display: flex;
+    align-items: center;
+}
+
+#leaderboard-modal-overlay .full-leaderboard-coins img {
+    width: 16px; /* אייקון מוקטן */
+    height: 16px;
+    margin-right: 5px;
+}
+    /* =================================================== */
+/* ===== תיקון ריווח פנימי בחלון המובילים למובייל ===== */
+/* =================================================== */
+#leaderboard-modal-overlay .overlay-content {
+    padding: 20px 25px; /* 20px למעלה ולמטה, 25px מרווח בצדדים */
+}
+    /* ================================================= */
+/* =====     עיצוב טבלת מובילים למצב עומד      ===== */
+/* ================================================= */
+@media (orientation: portrait) {
+  
+    #welcomeBannerImage {
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 30px; /* המרווח מתחת לתמונה קטן יותר */
+    margin-top: -290px; /* התמונה זזה יותר למעלה */
+}
+        #muteButton {
+    position: fixed;
+    z-index: 4001;
+
+    /* --- מיקום חדש --- */
+    top: 230px;      /* הערכה למיקום במובייל, שנה לפי הצורך */
+    left: 15px;     /* אותו מרחק מהצד כמו הווידג'ט */
+     width: 90px;     /* אותו רוחב כמו הווידג'ט במובייל */
+
+    /* --- שאר העיצובים נשארים --- */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+    #leaderboard-container {
+        /* מיקום בצד שמאל למעלה */
+        position: fixed;
+        top: 30px; /* מתחת לכפתור ההשתקה והמטבעות */
+        left: 10px;
+        
+        /* גודל וצורה */
+        width: 140px; /* רוחב קטן יותר למובייל */
+        border-radius: 10px;
+        padding: 6px;
+
+        /* רקע חצי שקוף */
+        background: rgba(0, 20, 40, 0.75);
+        backdrop-filter: blur(4px);
+        
+        /* הגדרות נוספות */
+        z-index: 3999;
+        direction: rtl;
+        color: white;
+        font-family: 'Varela Round', sans-serif;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #leaderboard-title {
+        font-size: 1rem; /* גופן קטן יותר לכותרת */
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        padding-bottom: 4px;
+    }
+
+    .leaderboard-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 3px;
+        font-size: 0.8rem; /* גופן קטן יותר לשורות */
+    }
+
+    .leaderboard-row span:first-child {
+        width: 15px; /* רוחב צר למספור */
+    }
+
+    .leaderboard-row img {
+        width: 19px; /* תמונת אוואטר קטנה יותר */
+        height: 19px;
+        border-radius: 50%;
+        margin: 0 5px;
+        border: 1px solid white;
+    }
+
+    .leaderboard-name {
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .leaderboard-coins {
+        font-weight: 700;
+        color: #ffd700;
+        margin-right: 5px; /* רווח קטן מימין */
+    }
+   
+        /* קובע את גודל כפתור ההתחלה (ללא מרווח עליון מיותר) */
+        #startButton {
+            width: 270px;
+             top: 250px;
+        }
+    #failScreen {
+    justify-content: flex-start; /* מבטל את המרכוז האנכי האוטומטי */
+    padding-top: 13vh;           /* דוחף את כל התוכן כלפי מטה ב-25% מגובה המסך */
+}
+
+        #failScreen .image-button {
+            width: 220px;
+            margin-top: 2px;
+        }
+
+}
+/* ======================================================================= */
+/* ===== עיצוב למצב שוכב (Landscape) - גרסה 7.0 (עם שאלה קבועה) ===== */
+/* ======================================================================= */
+@media (orientation: landscape) and (max-height: 550px) {
+
+    #welcomeBannerImage {
+    width: 90%;
+    max-width: 250px;
+    height: auto;
+    margin-bottom: -185px; /* המרווח מתחת לתמונה קטן יותר */
+    margin-top: -85px; /* התמונה זזה יותר למעלה */
+}
+    /* === שלב א': קיבוע השאלה למעלה בשורה עם הכפתורים === */
+  #questionText {
+    position: fixed;
+    top: 10px;
+    z-index: 3000;
+
+    /* --- התיקון למרכוז מושלם --- */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 220px); /* רוחב: 100% מהמסך פחות 220px לכפתורים בצדדים */
+    max-width: 500px; /* הגבלת רוחב מקסימלי */
+
+    /* --- שליטה על הגובה --- */
+    padding: 8px 12px; /* שנה את הערך הראשון (8px) כדי לשנות את הגובה */
+    min-height: auto;
+
+    /* עיצובים נוספים */
+    font-size: 1.1rem;
+    box-sizing: border-box;
+}
+    /* === שלב ב': סידור שאר התוכן מתחת לשאלה הקבועה === */
+    #quizContainer {
+        /* דוחפים את כל התוכן למטה כדי שלא יוסתר מתחת לשאלה */
+        padding-top: 70px;
+        padding-bottom: 10px;
+        
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* ממורכז אנכית */
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* רשת התשובות: מבנה של 2 על 2 שתמיד ייכנס למסך */
+    .answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        max-width: 500px; /* רוחב מותאם למצב שוכב */
+    }
+
+    .answer {
+        min-height: 28px; /* גובה נמוך יותר לתשובות */
+        padding: 5px;
+        font-size: 1rem;
+    }
+
+    /* כפתור דילוג ודשבורד בתחתית */
+    #dashboard, #skipWrapper {
+        width: 100%;
+        max-width: 500px;
+    }
+    #dashboard { font-size: 0.7rem; padding: 5px; }
+    #skipButton, #hintButton { font-size: 0.7rem; padding: 6px; }
+
+
+ /* === טיפול במסך 'תחילת שלב' (האנימציה) - גרסה מתוקנת === */
+#stageIntro {
+    display: flex;
+    align-items: center;     /* ממורכז אנכית */
+    justify-content: center; /* ממורכז אופקית */
+    height: 100vh;           /* תופס את כל גובה המסך */
+    overflow: hidden;        /* מונע גלישה החוצה */
+    padding-top: 0;          /* איפוס ריווחים ישנים */
+}
+#stageIntro iframe#bannerIframe {
+    /* הקטנו שוב את האנימציה כדי למנוע חיתוך */
+    transform: scale(0.8);
+    transform-origin: center;
+    border: none;
+
+    /* הגדרת גובה ורוחב שמתאימים למסגרת */
+    width: 100%;
+    height: 100%;
+    max-width: 600px; /* הגבלת רוחב למניעת עיוותים */
+}
+
+    /* ================================================= */
+/* =====     עיצוב טבלת מובילים למובייל       ===== */
+/* ================================================= */
+
+#leaderboard-container {
+    /* מיקום בצד שמאל למעלה */
+    position: fixed;
+    top: 30px; /* מתחת לכפתור ההשתקה והמטבעות */
+    left: 10px;
+    
+    /* גודל וצורה */
+    width: 135px; /* רוחב קטן יותר למובייל */
+    border-radius: 10px;
+    padding: 8px;
+
+    /* רקע חצי שקוף */
+    background: rgba(0, 20, 40, 0.75);
+    backdrop-filter: blur(4px);
+    
+    /* הגדרות נוספות */
+    z-index: 3999;
+    direction: rtl;
+    color: white;
+    font-family: 'Varela Round', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#leaderboard-title {
+    font-size: 1rem; /* גופן קטן יותר לכותרת */
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 4px;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 0.8rem; /* גופן קטן יותר לשורות */
+}
+
+.leaderboard-row span:first-child {
+    width: 15px; /* רוחב צר למספור */
+}
+
+.leaderboard-row img {
+    width: 22px; /* תמונת אוואטר קטנה יותר */
+    height: 22px;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: 1px solid white;
+}
+
+.leaderboard-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.leaderboard-coins {
+    font-weight: 700;
+    color: #ffd700;
+    margin-right: 5px; /* רווח קטן מימין */
+}
+#muteButton {
+    position: fixed;
+    z-index: 10001;
+    top: 225px; /* מיקום מתחת לטבלה במצב שוכב, ניתן לכוונון */
+    left: 10px;
+    width: 135px; /* רוחב מותאם לטבלה במצב שוכב */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+       #startButton {
+            width: 190px;
+            margin-top: 90px;
+        }
+        #failScreen .image-button {
+            width: 130px;
+            margin-top: 0px;
+        }
+body { font-family: system-ui, sans-serif; margin: 24px; }
+#controls button { margin-inline-end: 8px; }
+.card { border: 1px solid #ccc; border-radius: 8px; padding: 12px; min-height: 80px; width: 280px; }
+#players { display: flex; gap: 12px; margin-top: 12px; }
+#question { margin-top: 16px; }

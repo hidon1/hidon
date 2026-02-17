@@ -11,10 +11,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
+// Serve root directory static files (for main game)
+app.use(express.static(__dirname));
+// Serve public directory static files (for h2h mode)
 app.use(express.static(path.join(__dirname, "public")));
-
-// Serve auth.html from root directory
-app.get("/auth.html", (_, res) => res.sendFile(path.join(__dirname, "auth.html")));
 
 const server = http.createServer(app);
 // Note: Using '*' for CORS origin during development/demo.
@@ -194,7 +194,7 @@ async function settleCoins({ winnerUid, code, stake, players }) {
 // TODO: Add rate limiting for production deployment to prevent abuse
 // Consider using express-rate-limit middleware for these routes
 app.get("/health", (_, res) => res.json({ ok: true }));
-app.get("/", (_, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("/", (_, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 server.listen(PORT, () => console.log(`Server listening on ${PORT}`));
 

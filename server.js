@@ -11,9 +11,21 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
+
+// Block access to sensitive server files
+const blockedFiles = ['server.js', 'firebaseAdmin.js', 'package.json', 'package-lock.json', '.gitignore'];
+blockedFiles.forEach(file => {
+  app.get(`/${file}`, (req, res) => {
+    res.status(403).send('Access denied');
+  });
+});
+
 // Serve root directory static files (for main game) with security options
+// TODO: For improved security, consider moving game assets (JSON files, images, etc.)
+// to a dedicated directory and serve only that directory instead of the entire root.
+// This would prevent access to server.js, package.json, etc.
 app.use(express.static(__dirname, {
-  dotfiles: 'deny',  // Prevent access to dotfiles
+  dotfiles: 'deny',  // Prevent access to dotfiles (.env, .git, etc.)
   index: false       // Prevent directory listing and auto-serving index files here
 }));
 // Serve public directory static files (for h2h mode)

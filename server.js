@@ -11,8 +11,11 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
-// Serve root directory static files (for main game)
-app.use(express.static(__dirname));
+// Serve root directory static files (for main game) with security options
+app.use(express.static(__dirname, {
+  dotfiles: 'deny',  // Prevent access to dotfiles
+  index: false       // Prevent directory listing and auto-serving index files here
+}));
 // Serve public directory static files (for h2h mode)
 app.use(express.static(path.join(__dirname, "public")));
 

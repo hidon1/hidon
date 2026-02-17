@@ -1788,13 +1788,36 @@ function performRecaptchaCheck() {
         }
 
         function loadStage() {
-            fetch(`${stage}.json`).then(res => res.json()).then(data => {
-                shuffleArray(data);
-                questions = data.slice(0, 10);
-                current = 0;
-                correct = 0;
-                showQuestion();
-            });
+            console.log(`Attempting to load stage ${stage} from ${stage}.json`);
+            
+            fetch(`${stage}.json`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Failed to load ${stage}.json: ${res.status} ${res.statusText}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(`Successfully loaded ${data.length} questions for stage ${stage}`);
+                    
+                    if (!Array.isArray(data) || data.length === 0) {
+                        throw new Error(`Invalid data format or empty questions array in ${stage}.json`);
+                    }
+                    
+                    shuffleArray(data);
+                    questions = data.slice(0, 10);
+                    current = 0;
+                    correct = 0;
+                    showQuestion();
+                })
+                .catch(error => {
+                    console.error('Error loading questions:', error);
+                    alert(`שגיאה בטעינת השאלות לשלב ${stage}. אנא נסה שוב מאוחר יותר.\n\nפרטי השגיאה: ${error.message}`);
+                    
+                    // חזור למסך הקודם
+                    document.getElementById('quizContainer').style.display = 'none';
+                    document.getElementById('stageIntro').style.display = 'flex';
+                });
         }
 
         function showQuestion() {

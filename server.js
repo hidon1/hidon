@@ -11,10 +11,25 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
-app.use(express.static(path.join(__dirname, "public")));
 
-// Serve auth.html from root directory
-app.get("/auth.html", (_, res) => res.sendFile(path.join(__dirname, "auth.html")));
+// Block access to sensitive server files
+const blockedFiles = ['server.js', 'firebaseAdmin.js', 'package.json', 'package-lock.json', '.gitignore'];
+blockedFiles.forEach(file => {
+  app.get(`/${file}`, (req, res) => {
+    res.status(403).send('Access denied');
+  });
+});
+
+// Serve root directory static files (for main game) with security options
+// TODO: For improved security, consider moving game assets (JSON files, images, etc.)
+// to a dedicated directory and serve only that directory instead of the entire root.
+// This would prevent access to server.js, package.json, etc.
+app.use(express.static(__dirname, {
+  dotfiles: 'deny',  // Prevent access to dotfiles (.env, .git, etc.)
+  index: false       // Prevent directory listing and auto-serving index files here
+}));
+// Serve public directory static files (for h2h mode)
+app.use(express.static(path.join(__dirname, "public")));
 
 const server = http.createServer(app);
 // Note: Using '*' for CORS origin during development/demo.
@@ -194,7 +209,7 @@ async function settleCoins({ winnerUid, code, stake, players }) {
 // TODO: Add rate limiting for production deployment to prevent abuse
 // Consider using express-rate-limit middleware for these routes
 app.get("/health", (_, res) => res.json({ ok: true }));
-app.get("/", (_, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("/", (_, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 server.listen(PORT, () => console.log(`Server listening on ${PORT}`));
 

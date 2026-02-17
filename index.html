@@ -1572,15 +1572,6 @@ function performRecaptchaCheck() {
         console.log("בדיקת reCAPTCHA תקופתית נמנעה: לא עברה שעה מאז האתגר האחרון.");
     }
 }
-         .catch(error => {
-    console.error("שגיאה בבדיקת reCAPTCHA תקופתית:", error); // Translated
-    alert("אירעה שגיאה בבדיקת אבטחה. אנא נסה לפתור את האתגר."); // שיניתי את הודעת ההתראה
-    showRecaptchaV2Challenge(); // הצג את אתגר ה-v2 במקום לחסום
-    clearInterval(recaptchaInterval); //
-    recaptchaInterval = null; //
-});
-      });
-  }
 
   grecaptcha.ready(function() {
     // בדיקה ראשונית (כמו קודם, אך כעת באמצעות הפונקציה החדשה)

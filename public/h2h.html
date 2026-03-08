@@ -408,14 +408,26 @@
         // Load questions from JSON files
         async function loadQuestions() {
             try {
-                // Load from a random stage (1-10)
-                const stage = Math.floor(Math.random() * 10) + 1;
-                const response = await fetch(`../${stage}.json`);
-                const data = await response.json();
-                
+                // Load from all stages 1-10 in parallel
+                const results = await Promise.all(
+                    Array.from({ length: 10 }, (_, i) =>
+                        fetch(`${i + 1}.json`)
+                            .then(r => r.ok ? r.json() : [])
+                            .catch(() => [])
+                    )
+                );
+                const allLoadedQuestions = [];
+                for (const data of results) {
+                    if (Array.isArray(data)) {
+                        allLoadedQuestions.push(...data);
+                    }
+                }
+                if (allLoadedQuestions.length === 0) {
+                    throw new Error('No questions loaded from JSON files');
+                }
                 // Shuffle and take 20 questions
-                shuffleArray(data);
-                allQuestions = data.slice(0, 20);
+                shuffleArray(allLoadedQuestions);
+                allQuestions = allLoadedQuestions.slice(0, 20);
             } catch (error) {
                 console.error('Failed to load questions:', error);
                 // Fallback to placeholder questions
@@ -488,14 +500,13 @@
             socket.emit('answer', { code: currentRoom, uid: uid, correct: isCorrect });
             
             // Auto-load next question after a delay
-            if (currentQuestionNumber < totalQuestions) {
-                currentQuestionNumber++;
+            if (currentQuestionIndex < allQuestions.length) {
                 setTimeout(() => loadNextQuestion(), 1500);
             }
         }
 
         socket.on('question_progress', ({ current }) => {
-            document.getElementById('q-index').textContent = `שאלה ${current} / 20`;
+            document.getElementById('q-index').textContent = `שאלה ${current} / ${totalQuestions}`;
             currentQuestionNumber = current;
         });
 

@@ -326,6 +326,19 @@
         let timerInterval;
         let timeLeft = 20;
 
+        // Handle socket connection errors
+        socket.on('connect_error', (error) => {
+            console.error('Socket connection error:', error);
+        });
+
+        socket.on('error', (message) => {
+            alert('שגיאה: ' + message);
+        });
+
+        // Generate or retrieve UID for this player
+        const uid = localStorage.getItem('uid') || `uid_${Math.floor(Math.random()*1e6)}`;
+        localStorage.setItem('uid', uid);
+
         // נתונים מהאתר הראשי
         const userData = {
             name: localStorage.getItem('userName') || 'שחקן',
@@ -340,10 +353,10 @@
         document.getElementById('my-coins').textContent = userData.coins;
 
         function createGame() {
-            socket.emit('createRoom', userData);
+            socket.emit('create_room', { hostUid: uid, stake: 0 });
         }
 
-        socket.on('roomCreated', (code) => {
+        socket.on('room_created', ({ code }) => {
             currentRoom = code;
             document.getElementById('setup-btns').style.display = 'none';
             document.getElementById('waiting-area').style.display = 'block';
@@ -354,55 +367,91 @@
             const code = document.getElementById('join-code').value;
             if (code) {
                 currentRoom = code;
-                socket.emit('joinRoom', { roomCode: code, userData });
+                socket.emit('join_room', { code: code, guestUid: uid });
             }
         }
 
-        socket.on('playerJoined', (players) => {
+        socket.on('room_ready', ({ code, players }) => {
             document.getElementById('setup-btns').style.display = 'none';
             document.getElementById('waiting-area').style.display = 'block';
             document.getElementById('lobby-status').textContent = "היריב התחבר!";
             document.getElementById('ready-btn').style.display = 'block';
-            
-            const opponent = players.find(p => p.id !== socket.id);
-            if (opponent) {
-                document.getElementById('opp-widget').style.display = 'block';
-                document.getElementById('opp-name').textContent = opponent.name;
-                document.getElementById('opp-avatar').src = opponent.avatar;
-                document.getElementById('opp-wins').textContent = opponent.wins || 0;
-            }
+
+            // Show opponent widget (simplified - no opponent data available from server)
+            document.getElementById('opp-widget').style.display = 'block';
+            document.getElementById('opp-name').textContent = 'יריב';
+            document.getElementById('opp-wins').textContent = '0';
         });
 
         function setReady() {
-            socket.emit('playerReady', currentRoom);
+            socket.emit('start_game', { code: currentRoom });
             document.getElementById('ready-btn').disabled = true;
             document.getElementById('ready-btn').textContent = "ממתין ליריב...";
         }
 
-        socket.on('gameStarted', (data) => {
+        socket.on('game_started', async ({ totalQuestions: serverTotal, stake }) => {
             document.getElementById('lobby').style.display = 'none';
             document.getElementById('quizContainer').style.display = 'flex';
             document.getElementById('dashboard').style.display = 'flex';
             document.getElementById('progressBarContainer').style.display = 'block';
-            renderQuestion(data.question);
 
-            // עדכן widgets עם players
-            const me = data.players.find(p => p.id === socket.id);
-            const opp = data.players.find(p => p.id !== socket.id);
-            if (me) {
-                document.getElementById('my-name').textContent = me.name;
-                document.getElementById('my-avatar').src = me.avatar;
-                document.getElementById('my-wins').textContent = me.wins;
-                document.getElementById('my-coins').textContent = me.coins;
-            }
-            if (opp) {
-                document.getElementById('opp-widget').style.display = 'block';
-                document.getElementById('opp-name').textContent = opp.name;
-                document.getElementById('opp-avatar').src = opp.avatar;
-                document.getElementById('opp-wins').textContent = opp.wins;
-                document.getElementById('opp-coins').textContent = opp.coins;
-            }
+            // Load questions and start the game
+            await loadQuestions();
+            loadNextQuestion();
         });
+
+        let currentQuestionNumber = 1;
+        const totalQuestions = 20;
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+
+        // Load questions from all JSON files (1.json - 10.json)
+        async function loadQuestions() {
+            try {
+                // Load from all stages 1-10 in parallel
+                const results = await Promise.all(
+                    Array.from({ length: 10 }, (_, i) =>
+                        fetch(`${i + 1}.json`)
+                            .then(r => r.ok ? r.json() : [])
+                            .catch(() => [])
+                    )
+                );
+                const allLoadedQuestions = [];
+                for (const data of results) {
+                    if (Array.isArray(data)) {
+                        allLoadedQuestions.push(...data);
+                    }
+                }
+                if (allLoadedQuestions.length === 0) {
+                    throw new Error('No questions loaded from JSON files');
+                }
+                // Shuffle and take 20 questions
+                shuffleArray(allLoadedQuestions);
+                allQuestions = allLoadedQuestions.slice(0, 20);
+            } catch (error) {
+                console.error('Failed to load questions:', error);
+                // Fallback to placeholder questions
+                allQuestions = Array(20).fill(null).map((_, i) => ({
+                    question: `שאלה ${i + 1} מתוך 20`,
+                    options: ['תשובה 1', 'תשובה 2', 'תשובה 3', 'תשובה 4'],
+                    correct: 0
+                }));
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadNextQuestion() {
+            if (currentQuestionIndex < allQuestions.length) {
+                renderQuestion(allQuestions[currentQuestionIndex]);
+                currentQuestionIndex++;
+            }
+        }
 
         function renderQuestion(q) {
             document.getElementById('opp-msg').textContent = "";
@@ -448,46 +497,35 @@
                 answers[correct].classList.add('correct');
             }
 
-            socket.emit('submitAnswer', { roomCode: currentRoom, isCorrect, timeLeft });
+            socket.emit('answer', { code: currentRoom, uid: uid, correct: isCorrect });
+
+            // Auto-load next question after a delay
+            if (currentQuestionIndex < allQuestions.length) {
+                setTimeout(() => loadNextQuestion(), 1500);
+            }
         }
 
-        socket.on('playerAnsweredUpdate', (data) => {
-            if (data.playerId === socket.id) {
-                document.getElementById('my-coins').textContent = data.coins;
-            } else {
-                document.getElementById('opp-coins').textContent = data.coins;
-                document.getElementById('opp-msg').textContent = "היריב ענה!";
-            }
+        socket.on('question_progress', ({ current }) => {
+            document.getElementById('q-index').textContent = `שאלה ${current} / ${totalQuestions}`;
+            currentQuestionNumber = current;
         });
 
-        socket.on('nextQuestion', (data) => {
-            document.getElementById('q-index').textContent = `שאלה ${data.index + 1} / 20`;
-            setTimeout(() => renderQuestion(data.question), 1500);
-        });
-
-        socket.on('gameOver', (players) => {
-            const me = players.find(p => p.id === socket.id);
-            const opp = players.find(p => p.id !== socket.id);
-            const win = me.score > opp.score;
-            const totalCoins = me.coins + opp.coins;
+        socket.on('game_finished', ({ winnerUid }) => {
+            const win = winnerUid === uid;
 
             document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('endGameBanner').style.display = 'flex';
             document.getElementById('endGameBanner').classList.add('visible');
 
             if (win) {
-                document.getElementById('endGameTitle').textContent = 'ניצחת!';
-                document.getElementById('endGameMessage').textContent = 'מזל טוב, הרווחת מטבעות נוספים!';
-                document.getElementById('endGameCongratulations').textContent = 'כל הכבוד!';
+                document.getElementById('endGameTitle').textContent = 'ניצחון!';
+                document.getElementById('endGameMessage').textContent = 'כל הכבוד! זכית במשחק.';
+                document.getElementById('endGameCongratulations').textContent = 'מזל טוב!';
                 initBannerFireworks();
-                // עדכן localStorage עם המטבעות החדשות
-                localStorage.setItem('quizCoins', me.coins);
             } else {
                 document.getElementById('endGameTitle').textContent = 'הפעם לא הצלחת';
                 document.getElementById('endGameMessage').textContent = 'לא נורא, אולי בפעם הבאה.';
                 document.getElementById('endGameCongratulations').textContent = 'נסה שוב!';
-                // עדכן localStorage עם המטבעות החדשות
-                localStorage.setItem('quizCoins', me.coins);
             }
 
             setTimeout(() => {

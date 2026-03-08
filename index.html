@@ -1456,7 +1456,8 @@
     </div>
 
     <div id="stageIntro">
-        <iframe src="banner-animation/index.html" id="bannerIframe" style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;" loading="lazy"></iframe>
+        <iframe src="banner-animation/index.html" id="bannerIframe" style="width: 100%; height: 500px; border: none; position: relative; margin-top: 30px; z-index: 10;"></iframe>
+        <button class="button" id="stageStartBtn" onclick="startQuiz()" style="margin-top: 20px; padding: 14px 40px; font-size: 1.4rem; z-index: 20; position: relative;">התחל!</button>
     </div>
     
     <div id="quizContainer">
@@ -1749,12 +1750,7 @@ function performRecaptchaCheck() {
             setTimeout(alignAvatarBannerWidth, 50);
             const bannerIframe = document.getElementById('bannerIframe');
             if (bannerIframe) {
-                try {
-                    bannerIframe.contentWindow.location.reload();
-                } catch (e) {
-                    console.error("Iframe reload failed, falling back to src reset:", e);
-                    bannerIframe.src = 'banner-animation/index.html';
-                }
+                bannerIframe.src = 'banner-animation/index.html';
             }
             if (document.getElementById('welcomeBanner')) {
                 document.getElementById('welcomeBanner').classList.add('hide');
@@ -1777,10 +1773,13 @@ function performRecaptchaCheck() {
         }
 
         function startQuiz() {
+            // Prevent double-call (e.g., from both banner click and start button)
+            const stageIntroEl = document.getElementById('stageIntro');
+            if (!stageIntroEl || getComputedStyle(stageIntroEl).display === 'none') return;
             updateBackground(); // Update background based on device type and current selection
             stopAllSounds();
             playGameMusic();
-            document.getElementById('stageIntro').style.display = 'none';
+            stageIntroEl.style.display = 'none';
             document.getElementById('quizContainer').style.display = 'flex';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('skipButton').style.display = 'inline-block';
@@ -3108,13 +3107,6 @@ function stopAllSounds() {
             document.getElementById('authFrame').src = "auth.html";
         }
 
-        window.addEventListener("message", function(event) {
-            if(event.data === "authComplete") {
-                document.getElementById('authOverlay').style.display = 'none';
-                document.getElementById('authFrame').src = "";
-                showStageIntro();
-            }
-        });
         window.openAuthBanner = openAuthBanner;
         // ===== New functions for username change management =====
 
